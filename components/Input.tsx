@@ -1,18 +1,16 @@
-import { Text, TextInput, View } from "react-native";
+import { Text, TextInput, TextInputProps, View } from "react-native";
 
-export function InputBox({
-  title,
-  placeholder,
-}: {
+interface InputBoxProps extends TextInputProps {
   title: string;
-  placeholder: string;
-}) {
+}
+
+export function InputBox({ title, ...rest }: InputBoxProps) {
   return (
     <View className="flex flex-col items-start font-medium h-auto w-full">
       <Text className="text-lg text-black mb-2">{title}</Text>
       <TextInput
-        className="border border-[#BDBDBD] h-12 w-[310px] p-2 rounded-md text-lg"
-        placeholder={placeholder}
+        className="border border-[#BDBDBD] h-12 w-full p-2 rounded-md placeholder:text-[#BDBDBD]"
+        {...rest}
       />
     </View>
   );
