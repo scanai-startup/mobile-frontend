@@ -1,10 +1,12 @@
+import { InputBox } from "@/components/Input";
+import SafeAreaView from "@/components/SafeAreaView";
 import { Link } from "expo-router";
-import { View, Text, Image, TextInput, TouchableOpacity } from "react-native";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 
 export default function SignUp() {
   return (
-    <View>
-      <View>
+    <SafeAreaView>
+      <View className="flex-1">
         <View>
           <Image
             source={require("@/assets/images/logo.png")}
@@ -14,35 +16,26 @@ export default function SignUp() {
             <B>Cadastre</B> um novo usuário.
           </Text>
         </View>
-        <View className="mb-24 flex gap-2">
+        <View className="w-full mb-24 gap-2">
           <InputBox title={"Nome de usuário"} placeholder={"carlos_andrade"} />
           <InputBox title={"Email"} placeholder={"exemplo@gmail.com"} />
-          <InputBox title={"Senha"} placeholder={"************"} />
-          <InputBox title={"Confirmar senha"} placeholder={"************"} />
+          <InputBox
+            title={"Senha"}
+            placeholder={"************"}
+            secureTextEntry={true}
+          />
+          <InputBox
+            title={"Confirmar senha"}
+            placeholder={"************"}
+            secureTextEntry={true}
+          />
         </View>
         <View className="w-full flex justify-between">
           <Button placeholder="Cadastrar novo usuário" route="../" />
         </View>
       </View>
-    </View>
-  );
-}
-
-function InputBox({
-  title,
-  placeholder,
-}: {
-  title: string;
-  placeholder: string;
-}) {
-  return (
-    <View className="flex flex-col items-start font-medium h-auto w-full">
-      <Text className="text-lg text-black mb-2">{title}</Text>
-      <TextInput
-        className="border border-[#BDBDBD] h-12 w-[310px] p-2 rounded-md text-lg"
-        placeholder={placeholder}
-      />
-    </View>
+      <Footer />
+    </SafeAreaView>
   );
 }
 
@@ -63,5 +56,20 @@ function Button({
         <Text className="text-white text-lg font-medium ">{placeholder}</Text>
       </TouchableOpacity>
     </Link>
+  );
+}
+function Footer() {
+  return (
+    <View className="flex w-full items-center justify-between mb-4">
+      <View className="flex w-full items-center justify-center">
+        <Text className="mt-4 text-[#9B9B9B] text-[10px]">
+          © 2024 Scan.AI. Todos os direitos reservados.
+        </Text>
+        <Text className="text-xs text-[#9B9B9B]">scanaistartup@gmail.com</Text>
+      </View>
+      <Text className="flex text-xs mt-4 items-center justify-center text-[#9B9B9B]">
+        Política de Privacidade Termos de Uso
+      </Text>
+    </View>
   );
 }
