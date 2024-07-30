@@ -5,17 +5,15 @@ import { Image, Text, View } from "react-native";
 
 export default function Login() {
   return (
-    <SafeAreaView>
-      <View className="flex-1">
-        <View>
-          <Image
-            source={require("@/assets/images/logo.png")}
-            style={{ marginLeft: -40 }}
-          />
-          <Text className="text-4xl text-black mt-4 mb-8">
-            Desfrute da <B>inovação</B> que a <B>Scan.AI</B> pode oferecer.
-          </Text>
-        </View>
+    <SafeAreaView className="flex-1 justify-between">
+      <View>
+        <Image
+          source={require("@/assets/images/logo.png")}
+          style={{ marginLeft: -40 }}
+        />
+        <Text className="text-4xl text-black mt-4 mb-8">
+          Desfrute da <B>inovação</B> que a <B>Scan.AI</B> pode oferecer.
+        </Text>
         <View className="w-full mb-24 gap-2">
           <InputBox title={"Nome de usuário"} placeholder={"carlos_andrade"} />
           <InputBox
@@ -40,7 +38,7 @@ const B = (props: any) => (
 
 function Footer() {
   return (
-    <View className="flex items-center mb-4">
+    <View className="flex items-center">
       <View className="flex w-full items-center justify-center">
         <Text className="mt-4 text-[#9B9B9B] text-[10px]">
           © 2024 Scan.AI. Todos os direitos reservados.
