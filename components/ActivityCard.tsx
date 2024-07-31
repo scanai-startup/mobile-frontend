@@ -13,10 +13,14 @@ export default function ActivityCard({
   route,
 }: ActivityCardProps) {
   return (
-    <Link href={route} asChild>
-      <TouchableOpacity className="bg-white justify-between rounded-lg h-32 w-36 px-4 py-6">
+    <Link
+      style={{ paddingHorizontal: 10, paddingVertical: 20, width: 140 }}
+      href={route}
+      asChild
+    >
+      <TouchableOpacity className="bg-white justify-between rounded-lg px-20">
         {icon}
-        <Text className="text-black text-xl font-medium leading-5">
+        <Text className="text-black text-xl font-medium leading-3">
           {title}
         </Text>
       </TouchableOpacity>
