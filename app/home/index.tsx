@@ -24,7 +24,7 @@ export default function Home() {
   ];
   return (
     <>
-      <View className="h-1/3 pt-20 bg-zinc-900">
+      <View className="h-1/3 pt-20 px-7 bg-zinc-900">
         <AppHeader />
       </View>
       <SafeAreaView style={{ flex: 1, paddingHorizontal: 0 }}>
