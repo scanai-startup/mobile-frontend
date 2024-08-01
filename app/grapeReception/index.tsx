@@ -1,3 +1,4 @@
+import AppHeader from "@/components/AppHeader";
 import SafeAreaView from "@/components/SafeAreaView";
 import { Search } from "lucide-react-native";
 import { Text, TextInput, View } from "react-native";
@@ -5,6 +6,7 @@ import { Text, TextInput, View } from "react-native";
 export default function GrapeReception() {
   return (
     <SafeAreaView className="flex-1 justify-between">
+      <AppHeader showReturnButton />
       <View>
         <View>
           <Text className="text-4xl text-black mt-4 font-bold">

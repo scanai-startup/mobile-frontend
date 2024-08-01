@@ -23,7 +23,7 @@ export default function Login() {
           />
         </View>
         <View className="flex w-full justify-between">
-          <Button placeholder="Acessar" route="/grapeReception" />
+          <Button placeholder="Acessar" route="/home" />
           <Button placeholder="Cadastrar novo usuário" route="/signup" />
         </View>
       </View>
