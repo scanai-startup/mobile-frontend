@@ -10,7 +10,21 @@ import {
 } from "react-native";
 import { useState } from "react";
 
-function FilterDrawer({ visible, onClose }) {
+interface CardProps {
+  title: string;
+  isAvailable: boolean;
+  density?: string;
+  temperature?: number;
+  pressure?: 0;
+}
+
+function FilterDrawer({
+  visible,
+  onClose,
+}: {
+  visible: boolean;
+  onClose: any;
+}) {
   return (
     <Modal
       transparent={true}
@@ -43,7 +57,7 @@ function Card({
   density = "",
   temperature = 0,
   pressure = 0,
-}) {
+}: CardProps) {
   return (
     <View className="bg-white p-4 mb-4 rounded-lg shadow flex-col">
       <View className="flex-row justify-between items-center">
@@ -90,21 +104,21 @@ export default function GrapeReception() {
       pressure: 100000,
     },
     {
-      title: "Tanque 2",
+      title: "Tanque 3",
       isAvailable: false,
       density: "980",
       temperature: 22,
       pressure: 100000,
     },
-    { title: "Tanque 1", isAvailable: true },
+    { title: "Tanque 4", isAvailable: true },
     {
-      title: "Tanque 2",
+      title: "Tanque 5",
       isAvailable: false,
       density: "980",
       temperature: 22,
       pressure: 100000,
     },
-    { title: "Tanque 1", isAvailable: true },
+    { title: "Tanque 6", isAvailable: true },
   ];
 
   return (
@@ -148,10 +162,10 @@ export default function GrapeReception() {
             isAvailable={item.isAvailable}
             density={item.density}
             temperature={item.temperature}
-            pressure={item.pressure}
+            pressure={item.pressure == 0 ? 0 : undefined}
           />
         )}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.title}
         className="flex-1"
       />
       <FilterDrawer
