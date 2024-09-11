@@ -25,17 +25,15 @@ export default function Home() {
   ];
   return (
     <>
+      <CustomStatusBar backgroundColor="#18181b" />
       <SafeAreaView
-        style={{ flex: 1, paddingHorizontal: 0 }}
+        style={{ flex: 1, gap: 20 }}
         edges={["right", "bottom", "left"]}
       >
-        <CustomStatusBar backgroundColor="#18181b" />
-        <View className="h-[200px] relative">
-          <View className="h-full px-7 bg-zinc-900">
-            <AppHeader />
-          </View>
-          <View className="top-[90px] absolute">
-            <Text className="text-white font-bold text-2xl ml-7 mb-4">
+        <AppHeader mainText="Olá, Nome." />
+        <View>
+          <View>
+            <Text className="text-zinc-950 font-bold text-2xl ml-7 mb-4">
               Atividades
             </Text>
             <FlatList
@@ -56,24 +54,22 @@ export default function Home() {
               }}
             />
           </View>
-          <View className="px-7 mt-20">
-            <Text className="text-black font-bold text-2xl mb-4">
-              Relatório mais recente
+        </View>
+        <View className="px-7 mt-10">
+          <Text className="text-zinc-950 font-bold text-2xl mb-4">
+            Relatório mais recente
+          </Text>
+          <View className="bg-white rounded-lg px-3 pt-3 pb-6 gap-2">
+            <Text className="text-[#575757] text-md">
+              Relatório final de saída
             </Text>
-            <View className="bg-white rounded-lg px-3 pt-3 pb-6 gap-2">
-              <Text className="text-[#575757] text-md">
-                Relatório final de saída
-              </Text>
-              <View className="flex-row justify-between items-center">
-                <Text className="text-black text-2xl font-bold">
-                  Nº 14072024
+            <View className="flex-row justify-between items-center">
+              <Text className="text-black text-2xl font-bold">Nº 14072024</Text>
+              <TouchableOpacity>
+                <Text className="text-[#ED2860] text-md font-bold">
+                  Exportar
                 </Text>
-                <TouchableOpacity>
-                  <Text className="text-[#ED2860] text-md font-bold">
-                    Exportar
-                  </Text>
-                </TouchableOpacity>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
         </View>

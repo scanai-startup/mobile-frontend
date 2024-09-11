@@ -14,7 +14,7 @@ export default function ActivityCard({
 }: ActivityCardProps) {
   return (
     <Link
-      style={{ paddingHorizontal: 10, paddingVertical: 20, width: 140 }}
+      style={{ paddingHorizontal: 10, paddingVertical: 20, width: 130 }}
       href={route}
       asChild
     >
