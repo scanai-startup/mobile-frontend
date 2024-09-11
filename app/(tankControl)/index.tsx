@@ -9,6 +9,7 @@ import {
   FlatList,
 } from "react-native";
 import { useState } from "react";
+import { useRouter } from "expo-router";
 
 interface CardProps {
   title: string;
@@ -41,7 +42,6 @@ function FilterDrawer({
       >
         <View className="bg-white p-4 rounded-t-lg">
           <Text className="text-xl font-bold mb-4">Filtros</Text>
-          {/* Adicione conteúdos de filtro aqui */}
           <TouchableOpacity onPress={onClose}>
             <Text className="text-blue-500">Fechar</Text>
           </TouchableOpacity>
@@ -58,39 +58,50 @@ function Card({
   temperature = 0,
   pressure = 0,
 }: CardProps) {
+  const router = useRouter();
+
   return (
-    <View className="bg-white p-4 mb-4 rounded-lg shadow flex-col">
-      <View className="flex-row justify-between items-center">
-        <Text className="text-lg font-bold">{title}</Text>
-        {isAvailable ? (
-          <View className="bg-green-200 px-2 py-1 rounded-full">
-            <Text className="text-xs text-green-800">Disponível</Text>
-          </View>
-        ) : (
-          <View className="bg-red-200 px-2 py-1 rounded-full">
-            <Text className="text-xs text-red-800">Ocupado</Text>
+    <TouchableOpacity
+      onPress={() => {
+        console.log(`Navigating to ${title} details`);
+        router.push(`/(tankControl)/${title}`);
+      }}
+      style={{ marginBottom: 16 }}
+    >
+      <View className="bg-white p-4 rounded-lg shadow flex-col">
+        <View className="flex-row justify-between items-center">
+          <Text className="text-lg font-bold">{title}</Text>
+          {isAvailable ? (
+            <View className="bg-green-200 px-2 py-1 rounded-full">
+              <Text className="text-xs text-green-800">Disponível</Text>
+            </View>
+          ) : (
+            <View className="bg-red-200 px-2 py-1 rounded-full">
+              <Text className="text-xs text-red-800">Ocupado</Text>
+            </View>
+          )}
+        </View>
+        {!isAvailable && (
+          <View className="mt-2 space-y-1">
+            <View className="flex-row justify-between">
+              <Text className="text-base">Densidade:</Text>
+              <Text className="text-lg">{density} kg/m³</Text>
+            </View>
+            <View className="flex-row justify-between">
+              <Text className="text-base">Temperatura:</Text>
+              <Text className="text-lg">{temperature} °C</Text>
+            </View>
+            <View className="flex-row justify-between">
+              <Text className="text-base">Pressão:</Text>
+              <Text className="text-lg">{pressure} Pa</Text>
+            </View>
           </View>
         )}
       </View>
-      {!isAvailable && (
-        <View className="mt-2 space-y-1">
-          <View className="flex-row justify-between">
-            <Text className="text-base">Densidade:</Text>
-            <Text className="text-lg">{density} kg/m³</Text>
-          </View>
-          <View className="flex-row justify-between">
-            <Text className="text-base">Temperatura:</Text>
-            <Text className="text-lg">{temperature} °C</Text>
-          </View>
-          <View className="flex-row justify-between">
-            <Text className="text-base">Pressão:</Text>
-            <Text className="text-lg">{pressure} Pa</Text>
-          </View>
-        </View>
-      )}
-    </View>
+    </TouchableOpacity>
   );
 }
+
 export default function GrapeReception() {
   const [drawerVisible, setDrawerVisible] = useState(false);
 

@@ -6,7 +6,7 @@ import { Image, Text, View } from "react-native";
 export default function Login() {
   return (
     <SafeAreaView className="flex-1">
-      <View className="flex-1 justify-between mt-10">
+      <View className="flex-1 justify-between">
         <View>
           <Image
             source={require("@/assets/images/logo.png")}
@@ -15,7 +15,7 @@ export default function Login() {
           <Text className="text-4xl text-black mt-4 mb-8">
             Desfrute da <B>inovação</B> que a <B>Scan.AI</B> pode oferecer.
           </Text>
-          <View className="w-full mb-6 mt-14 gap-2">
+          <View className="w-full mb-6 mt-20 gap-2">
             <InputBox title="Nome de usuário" placeholder="carlos_andrade" />
             <InputBox
               title="Senha"
@@ -23,8 +23,8 @@ export default function Login() {
               secureTextEntry={true}
             />
           </View>
-          <View className="flex w-full items-center">
-            <Button placeholder="Acessar" route="/grapeReception" />
+          <View className="flex w-full items-center mt-16">
+            <Button placeholder="Acessar" route="/(tankControl)" />
             <Text className="mt-4 text-[#9B9B9B] text-[10px]">
               © 2024 Scan.AI. Todos os direitos reservados.
             </Text>
