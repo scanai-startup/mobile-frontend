@@ -39,6 +39,11 @@ export default function Login() {
           Política de Privacidade Termos de Uso
         </Text>
       </View>
+      <View className="items-center mt-auto mb-4">
+        <Text className="text-xs text-[#9B9B9B]">
+          Política de Privacidade Termos de Uso
+        </Text>
+      </View>
     </SafeAreaView>
   );
 }
