@@ -16,6 +16,7 @@ export function InputBox({ title, ...rest }: InputBoxProps) {
       <Text className="text-lg text-black mb-2">{title}</Text>
       <TextInput
         className="border border-[#BDBDBD] h-12 w-full p-2 rounded-md placeholder:text-[#BDBDBD]"
+        style={{ backgroundColor: "#D4D4D4", padding: 10, borderRadius: 5 }}
         {...rest}
       />
     </KeyboardAvoidingView>
