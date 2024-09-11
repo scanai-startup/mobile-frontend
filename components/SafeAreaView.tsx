@@ -1,14 +1,22 @@
-import { SafeAreaView as SafeArea } from "react-native-safe-area-context";
+import {
+  SafeAreaView as SafeArea,
+  SafeAreaViewProps as props,
+} from "react-native-safe-area-context";
 
-export default function SafeAreaView(props: any) {
+interface SafeAreaViewProps extends props {
+  children: any;
+}
+
+export default function SafeAreaView({ children, ...rest }: SafeAreaViewProps) {
   return (
     <SafeArea
       style={{
         flex: 1,
         paddingHorizontal: 24,
       }}
+      {...rest}
     >
-      {props.children}
+      {children}
     </SafeArea>
   );
 }
