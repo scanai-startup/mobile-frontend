@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useState } from "react";
 import { useRouter } from "expo-router";
+import AppHeader from "@/components/AppHeader";
 
 interface CardProps {
   title: string;
@@ -63,8 +64,8 @@ function Card({
   return (
     <TouchableOpacity
       onPress={() => {
-        console.log(`Navigating to ${title} details`);
-        router.push(`/(tankControl)/${title}`);
+        console.log(`/(tankControl)/tank/${title}`);
+        router.push(`/(tankControl)/tank/${title}`);
       }}
       style={{ marginBottom: 16 }}
     >
@@ -134,6 +135,11 @@ export default function GrapeReception() {
 
   return (
     <SafeAreaView className="flex-1 p-4">
+      <AppHeader
+        showReturnButton
+        variant="secondary"
+        mainText="Controle de tanques"
+      />
       <View>
         <Text className="text-4xl text-black mt-4 font-bold">
           Controle de tanques.

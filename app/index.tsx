@@ -12,7 +12,6 @@ export default function Login() {
             source={require("@/assets/images/logo.png")}
             style={{ marginLeft: -40 }}
           />
-<<<<<<< HEAD
           <Text className="text-4xl text-black mt-4 mb-8">
             Desfrute da <B>inovação</B> que a <B>Scan.AI</B> pode oferecer.
           </Text>
@@ -33,13 +32,12 @@ export default function Login() {
               scanaistartup@gmail.com
             </Text>
           </View>
-=======
         </View>
-        <View className="flex w-full justify-between">
-          <Button placeholder="Acessar" route="/home" />
-          <Button placeholder="Cadastrar novo usuário" route="/signup" />
->>>>>>> 2ccfb992c984228666f9b54e947a9b5d41418ef8
-        </View>
+      </View>
+      <View className="items-center mt-auto mb-4">
+        <Text className="text-xs text-[#9B9B9B]">
+          Política de Privacidade Termos de Uso
+        </Text>
       </View>
       <View className="items-center mt-auto mb-4">
         <Text className="text-xs text-[#9B9B9B]">
