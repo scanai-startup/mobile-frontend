@@ -103,7 +103,7 @@ function Card({
   );
 }
 
-export default function GrapeReception() {
+export default function TankControl() {
   const [drawerVisible, setDrawerVisible] = useState(false);
 
   const data = [
