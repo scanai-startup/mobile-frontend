@@ -24,7 +24,7 @@ export default function Login() {
             />
           </View>
           <View className="flex w-full items-center mt-16">
-            <Button placeholder="Acessar" route="/(tankControl)" />
+            <Button placeholder="Acessar" route="/home" />
             <Text className="mt-4 text-[#9B9B9B] text-[10px]">
               © 2024 Scan.AI. Todos os direitos reservados.
             </Text>

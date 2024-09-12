@@ -1,20 +1,123 @@
+import ActivityCard from "@/components/ActivityCard";
+import AppHeader from "@/components/AppHeader";
 import { useLocalSearchParams } from "expo-router";
-import { View, Text, StyleSheet } from "react-native";
+import { Boxes, Cylinder, Grape } from "lucide-react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  SafeAreaView,
+  TouchableOpacity,
+} from "react-native";
 
 export default function Tank() {
   const { tank } = useLocalSearchParams();
 
+  const activityListItems = [
+    {
+      name: "Análises diárias",
+      icon: <Cylinder size="28px" color="#000000" />,
+      route: "",
+    },
+    {
+      name: "Análises de deposito",
+      icon: <Boxes size="28px" color="#000000" />,
+      route: "",
+    },
+    {
+      name: "Envase e rotulagem",
+      icon: <Grape size="28px" color="#000000" />,
+      route: "",
+    },
+    {
+      name: "Adicionar Vinho Base",
+      icon: <Grape size="28px" color="#000000" />,
+      route: "",
+    },
+    {
+      name: "Realizar Trasfega",
+      icon: <Grape size="28px" color="#000000" />,
+      route: "",
+    },
+    {
+      name: "Adicionar pé de Cuba",
+      icon: <Grape size="28px" color="#000000" />,
+      route: "",
+    },
+  ];
+
   return (
-    <View style={styles.container}>
-      <Text>Details of user {tank} </Text>
-    </View>
+    <SafeAreaView className="flex-1 p-4">
+      <AppHeader showReturnButton variant="secondary" mainText={`${tank}`} />
+      <View>
+        <Text className="text-zinc-950 font-bold text-2xl ml-7 mb-4">
+          Ações
+        </Text>
+        <FlatList
+          data={activityListItems}
+          keyExtractor={(item) => item.name}
+          renderItem={({ item }) => (
+            <ActivityCard
+              title={item.name}
+              icon={item.icon}
+              route={item.route}
+            />
+          )}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingHorizontal: 25,
+            gap: 10,
+          }}
+        />
+      </View>
+      <View className="mt-4">
+        <Text className="text-2xl">Remessas associadas</Text>
+        <Card />
+      </View>
+    </SafeAreaView>
   );
 }
 
+const Card = () => {
+  return (
+    <View style={styles.card}>
+      <Text style={styles.subtitle}>Última remessa associada</Text>
+      <View style={styles.row}>
+        <Text style={styles.shipment}>101 - 2º Talão</Text>
+        <Text style={styles.details}>Detalhes</Text>
+      </View>
+    </View>
+  );
+};
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  card: {
+    backgroundColor: "#fff",
+    padding: 16,
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
+    marginTop: 8,
+  },
+  subtitle: {
+    color: "gray",
+    fontSize: 12,
+    marginBottom: 2,
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  shipment: {
+    fontSize: 16,
+  },
+  details: {
+    fontSize: 16,
+    fontWeight: "semibold",
+    color: "blue",
   },
 });

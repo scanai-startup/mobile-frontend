@@ -10,7 +10,7 @@ export default function Home() {
     {
       name: "Gestão de tanques",
       icon: <Cylinder size="28px" color="#000000" />,
-      route: "",
+      route: "/(tankControl)",
     },
     {
       name: "Recepção de uvas",
