@@ -3,6 +3,7 @@ import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
 import { Boxes, Cylinder, Grape } from "lucide-react-native";
+import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
 export default function Home() {

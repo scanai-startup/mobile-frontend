@@ -2,6 +2,7 @@ import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
 import { Link } from "expo-router";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import React from "react";
 
 export default function SignUp() {
   return (
@@ -51,7 +52,7 @@ function Button({
   route: string;
 }) {
   return (
-    <Link href={route} className="p-3" asChild>
+    <Link href={{ pathname: route as "/signup" }} className="p-3" asChild>
       <TouchableOpacity className="bg-[#171717] w-full flex items-center rounded-lg mb-4">
         <Text className="text-white text-lg font-medium ">{placeholder}</Text>
       </TouchableOpacity>
