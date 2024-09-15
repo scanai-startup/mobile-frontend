@@ -1,7 +1,20 @@
 import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
-import { useLocalSearchParams } from "expo-router";
-import { Boxes, Cylinder, Grape } from "lucide-react-native";
+import {
+  Link,
+  useLocalSearchParams,
+  useNavigation,
+  useRouter,
+} from "expo-router";
+import {
+  ArrowDown,
+  Boxes,
+  ChevronDown,
+  Cylinder,
+  Grape,
+  Search,
+} from "lucide-react-native";
+import React from "react";
 import {
   View,
   Text,
@@ -9,6 +22,7 @@ import {
   FlatList,
   SafeAreaView,
   TouchableOpacity,
+  Button,
 } from "react-native";
 
 export default function Tank() {
@@ -19,16 +33,22 @@ export default function Tank() {
       name: "Análises diárias",
       icon: <Cylinder size="28px" color="#000000" />,
       route: "",
+      type: "",
+      param: "",
     },
     {
       name: "Análises de deposito",
       icon: <Boxes size="28px" color="#000000" />,
-      route: "",
+      route: "/(tankControl)/tank/depositAnalysis/[depositAnalysis]",
+      type: "tank",
+      param: tank,
     },
     {
       name: "Envase e rotulagem",
       icon: <Grape size="28px" color="#000000" />,
       route: "",
+      type: "",
+      param: "",
     },
     {
       name: "Adicionar Vinho Base",
@@ -39,11 +59,15 @@ export default function Tank() {
       name: "Realizar Trasfega",
       icon: <Grape size="28px" color="#000000" />,
       route: "",
+      type: "",
+      param: "",
     },
     {
       name: "Adicionar pé de Cuba",
       icon: <Grape size="28px" color="#000000" />,
       route: "",
+      type: "",
+      param: "",
     },
   ];
 
@@ -62,6 +86,8 @@ export default function Tank() {
               title={item.name}
               icon={item.icon}
               route={item.route}
+              type={item.type}
+              param={item.param}
             />
           )}
           horizontal
@@ -76,6 +102,7 @@ export default function Tank() {
         <Text className="text-2xl">Remessas associadas</Text>
         <Card />
       </View>
+      <CardNotEmpty />
     </SafeAreaView>
   );
 }
@@ -87,6 +114,46 @@ const Card = () => {
       <View style={styles.row}>
         <Text style={styles.shipment}>101 - 2º Talão</Text>
         <Text style={styles.details}>Detalhes</Text>
+      </View>
+    </View>
+  );
+};
+
+const CardNotEmpty = () => {
+  return (
+    <View>
+      <Text className="text-2xl font-medium">Resumo da última análise</Text>
+      <View className="bg-white" style={styles.card}>
+        <Text className="text-xl text-black font-medium">09/08/24</Text>
+        <View className="flex-row justify-between">
+          <Text className="text-gray-500">Densidade</Text>
+          <View style={styles.bottomAligned}>
+            <Text className="text-xl">996</Text>
+            <Text className="text-gray-500">g/cm3</Text>
+          </View>
+        </View>
+        <View className="flex-row justify-between">
+          <Text className="text-gray-500">Temperatura</Text>
+          <View style={styles.bottomAligned}>
+            <ChevronDown size="25px" color="red" />
+            <Text className="text-xl">20</Text>
+            <Text className="text-gray-500">ºC</Text>
+          </View>
+        </View>
+        <View className="flex-row justify-between">
+          <Text className="text-gray-500">Pressão</Text>
+          <View style={styles.bottomAligned}>
+            <ChevronDown
+              size="25px"
+              color="green"
+              style={{
+                transform: [{ rotate: "180deg" }],
+              }}
+            />
+            <Text className="text-xl">5.7</Text>
+            <Text className="text-gray-500">bar</Text>
+          </View>
+        </View>
       </View>
     </View>
   );
@@ -119,5 +186,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "semibold",
     color: "blue",
+  },
+  bottomAligned: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    gap: 4, // Use this if gap is not supported, otherwise you can remove it
   },
 });
