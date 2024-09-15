@@ -1,6 +1,11 @@
 import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
-import { useLocalSearchParams } from "expo-router";
+import {
+  Link,
+  useLocalSearchParams,
+  useNavigation,
+  useRouter,
+} from "expo-router";
 import {
   ArrowDown,
   Boxes,
@@ -9,6 +14,7 @@ import {
   Grape,
   Search,
 } from "lucide-react-native";
+import React from "react";
 import {
   View,
   Text,
@@ -16,6 +22,7 @@ import {
   FlatList,
   SafeAreaView,
   TouchableOpacity,
+  Button,
 } from "react-native";
 
 export default function Tank() {
@@ -26,16 +33,22 @@ export default function Tank() {
       name: "Análises diárias",
       icon: <Cylinder size="28px" color="#000000" />,
       route: "",
+      type: "",
+      param: "",
     },
     {
       name: "Análises de deposito",
       icon: <Boxes size="28px" color="#000000" />,
-      route: "",
+      route: "/(tankControl)/tank/depositAnalysis/[depositAnalysis]",
+      type: "tank",
+      param: tank,
     },
     {
       name: "Envase e rotulagem",
       icon: <Grape size="28px" color="#000000" />,
       route: "",
+      type: "",
+      param: "",
     },
     {
       name: "Adicionar Vinho Base",
@@ -46,11 +59,15 @@ export default function Tank() {
       name: "Realizar Trasfega",
       icon: <Grape size="28px" color="#000000" />,
       route: "",
+      type: "",
+      param: "",
     },
     {
       name: "Adicionar pé de Cuba",
       icon: <Grape size="28px" color="#000000" />,
       route: "",
+      type: "",
+      param: "",
     },
   ];
 
@@ -69,6 +86,8 @@ export default function Tank() {
               title={item.name}
               icon={item.icon}
               route={item.route}
+              type={item.type}
+              param={item.param}
             />
           )}
           horizontal

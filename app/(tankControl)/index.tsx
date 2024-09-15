@@ -9,8 +9,9 @@ import {
   FlatList,
 } from "react-native";
 import { useState } from "react";
-import { useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import AppHeader from "@/components/AppHeader";
+import React from "react";
 
 interface CardProps {
   title: string;
@@ -62,44 +63,47 @@ function Card({
   const router = useRouter();
 
   return (
-    <TouchableOpacity
-      onPress={() => {
-        console.log(`/(tankControl)/tank/${title}`);
-        router.push(`/(tankControl)/tank/${title}`);
+    <Link
+      href={{
+        pathname: "/tank/[tank]",
+        params: { tank: title },
       }}
-      style={{ marginBottom: 16 }}
+      style={{ marginBottom: 16, width: "100%" }}
+      asChild
     >
-      <View className="bg-white p-4 rounded-lg shadow flex-col">
-        <View className="flex-row justify-between items-center">
-          <Text className="text-lg font-bold">{title}</Text>
-          {isAvailable ? (
-            <View className="bg-green-200 px-2 py-1 rounded-full">
-              <Text className="text-xs text-green-800">Disponível</Text>
-            </View>
-          ) : (
-            <View className="bg-red-200 px-2 py-1 rounded-full">
-              <Text className="text-xs text-red-800">Ocupado</Text>
+      <TouchableOpacity>
+        <View className="bg-white p-4 rounded-lg shadow flex-col">
+          <View className="flex-row justify-between items-center">
+            <Text className="text-lg font-bold">{title}</Text>
+            {isAvailable ? (
+              <View className="bg-green-200 px-2 py-1 rounded-full">
+                <Text className="text-xs text-green-800">Disponível</Text>
+              </View>
+            ) : (
+              <View className="bg-red-200 px-2 py-1 rounded-full">
+                <Text className="text-xs text-red-800">Ocupado</Text>
+              </View>
+            )}
+          </View>
+          {!isAvailable && (
+            <View className="mt-2 space-y-1">
+              <View className="flex-row justify-between">
+                <Text className="text-base">Densidade:</Text>
+                <Text className="text-lg">{density} kg/m³</Text>
+              </View>
+              <View className="flex-row justify-between">
+                <Text className="text-base">Temperatura:</Text>
+                <Text className="text-lg">{temperature} °C</Text>
+              </View>
+              <View className="flex-row justify-between">
+                <Text className="text-base">Pressão:</Text>
+                <Text className="text-lg">{pressure} Pa</Text>
+              </View>
             </View>
           )}
         </View>
-        {!isAvailable && (
-          <View className="mt-2 space-y-1">
-            <View className="flex-row justify-between">
-              <Text className="text-base">Densidade:</Text>
-              <Text className="text-lg">{density} kg/m³</Text>
-            </View>
-            <View className="flex-row justify-between">
-              <Text className="text-base">Temperatura:</Text>
-              <Text className="text-lg">{temperature} °C</Text>
-            </View>
-            <View className="flex-row justify-between">
-              <Text className="text-base">Pressão:</Text>
-              <Text className="text-lg">{pressure} Pa</Text>
-            </View>
-          </View>
-        )}
-      </View>
-    </TouchableOpacity>
+      </TouchableOpacity>
+    </Link>
   );
 }
 
