@@ -1,7 +1,6 @@
 import { Button } from "@/components/Button";
 import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
-import { Link } from "expo-router";
 import React from "react";
 import { Image, Text, View } from "react-native";
 
@@ -26,7 +25,7 @@ export default function Login() {
             />
           </View>
           <View className="flex w-full items-center mt-16">
-            <Button placeholder="Acessar" route="/home" />
+            <Button placeholder="Acessar" route="/(tabs)" />
             <Text className="mt-4 text-[#9B9B9B] text-[10px]">
               © 2024 Scan.AI. Todos os direitos reservados.
             </Text>
