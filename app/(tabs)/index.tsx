@@ -2,7 +2,7 @@ import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
-import { Boxes, Cylinder, Grape } from "lucide-react-native";
+import { Boxes, Cylinder, Grape, Truck } from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
@@ -12,6 +12,11 @@ export default function Home() {
       name: "Gestão de tanques",
       icon: <Cylinder size="28px" color="#000000" />,
       route: "/(tabs)/tankControl",
+    },
+    {
+      name: "Gestão de remessas",
+      icon: <Truck size="28px" color="#000000" />,
+      route: "/(tabs)/shipment",
     },
     {
       name: "Recepção de uvas",
