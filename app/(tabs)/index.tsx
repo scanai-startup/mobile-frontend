@@ -23,6 +23,11 @@ export default function Home() {
       icon: <Grape size="28px" color="#000000" />,
       route: "",
     },
+    {
+      name: "Envase e Rotulagem",
+      icon: <Grape size="28px" color="#000000" />,
+      route: "/envaseERotulagem",
+    }
   ];
   return (
     <>
