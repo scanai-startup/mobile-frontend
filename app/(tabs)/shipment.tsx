@@ -1,6 +1,8 @@
 import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
+import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
+import { Link } from "expo-router";
 import { CirclePlus } from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
@@ -78,12 +80,13 @@ export default function Shipment() {
           showReturnButton
         />
         <View className="px-7">
-          <TouchableOpacity className="flex flex-row justify-center items-center bg-blue-500 rounded-xl py-3 gap-2">
-            <CirclePlus size="24px" color="white" />
-            <Text className="text-white font-semibold">
-              ADICIONAR NOVA REMESSA
-            </Text>
-          </TouchableOpacity>
+          <Link href="/" asChild>
+            <DefaultButton
+              title="ADICIONAR NOVA REMESSA"
+              icon={<CirclePlus color="white" />}
+            />
+          </Link>
+
           <FlatList
             data={data}
             keyExtractor={(item) => String(item.id)}
@@ -141,7 +144,7 @@ export default function Shipment() {
             )}
             contentContainerStyle={{
               paddingVertical: 20,
-              paddingBottom: 140,
+              paddingBottom: 160,
               gap: 10,
             }}
           ></FlatList>
