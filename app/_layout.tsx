@@ -12,7 +12,6 @@ import "react-native-reanimated";
 import React from "react";
 import { StatusBar } from "react-native";
 import "../global.css";
-import React from "react";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
