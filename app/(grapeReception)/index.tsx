@@ -1,30 +1,12 @@
-import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
-import {
-  Link,
-  useLocalSearchParams,
-  useNavigation,
-  useRouter,
-} from "expo-router";
-import {
-  ArrowDown,
-  Boxes,
-  ChevronDown,
-  Cylinder,
-  Grape,
-  Search,
-} from "lucide-react-native";
+import { Boxes, Check, Cylinder, Grape, X } from "lucide-react-native";
 import React, { useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  SafeAreaView,
   ScrollView,
-  TouchableOpacity,
-  Button,
+  Text,
   TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 export default function Reception() {
@@ -71,14 +53,18 @@ export default function Reception() {
   ];
 
   return (
-    <SafeAreaView className="flex-1 p-4">
+    <View className="flex-1 gap-4">
       <AppHeader
         showReturnButton
         variant="secondary"
         mainText="Recepção de Uvas"
+        returnHref="/(tabs)"
       />
-      <View className="flex flex-1 mt-4 gap-2">
-        <ScrollView>
+      <View className="flex flex-1 gap-2 px-7">
+        <ScrollView
+          contentContainerStyle={{ gap: 10 }}
+          showsVerticalScrollIndicator={false}
+        >
           <View>
             <Text className="text-xl">Sanidade</Text>
             <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
@@ -126,9 +112,9 @@ export default function Reception() {
               />
             </View>
           </View>
-          <View>
+          <View className="mt-6 mb-12">
             <Text className="text-3xl font-bold">Condições do caminhão</Text>
-            <View className="flex flex-col items-center gap-4">
+            <View className="flex flex-col gap-4">
               <YesNoButton
                 question={"Caminhão em bom estado de conservação?"}
               />
@@ -145,7 +131,7 @@ export default function Reception() {
           </View>
         </ScrollView>
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -162,11 +148,15 @@ const YesNoButton = ({ question }: { question: string }) => {
         <View className="flex-row flex-wrap items-center">
           <TouchableOpacity
             className={`px-7 py-5 rounded mr-2 ${
-              buttonState === "yes" ? "bg-green-500" : "bg-gray-300"
+              buttonState === "yes" ? "bg-green-400" : "bg-gray-300"
             }`}
             onPress={handleYesClick}
           >
-            <Text className="text-white text-lg">X</Text>
+            <Check
+              color={buttonState === "yes" ? "#15803d" : "#9ca3af"}
+              width={20}
+              height={24}
+            />
           </TouchableOpacity>
           <View className="flex-shrink">
             <Text className="text-black font-semibold text-2xl">Sim</Text>
@@ -178,15 +168,19 @@ const YesNoButton = ({ question }: { question: string }) => {
         <View className="flex-row flex-wrap items-center">
           <TouchableOpacity
             className={`px-7 py-5 rounded mr-2 ${
-              buttonState === "no" ? "bg-red-500" : "bg-gray-300"
+              buttonState === "no" ? "bg-red-400" : "bg-gray-300"
             }`}
             onPress={handleNoClick}
           >
-            <Text className="text-white text-lg">X</Text>
+            <X
+              width={20}
+              height={24}
+              color={buttonState === "no" ? "#dc2626" : "#9ca3af"}
+            />
           </TouchableOpacity>
           <View className="flex-shrink">
             <Text className="text-black font-semibold text-2xl">Não</Text>
-            <Text className="text-gray-400 font-semibold">
+            <Text className="text-gray-500 font-semibold text-lg">
               Estado de conservação ruim
             </Text>
           </View>
