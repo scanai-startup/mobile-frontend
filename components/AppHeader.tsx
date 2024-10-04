@@ -1,16 +1,19 @@
-import { Link } from "expo-router";
+import { Href, Link } from "expo-router";
 import { Bell, ChevronLeft } from "lucide-react-native";
+import React from "react";
 import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
 
 interface AppHeaderProps {
   showReturnButton?: boolean;
   variant?: "primary" | "secondary";
   mainText: string;
+  returnHref?: Href<string>;
 }
 
 export default function AppHeader({
   showReturnButton = false,
   variant = "primary",
+  returnHref = "/",
   mainText,
 }: AppHeaderProps) {
   const OSPadding = Platform.OS === "ios" ? 0 : 20;
@@ -26,7 +29,7 @@ export default function AppHeader({
       className="flex-row items-center"
     >
       {showReturnButton ? (
-        <Link href="/">
+        <Link href={returnHref}>
           <ChevronLeft color="#171717" />
         </Link>
       ) : null}
