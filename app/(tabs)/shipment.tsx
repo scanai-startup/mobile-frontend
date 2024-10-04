@@ -80,7 +80,10 @@ export default function Shipment() {
           showReturnButton
         />
         <View className="px-7">
-          <Link href="/(grapeReception)" asChild>
+          <Link
+            href="/(grapeReception)?nextHref=(grapeReception)/grapeReceptionP2&prevHref=/"
+            asChild
+          >
             <DefaultButton
               title="ADICIONAR NOVA REMESSA"
               icon={<CirclePlus color="white" />}

@@ -21,7 +21,7 @@ export default function Home() {
     {
       name: "Recepção de uvas",
       icon: <Boxes size="28px" color="#000000" />,
-      route: "/(grapeReception)",
+      route: "/(grapeReception)?nextHref=(grapeReception)/grapeReceptionP2",
     },
     {
       name: "Iniciar nova produção",
