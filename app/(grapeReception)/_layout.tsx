@@ -27,7 +27,7 @@ export default function GrapeReceptionLayout() {
       <CustomStatusBar barStyle="dark-content" />
       <SafeAreaView style={{ flex: 1 }} edges={["right", "bottom", "left"]}>
         <AppHeader
-          showReturnButton
+          showReturnButton={currRoute === "/" ? true : false}
           variant="secondary"
           mainText="Recepção de Uvas"
           returnHref="/(tabs)"
