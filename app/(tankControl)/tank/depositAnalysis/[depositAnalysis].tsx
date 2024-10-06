@@ -10,6 +10,9 @@ import { useLocalSearchParams } from "expo-router";
 import SafeAreaView from "@/components/SafeAreaView";
 import AppHeader from "@/components/AppHeader";
 
+//TODO ISSO AQUI É A ANALISE DIARIA E NAO A DE DEPOSITO, A DE DEPOSITO
+//SE TRATA DE OUTRA COISA
+
 export default function depositAnalysis() {
   const { tank } = useLocalSearchParams();
 

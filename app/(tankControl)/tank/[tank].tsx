@@ -32,9 +32,9 @@ export default function Tank() {
     {
       name: "Análises diárias",
       icon: <Cylinder size="28px" color="#000000" />,
-      route: "",
-      type: "",
-      param: "",
+      route: "/(tankControl)/tank/dailyAnalysis/[dailyAnalysis]",
+      type: "tank",
+      param: tank,
     },
     {
       name: "Análises de deposito",
