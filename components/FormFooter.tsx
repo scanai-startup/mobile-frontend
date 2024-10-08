@@ -13,24 +13,32 @@ export default function FormFooter({
 }: FormFooterP) {
   const router = useRouter();
   return (
-    <View className="h-20 border-t border-neutral-250">
+    <View
+      style={{
+        height: 80,
+        paddingHorizontal: 20,
+        borderTopWidth: 1,
+        borderTopColor: "#C0C0C0",
+      }}
+    >
       <View className="flex-1 flex-row items-center justify-between px-14">
         <TouchableOpacity
           onPress={() => router.dismiss(1)}
           disabled={!isReturnButtonEnabled}
         >
           <Text
-            className={
-              isReturnButtonEnabled
-                ? "text-xl text-blue-500"
-                : "text-xl text-neutral-250"
-            }
+            className="text-xl"
+            style={{
+              color: isReturnButtonEnabled ? "#93c5fd" : "#C0C0C0",
+            }}
           >
             Anterior
           </Text>
         </TouchableOpacity>
-        <Link href={nextHref}>
-          <Text className="text-xl text-blue-500">Próximo</Text>
+        <Link href={nextHref} asChild>
+          <TouchableOpacity>
+            <Text className="text-xl text-blue-500">Próximo</Text>
+          </TouchableOpacity>
         </Link>
       </View>
     </View>
