@@ -17,6 +17,7 @@ export default function FormFooter({
       style={{
         height: 80,
         borderTopWidth: 1,
+        paddingHorizontal: 20,
         borderTopColor: "#C0C0C0",
       }}
     >

@@ -23,13 +23,65 @@ import {
   View,
 } from "react-native";
 
+interface StageInfo {
+  title: string;
+  icon: React.JSX.Element;
+  description: string;
+  value: string;
+}
+
 export default function newFilLab() {
+  const stages: StageInfo[] = [
+    {
+      title: "Despaletização",
+
+      icon: (
+        <View className="justify-center p-3 bg-green-100 rounded-lg">
+          <Rows3 color="#00A64E" />
+        </View>
+      ),
+      description: "Lorem Ipsum",
+      value: "depalletization",
+    },
+    {
+      title: "Enchimento",
+      icon: (
+        <View className="justify-center p-3 bg-red-100 rounded-lg">
+          <Droplet color="#EB1203" />
+        </View>
+      ),
+      description: "Lorem Ipsum",
+      value: "filling",
+    },
+    {
+      title: "Rotulagem",
+      icon: (
+        <View className="justify-center p-3 bg-purple-100 rounded-lg">
+          <Tag color="#8C5EE8" />
+        </View>
+      ),
+      description: "Lorem Ipsum",
+      value: "labelling",
+    },
+    {
+      title: "Embalamento",
+      icon: (
+        <View className="justify-center p-3 bg-blue-100 rounded-lg">
+          <Package color="#0052FF" />
+        </View>
+      ),
+      description: "Lorem Ipsum",
+      value: "packaging",
+    },
+  ];
+
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [startHour, setStartHour] = useState(new Date());
   const [finishHour, setFinishHour] = useState(
     new Date(startHour.getTime() + 2 * 60 * 60 * 1000)
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [selectedStage, setSelectedStage] = useState<StageInfo | null>(null);
 
   return (
     <>
@@ -45,7 +97,9 @@ export default function newFilLab() {
             onPress={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex flex-row items-center justify-between bg-[#DEDEDE] py-3 px-3 rounded-lg h-14"
           >
-            <Text className="text-xl">Etapas</Text>
+            <Text className="text-xl">
+              {selectedStage ? selectedStage.title : "Etapas"}
+            </Text>
             <ChevronsUpDown color="black" />
           </TouchableOpacity>
           {isDropdownOpen ? (
@@ -54,44 +108,37 @@ export default function newFilLab() {
               animationType="fade"
               className="bg-[#DEDEDE] py-3 px-3 rounded-b-lg"
             >
-              <View className="flex-1">
+              <View
+                className="flex-1"
+                style={{
+                  backgroundColor: "rgba(0, 0, 0, 0.5)",
+                }}
+              >
                 <Pressable
-                  className="flex-1 bg-black opacity-25"
+                  className="flex-1"
                   onPress={() => setIsDropdownOpen(false)}
                 />
-                <View className="bg-white px-10 py-4 gap-4">
-                  <TouchableOpacity className="flex-row items-center gap-4">
-                    <Rows3 color="green" />
-                    <View className="">
-                      <Text className="text-2xl font-semibold">
-                        Despaletização
-                      </Text>
-                      <Text className="text-neutral-400">Lorem Ipsum</Text>
-                    </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity className="flex-row items-center gap-4">
-                    <Droplet color="red" />
-                    <View className="">
-                      <Text className="text-2xl font-semibold">Enchimento</Text>
-                      <Text className="text-neutral-400">Lorem Ipsum</Text>
-                    </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity className="flex-row items-center gap-4">
-                    <Tag color="purple" />
-                    <View className="">
-                      <Text className="text-2xl font-semibold">Rotulagem</Text>
-                      <Text className="text-neutral-400">Lorem Ipsum</Text>
-                    </View>
-                  </TouchableOpacity>
-                  <TouchableOpacity className="flex-row items-center gap-4">
-                    <Package color="blue" />
-                    <View className="">
-                      <Text className="text-2xl font-semibold">
-                        Embalamento
-                      </Text>
-                      <Text className="text-neutral-400">Lorem Ipsum</Text>
-                    </View>
-                  </TouchableOpacity>
+                <View className="bg-white px-10 py-5 gap-4 rounded-t-3xl">
+                  {stages.map((s) => (
+                    <TouchableOpacity
+                      key={s.value}
+                      className="flex-row items-center gap-4"
+                      onPress={() => {
+                        setSelectedStage(s);
+                        setIsDropdownOpen(false);
+                      }}
+                    >
+                      {s.icon}
+                      <View className="">
+                        <Text className="text-2xl font-semibold">
+                          {s.title}
+                        </Text>
+                        <Text className="text-neutral-400">
+                          {s.description}
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  ))}
                 </View>
               </View>
             </Modal>
