@@ -62,15 +62,12 @@ function Card({
 }: CardProps) {
   const router = useRouter();
 
+  const href = isAvailable
+    ? { pathname: "/(tankControl)/[emptyTank]", params: { tank: title } }
+    : { pathname: "/tank/[tank]", params: { tank: title } };
+
   return (
-    <Link
-      href={{
-        pathname: "/tank/[tank]",
-        params: { tank: title },
-      }}
-      style={{ marginBottom: 16, width: "100%" }}
-      asChild
-    >
+    <Link href={href} style={{ marginBottom: 16, width: "100%" }} asChild>
       <TouchableOpacity>
         <View className="bg-white p-4 rounded-lg shadow flex-col">
           <View className="flex-row justify-between items-center">
