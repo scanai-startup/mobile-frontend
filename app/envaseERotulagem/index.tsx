@@ -1,14 +1,10 @@
 import AppHeader from "@/components/AppHeader";
+import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
-import AntDesign from "@expo/vector-icons/AntDesign";
+import { Link } from "expo-router";
+import { CirclePlus } from "lucide-react-native";
 import React from "react";
-import {
-  FlatList,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
 interface Item {
   id: number | string;
@@ -99,14 +95,13 @@ export default function envaseERotulagem() {
         variant="secondary"
         mainText="Envase e Rotulagem"
       />
-      <View className="flex-1 items-center">
-        <TouchableOpacity className="flex-row items-center w-80 h-14 bg-blue-500 rounded-xl px-6 py-3">
-          <AntDesign name="pluscircle" size={24} color="white" />
-          <Text className="text-white font-medium text-base ml-2">
-            ADICIONAR NOVO PROCESSO
-          </Text>
-        </TouchableOpacity>
-
+      <View className="px-7">
+        <Link href="/envaseERotulagem/newFilLab" asChild>
+          <DefaultButton
+            title="ADICIONAR NOVO PROCESSO"
+            icon={<CirclePlus color="white" />}
+          />
+        </Link>
         <FlatList
           data={data}
           keyExtractor={(item) => String(item.id)}

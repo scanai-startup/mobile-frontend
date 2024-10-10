@@ -1,3 +1,4 @@
+import DateInput from "@/components/DateInput";
 import { DefaultButton } from "@/components/DefaultButton";
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -13,17 +14,10 @@ import {
 } from "react-native";
 
 export default function GrapeReception() {
-  const [isDateModalOpen, setIsDateModalOpen] = useState(false);
   const [isHourModalOpen, setIsHourModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedHour, setSelectedHour] = useState(new Date());
 
-  function handleDatePickEvent(event: DateTimePickerEvent, date: Date) {
-    if (event.type === "set") {
-      setSelectedDate(date);
-    }
-    setIsDateModalOpen(false);
-  }
   function handleHourPickEvent(event: DateTimePickerEvent, date: Date) {
     if (event.type === "set") {
       setSelectedHour(date);
@@ -42,25 +36,11 @@ export default function GrapeReception() {
           contentContainerStyle={{ gap: 10 }}
           showsVerticalScrollIndicator={false}
         >
-          <View>
-            <Text className="text-xl">Data</Text>
-            <View className="flex flex-col justify-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
-              <TouchableOpacity onPress={() => setIsDateModalOpen(true)}>
-                <Text className="text-xl">
-                  {selectedDate.toLocaleDateString()}
-                </Text>
-              </TouchableOpacity>
-              {isDateModalOpen && (
-                <DateTimePicker
-                  value={new Date()}
-                  onChange={(event, date) => {
-                    date ? handleDatePickEvent(event, date) : null;
-                  }}
-                  is24Hour
-                />
-              )}
-            </View>
-          </View>
+          <DateInput
+            questionTitle="Data"
+            selectedDate={selectedDate}
+            setSelectedDate={(date) => setSelectedDate(date)}
+          />
           <View>
             <Text className="text-xl">Número da carrada</Text>
             <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
