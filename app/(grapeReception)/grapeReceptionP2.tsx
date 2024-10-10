@@ -1,12 +1,6 @@
-import { Check, X } from "lucide-react-native";
-import React, { useState } from "react";
-import {
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import YesNoButtonField from "@/components/YesNoButtonField";
+import React from "react";
+import { ScrollView, Text, TextInput, View } from "react-native";
 
 export default function GrapeRepectionP2() {
   return (
@@ -66,17 +60,25 @@ export default function GrapeRepectionP2() {
           <View className="mt-6">
             <Text className="text-3xl font-bold">Condições do caminhão</Text>
             <View className="flex flex-col gap-4">
-              <YesNoButton
-                question={"Caminhão em bom estado de conservação?"}
+              <YesNoButtonField
+                yesDescription="Bom estado de conservação"
+                noDescription="Estado de conservação ruim"
+                question="Caminhão em bom estado de conservação?"
               />
-              <YesNoButton
-                question={"Caminhão em boas condições de higiene?"}
+              <YesNoButtonField
+                yesDescription="Boas condições de higiene"
+                noDescription="Condições de higiene ruins"
+                question="Caminhão em boas condições de higiene?"
               />
-              <YesNoButton
-                question={"Contentores de uva em boas condições de uso?"}
+              <YesNoButtonField
+                yesDescription="Boas condições de uso"
+                noDescription="Condições de uso ruins"
+                question="Contentores de uva em boas condições de uso?"
               />
-              <YesNoButton
-                question={"As boas práticas estão sendo mantidas?"}
+              <YesNoButtonField
+                yesDescription="Boas práticas sendo mantidas"
+                noDescription="Boas práticas não mantidas"
+                question="As boas práticas estão sendo mantidas?"
               />
             </View>
           </View>
@@ -85,58 +87,3 @@ export default function GrapeRepectionP2() {
     </View>
   );
 }
-
-const YesNoButton = ({ question }: { question: string }) => {
-  const [buttonState, setButtonState] = useState("yes");
-
-  const handleYesClick = () => setButtonState("yes");
-  const handleNoClick = () => setButtonState("no");
-
-  return (
-    <View className="justify-start">
-      <Text className="text-lg mb-2">{question}</Text>
-      <View className="gap-2">
-        <View className="flex-row flex-wrap items-center">
-          <TouchableOpacity
-            className={`px-7 py-5 rounded mr-2 ${
-              buttonState === "yes" ? "bg-green-400" : "bg-gray-300"
-            }`}
-            onPress={handleYesClick}
-          >
-            <Check
-              color={buttonState === "yes" ? "#15803d" : "#9ca3af"}
-              width={20}
-              height={24}
-            />
-          </TouchableOpacity>
-          <View className="flex-shrink">
-            <Text className="text-black font-semibold text-2xl">Sim</Text>
-            <Text className="text-gray-500 font-semibold text-lg">
-              Bom estado de conservação
-            </Text>
-          </View>
-        </View>
-        <View className="flex-row flex-wrap items-center">
-          <TouchableOpacity
-            className={`px-7 py-5 rounded mr-2 ${
-              buttonState === "no" ? "bg-red-400" : "bg-gray-300"
-            }`}
-            onPress={handleNoClick}
-          >
-            <X
-              width={20}
-              height={24}
-              color={buttonState === "no" ? "#dc2626" : "#9ca3af"}
-            />
-          </TouchableOpacity>
-          <View className="flex-shrink">
-            <Text className="text-black font-semibold text-2xl">Não</Text>
-            <Text className="text-gray-500 font-semibold text-lg">
-              Estado de conservação ruim
-            </Text>
-          </View>
-        </View>
-      </View>
-    </View>
-  );
-};

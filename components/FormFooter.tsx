@@ -16,8 +16,8 @@ export default function FormFooter({
     <View
       style={{
         height: 80,
-        paddingHorizontal: 20,
         borderTopWidth: 1,
+        paddingHorizontal: 20,
         borderTopColor: "#C0C0C0",
       }}
     >
