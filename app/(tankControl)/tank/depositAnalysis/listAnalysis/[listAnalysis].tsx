@@ -40,6 +40,7 @@ export default function ListAnalysis() {
             pathname: "/(tankControl)/tank/depositAnalysis/[newAnalysis]",
             params: {
               tank: tank,
+              newAnalysis: "",
             },
           }}
           asChild

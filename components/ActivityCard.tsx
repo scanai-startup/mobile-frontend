@@ -5,9 +5,9 @@ import { Text, TouchableOpacity } from "react-native";
 interface ActivityCardProps {
   icon: any;
   title: string;
-  route: string;
+  route: string | any;
   type?: string;
-  param?: string;
+  param?: string | string[];
 }
 
 export default function ActivityCard({
