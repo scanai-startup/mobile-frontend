@@ -15,11 +15,12 @@ export function InputBox({ title, ...rest }: InputBoxProps) {
   return (
     <KeyboardAvoidingView className="flex flex-col items-start font-medium h-auto w-full">
       <Text className="text-lg text-black mb-2">{title}</Text>
-      <TextInput
-        className="border border-[#BDBDBD] h-12 w-full p-2 rounded-md placeholder:text-[#BDBDBD]"
-        style={{ backgroundColor: "#D4D4D4", padding: 10, borderRadius: 5 }}
-        {...rest}
-      />
+      <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
+        <TextInput
+          className="h-12 w-full p-2 rounded-md placeholder:text-[#BDBDBD]"
+          {...rest}
+        />
+      </View>
     </KeyboardAvoidingView>
   );
 }

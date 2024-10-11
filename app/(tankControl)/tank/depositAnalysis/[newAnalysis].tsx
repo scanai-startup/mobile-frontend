@@ -72,8 +72,9 @@ export default function DepositAnalysis() {
 
         <View className="mb-4">
           <Text className="text-lg mb-2">Data de registro</Text>
+
           <TextInput
-            className="border border-gray-400 h-12 w-full p-2 rounded-md placeholder-gray-400 bg-gray-300"
+            className="flex-1 bg-[#DEDEDE] py-3 px-3 rounded-lg h-14 placeholder-gray-400"
             value={date}
             onChangeText={setDate}
           />
@@ -83,13 +84,13 @@ export default function DepositAnalysis() {
           <Text className="text-lg mb-2">Densidade</Text>
           <View className="flex-row items-center gap-4">
             <TextInput
-              className="flex-1 border border-gray-400 h-12 p-2 rounded-md placeholder-gray-400 bg-gray-300"
+              className="flex-1 bg-[#DEDEDE] py-3 px-3 rounded-lg h-14 placeholder-gray-400"
               value={densityValue}
               onChangeText={setDensityValue}
               keyboardType="numeric"
             />
             <TextInput
-              className="flex-1 border border-gray-400 h-12 p-2 rounded-md placeholder-gray-400 bg-gray-300"
+              className="flex-1 bg-[#DEDEDE] py-3 px-3 rounded-lg h-14 placeholder-gray-400"
               value={densityUnit}
               onChangeText={setDensityUnit}
             />
@@ -100,19 +101,20 @@ export default function DepositAnalysis() {
           <Text className="text-lg mb-2">Temperatura</Text>
           <View className="flex-row items-center gap-4">
             <TextInput
-              className="flex-1 border border-gray-400 h-12 p-2 rounded-md placeholder-gray-400 bg-gray-300"
+              className="flex-1 bg-[#DEDEDE] py-3 px-3 rounded-lg h-14 placeholder-gray-400"
               value={temperatureValue}
               onChangeText={setTemperatureValue}
               keyboardType="numeric"
             />
             <TextInput
-              className="flex-1 border border-gray-400 h-12 p-2 rounded-md placeholder-gray-400 bg-gray-300"
+              className="flex-1 bg-[#DEDEDE] py-3 px-3 rounded-lg h-14 placeholder-gray-400"
               value={temperatureUnit}
               onChangeText={setTemperatureUnit}
             />
           </View>
         </View>
 
+        {/* Map through each item */}
         {[
           {
             label: "TA",
@@ -210,12 +212,12 @@ export default function DepositAnalysis() {
             <Text className="text-lg mb-2">{item.label}</Text>
             <View className="flex-row items-center gap-4">
               <TextInput
-                className="flex-1 border border-gray-400 h-12 p-2 rounded-md placeholder-gray-400 bg-gray-300"
+                className="flex-1 bg-[#DEDEDE] py-3 px-3 rounded-lg h-14 placeholder-gray-400"
                 value={item.value}
                 onChangeText={item.setValue}
               />
               <TextInput
-                className="flex-1 border border-gray-400 h-12 p-2 rounded-md placeholder-gray-400 bg-gray-300"
+                className="flex-1 bg-[#DEDEDE] py-3 px-3 rounded-lg h-14 placeholder-gray-400"
                 value={item.unit}
                 onChangeText={item.setUnit}
               />
@@ -226,7 +228,7 @@ export default function DepositAnalysis() {
         <View className="mb-4">
           <Text className="text-lg mb-2">PH</Text>
           <TextInput
-            className="border border-gray-400 h-12 w-full p-2 rounded-md placeholder-gray-400 bg-gray-300"
+            className="bg-[#DEDEDE] py-3 px-3 rounded-lg h-14 placeholder-gray-400"
             value={ph}
             onChangeText={setPH}
           />
