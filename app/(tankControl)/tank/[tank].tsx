@@ -1,29 +1,9 @@
 import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
-import {
-  Link,
-  useLocalSearchParams,
-  useNavigation,
-  useRouter,
-} from "expo-router";
-import {
-  ArrowDown,
-  Boxes,
-  ChevronDown,
-  Cylinder,
-  Grape,
-  Search,
-} from "lucide-react-native";
+import { useLocalSearchParams } from "expo-router";
+import { Boxes, ChevronDown, Cylinder, Grape } from "lucide-react-native";
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  SafeAreaView,
-  TouchableOpacity,
-  Button,
-} from "react-native";
+import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
 export default function Tank() {
   const { tank } = useLocalSearchParams();
@@ -53,7 +33,9 @@ export default function Tank() {
     {
       name: "Adicionar Vinho Base",
       icon: <Grape size="28px" color="#000000" />,
-      route: "",
+      route: "/(tankControl)/tank/addBaseWine/[addBaseWine]",
+      type: "tank",
+      param: tank,
     },
     {
       name: "Realizar Trasfega",
