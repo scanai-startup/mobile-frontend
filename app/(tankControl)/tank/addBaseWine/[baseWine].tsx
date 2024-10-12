@@ -4,12 +4,13 @@ import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
 import ShipmentCard from "@/components/ShipmentCard";
 import { ShipmentCardType } from "@/types/ShipmentCardType";
-import { Link } from "expo-router";
-import { CirclePlus } from "lucide-react-native";
+import { Href, Link, useLocalSearchParams } from "expo-router";
 import React from "react";
-import { FlatList, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 
-export default function Shipment() {
+export default function BaseWine() {
+  const { tank } = useLocalSearchParams();
+
   const data: ShipmentCardType[] = [
     {
       number: 101,
@@ -60,6 +61,10 @@ export default function Shipment() {
       type: "Vinho branco",
     },
   ];
+  const href: Href = {
+    pathname: "/tank/[tank]",
+    params: { tank: tank as string },
+  };
   return (
     <>
       <CustomStatusBar barStyle="dark-content" />
@@ -69,30 +74,30 @@ export default function Shipment() {
       >
         <AppHeader
           variant="secondary"
-          mainText="Gestão de remessas"
+          mainText={tank as string}
           showReturnButton
         />
-        <View className="px-7">
-          <Link
-            href="/(grapeReception)?nextHref=(grapeReception)/grapeReceptionP2&prevHref=/"
-            asChild
-          >
-            <DefaultButton
-              title="ADICIONAR NOVA REMESSA"
-              icon={<CirclePlus color="white" />}
-            />
-          </Link>
+        <View className="flex-1 px-7 pb-4">
+          <Text className="text-zinc-950 font-bold text-3xl mb-1">
+            Associar Remessas
+          </Text>
           <FlatList
             data={data}
             keyExtractor={(item) => String(item.id)}
             showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => <ShipmentCard shipment={item} />}
+            renderItem={({ item }) => (
+              <ShipmentCard shipment={item} variant="secondary" />
+            )}
             contentContainerStyle={{
-              paddingVertical: 20,
-              paddingBottom: 160,
+              paddingVertical: 10,
               gap: 10,
             }}
           ></FlatList>
+          <View className="mt-4">
+            <Link href={href} asChild>
+              <DefaultButton title="Concluir" />
+            </Link>
+          </View>
         </View>
       </SafeAreaView>
     </>

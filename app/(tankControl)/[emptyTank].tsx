@@ -1,4 +1,6 @@
-import React from "react";
+import ActivityCard from "@/components/ActivityCard";
+import AppHeader from "@/components/AppHeader";
+import SafeAreaView from "@/components/SafeAreaView";
 import { useLocalSearchParams } from "expo-router";
 import {
   AlertCircle,
@@ -7,10 +9,8 @@ import {
   Grape,
   GrapeIcon,
 } from "lucide-react-native";
-import ActivityCard from "@/components/ActivityCard";
+import React from "react";
 import { FlatList, Text, View } from "react-native";
-import AppHeader from "@/components/AppHeader";
-import SafeAreaView from "@/components/SafeAreaView";
 
 export default function EmptyTank() {
   const { tank } = useLocalSearchParams();
@@ -36,7 +36,9 @@ export default function EmptyTank() {
     {
       name: "Adicionar Vinho Base",
       icon: <GrapeIcon size={28} color="#000000" />,
-      route: "",
+      route: "/(tankControl)/tank/addBaseWine/[addBaseWine]",
+      type: "tank",
+      param: tank,
     },
     {
       name: "Realizar Trasfega",

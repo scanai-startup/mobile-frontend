@@ -14,8 +14,7 @@ export const DefaultButton = forwardRef(
   ) => (
     <Pressable ref={ref}>
       <TouchableOpacity
-        className="flex flex-row justify-center items-center bg-blue-500 rounded-xl py-3 gap-2"
-        style={{ height: 50 }}
+        className="flex flex-row justify-center items-center bg-blue-500 rounded-xl py-3 gap-2 h-16"
         {...TouchableOpacityProps}
       >
         {/* <CirclePlus size="24px" color="white" /> */}
