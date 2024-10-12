@@ -7,7 +7,7 @@ import { ShipmentCardType } from "@/types/ShipmentCardType";
 import { Link } from "expo-router";
 import { CirclePlus } from "lucide-react-native";
 import React from "react";
-import { FlatList, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 
 export default function Shipment() {
   const data: ShipmentCardType[] = [
@@ -92,6 +92,14 @@ export default function Shipment() {
               paddingBottom: 160,
               gap: 10,
             }}
+            ListEmptyComponent={
+              <View className="flex-1 justify-center items-center">
+                <Text className="text-gray-500 text-center mb-4">
+                  Não há remessas cadastradas ainda
+                </Text>
+                <Text className="text-4xl">🚗</Text>
+              </View>
+            }
           ></FlatList>
         </View>
       </SafeAreaView>

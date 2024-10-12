@@ -92,6 +92,14 @@ export default function BaseWine() {
               paddingVertical: 10,
               gap: 10,
             }}
+            ListEmptyComponent={
+              <View className="flex-1 justify-center items-center">
+                <Text className="text-gray-500 text-center mb-4">
+                  Não existe nenhum vinho base cadastrado (remessa).
+                </Text>
+                <Text className="text-4xl">🍷</Text>
+              </View>
+            }
           ></FlatList>
           <View className="mt-4">
             <Link href={href} asChild>
