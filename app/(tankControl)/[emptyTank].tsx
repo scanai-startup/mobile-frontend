@@ -4,10 +4,13 @@ import SafeAreaView from "@/components/SafeAreaView";
 import { useLocalSearchParams } from "expo-router";
 import {
   AlertCircle,
+  ArrowRightLeft,
   Boxes,
   Cylinder,
   Grape,
   GrapeIcon,
+  Microscope,
+  Milk,
 } from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, View } from "react-native";
@@ -24,13 +27,13 @@ export default function EmptyTank() {
     },
     {
       name: "Análises de depósito",
-      icon: <Boxes size={28} color="#000000" />,
+      icon: <Microscope size={28} color="#000000" />,
       route: "/(tankControl)/tank/depositAnalysis/[depositAnalysis]",
       type: "tank",
     },
     {
       name: "Envase e rotulagem",
-      icon: <Grape size={28} color="#000000" />,
+      icon: <Milk size={28} color="#000000" />,
       route: "",
     },
     {
@@ -42,7 +45,7 @@ export default function EmptyTank() {
     },
     {
       name: "Realizar Trasfega",
-      icon: <Grape size={28} color="#000000" />,
+      icon: <ArrowRightLeft size={28} color="#000000" />,
       route: "",
     },
     {
