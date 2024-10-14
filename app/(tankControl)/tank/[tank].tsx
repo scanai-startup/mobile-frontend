@@ -47,9 +47,9 @@ export default function Tank() {
     {
       name: "Adicionar pé de Cuba",
       icon: <Grape size="28px" color="#000000" />,
-      route: "",
-      type: "",
-      param: "",
+      route: "/(tankControl)/tank/addPeDeCuba/[addPeDeCuba]",
+      type: "tank",
+      param: tank,
     },
   ];
 
