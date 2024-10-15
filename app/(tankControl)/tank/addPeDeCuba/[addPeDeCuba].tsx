@@ -3,9 +3,9 @@ import CustomStatusBar from "@/components/CustomStatusBar";
 import DateInput from "@/components/DateInput";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
-import { useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import { CirclePlus, CircleX, Minus, Pencil, Plus } from "lucide-react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   FlatList,
   Modal,
@@ -71,19 +71,74 @@ export default function AddPeDeCuba() {
   ]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductData | null>();
+  const lastProductUpdateRef = useRef<{
+    [key: number]: { date: string; hour: string };
+  }>({});
 
   function handleProductAction(product: ProductData) {
+    // adding or editing any product will trigger this function
     const pIndex = data.findIndex((p) => p.id === product.id);
     if (pIndex !== -1) {
       setData((prev) => prev.map((p, i) => (i === pIndex ? product : p)));
-      setSelectedProduct(null);
+      selectedProduct ? setSelectedProduct(null) : null;
       return;
     }
     setData((prev) => [...prev, product]);
   }
+
   function onDialogClose() {
+    // when closing the dialog this funcion will be called
     setIsModalOpen(false);
-    selectedProduct ?? setSelectedProduct(null);
+    setSelectedProduct(null);
+  }
+
+  function handleChangeProductQuantity(
+    product: ProductData,
+    operation: string
+  ) {
+    const currHour = new Date().toLocaleTimeString();
+    const currDate = new Date().toLocaleDateString();
+    const formatedHour = currHour.slice(0, currHour.length - 6);
+    const formatedDate =
+      currDate.slice(0, currDate.length - 4) +
+      currDate.slice(8, currDate.length);
+    const lastUpdate = lastProductUpdateRef.current[product.id] || {};
+
+    if (lastUpdate.date === formatedDate && lastUpdate.hour === formatedHour) {
+      setData((prev) =>
+        prev.map((p) =>
+          p.id === product.id
+            ? {
+                ...p,
+                quantity:
+                  operation === "add"
+                    ? product.quantity + 10
+                    : product.quantity - 10,
+              }
+            : p
+        )
+      );
+    } else {
+      setData((prev) =>
+        prev.map((p) =>
+          p.id === product.id
+            ? {
+                ...p,
+                quantity:
+                  operation === "add"
+                    ? product.quantity + 10
+                    : product.quantity - 10,
+                hourAdded: formatedHour,
+                dateAdded: formatedDate,
+              }
+            : p
+        )
+      );
+      lastProductUpdateRef.current[product.id] = {
+        date: formatedDate,
+        hour: formatedHour,
+      };
+    }
   }
 
   return (
@@ -102,7 +157,7 @@ export default function AddPeDeCuba() {
           <ProductInfoModal
             handleCloseDialog={() => onDialogClose()}
             isDialogOpen={isModalOpen}
-            handleSetProduct={(p) => handleProductAction(p)}
+            handleProductAction={(p) => handleProductAction(p)}
             product={selectedProduct ? selectedProduct : null}
           />
           <DateInput
@@ -152,6 +207,9 @@ export default function AddPeDeCuba() {
                   setIsModalOpen(v);
                   setSelectedProduct(item);
                 }}
+                onChangeProductQuantity={(op: string) =>
+                  handleChangeProductQuantity(item, op)
+                }
               />
             )}
             contentContainerStyle={{
@@ -164,6 +222,12 @@ export default function AddPeDeCuba() {
               </View>
             }
           ></FlatList>
+          <Link href="/" asChild>
+            <DefaultButton
+              title="CONCLUIR"
+              onPress={() => setIsModalOpen(true)}
+            />
+          </Link>
         </View>
       </SafeAreaView>
     </>
@@ -174,39 +238,42 @@ interface ProductCardP {
   product: ProductData;
   onRemove: (id: number) => void;
   handleEditProductClick: (v: boolean) => void;
+  onChangeProductQuantity: (operation: string) => void;
 }
 export function ProductCard({
   product,
   onRemove,
   handleEditProductClick,
+  onChangeProductQuantity,
 }: ProductCardP) {
   return (
     <View className="flex-row justify-between items-center bg-white p-6 rounded-md">
-      <View>
-        <View className="flex-row items-center gap-3">
-          <TouchableOpacity
-            className="p-2 bg-blue-100 rounded-lg"
-            onPress={() => handleEditProductClick(true)}
-          >
-            <Pencil color="blue" />
+      <View className="flex-row flex-1 items-center gap-3">
+        <TouchableOpacity
+          className="p-2 bg-blue-100 rounded-lg"
+          onPress={() => handleEditProductClick(true)}
+        >
+          <Pencil color="blue" />
+        </TouchableOpacity>
+        <View>
+          <TouchableOpacity onPress={() => onChangeProductQuantity("add")}>
+            <Plus color="black" />
           </TouchableOpacity>
-          <View>
-            <TouchableOpacity>
-              <Plus color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Minus color="black" />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <Text className="text-xl font-semibold max-w-52">
-              {product.quantity} {product.unity === "liters" ? "litros" : "kg"}{" "}
-              de {product.name}
-            </Text>
-            <View className="flex-row justify-between">
-              <Text className="text-sm">{product.dateAdded}</Text>
-              <Text className="text-sm">{product.hourAdded}</Text>
-            </View>
+          <TouchableOpacity
+            onPress={() => onChangeProductQuantity("minus")}
+            disabled={product.quantity <= 0}
+          >
+            <Minus color="black" />
+          </TouchableOpacity>
+        </View>
+        <View className="flex-1">
+          <Text className="text-xl font-semibold max-w-52" numberOfLines={1}>
+            {product.quantity} {product.unity === "liters" ? "litros" : "kg"} de{" "}
+            {product.name}
+          </Text>
+          <View className="flex-row justify-between pr-2">
+            <Text className="text-sm">{product.dateAdded}</Text>
+            <Text className="text-sm">{product.hourAdded}</Text>
           </View>
         </View>
       </View>
@@ -221,43 +288,55 @@ interface ProductInfoModalP {
   product?: ProductData | null;
   handleCloseDialog: () => void;
   isDialogOpen: boolean;
-  handleSetProduct: (product: ProductData) => void;
+  handleProductAction: (product: ProductData) => void;
 }
 export function ProductInfoModal({
   handleCloseDialog,
   product,
   isDialogOpen,
-  handleSetProduct,
+  handleProductAction,
 }: ProductInfoModalP) {
   const [productUnity, setProductUnity] = useState<"liters" | "kilogram">(
-    "kilogram"
+    "liters"
   );
   const [productName, setProductName] = useState("");
   const [productQuantity, setProductQuantity] = useState("");
 
   function handleAddProduct() {
+    // if the component recieved a product it means that the user is editing a product
+    const addedHour = new Date().toLocaleTimeString();
+    const addedDate = new Date().toLocaleDateString();
     if (product) {
       product = {
         ...product,
         name: productName,
         quantity: parseInt(productQuantity),
         unity: productUnity,
+        dateAdded:
+          addedDate.slice(0, addedDate.length - 4) +
+          addedDate.slice(8, addedDate.length),
+        hourAdded: addedHour.slice(0, addedHour.length - 6),
       };
-      handleSetProduct(product);
+      handleProductAction(product);
     } else {
+      // otherwise, its adding a product
       const data: ProductData = {
         id: Math.floor(Math.random() * 100),
         name: productName,
         quantity: parseInt(productQuantity),
         unity: productUnity,
-        dateAdded: "08/07/25",
-        hourAdded: "11:15",
+        dateAdded:
+          addedDate.slice(0, addedDate.length - 4) +
+          addedDate.slice(8, addedDate.length),
+        hourAdded: addedHour.slice(0, addedHour.length - 6),
       };
-      handleSetProduct(data);
+      handleProductAction(data);
     }
     onDialogClose();
   }
+
   function onDialogClose() {
+    // function to clear all the input values and close the dialog
     setProductName("");
     setProductQuantity("");
     handleCloseDialog();
