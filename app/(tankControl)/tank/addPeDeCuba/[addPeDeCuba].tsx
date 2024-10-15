@@ -5,9 +5,11 @@ import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useLocalSearchParams } from "expo-router";
 import { CirclePlus, CircleX, Minus, Pencil, Plus } from "lucide-react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
+  Modal,
+  Pressable,
   Text,
   TextInput,
   TouchableOpacity,
@@ -22,7 +24,6 @@ interface ProductData {
   dateAdded: string;
   hourAdded: string;
 }
-
 export default function AddPeDeCuba() {
   const { tank } = useLocalSearchParams();
   const [trasfegaDate, setTrasfegaDate] = useState<Date>(new Date());
@@ -68,7 +69,23 @@ export default function AddPeDeCuba() {
       hourAdded: "18:15",
     },
   ]);
-  //   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<ProductData | null>();
+
+  function handleProductAction(product: ProductData) {
+    const pIndex = data.findIndex((p) => p.id === product.id);
+    if (pIndex !== -1) {
+      setData((prev) => prev.map((p, i) => (i === pIndex ? product : p)));
+      setSelectedProduct(null);
+      return;
+    }
+    setData((prev) => [...prev, product]);
+  }
+  function onDialogClose() {
+    setIsModalOpen(false);
+    selectedProduct ?? setSelectedProduct(null);
+  }
+
   return (
     <>
       <CustomStatusBar barStyle="dark-content" />
@@ -82,6 +99,12 @@ export default function AddPeDeCuba() {
           showReturnButton
         />
         <View className="flex-1 gap-4 px-7 pb-4">
+          <ProductInfoModal
+            handleCloseDialog={() => onDialogClose()}
+            isDialogOpen={isModalOpen}
+            handleSetProduct={(p) => handleProductAction(p)}
+            product={selectedProduct ? selectedProduct : null}
+          />
           <DateInput
             questionTitle="Data da trasfega"
             selectedDate={trasfegaDate}
@@ -113,7 +136,7 @@ export default function AddPeDeCuba() {
           <DefaultButton
             title="ADICIONAR NOVO PRODUTO"
             icon={<CirclePlus color="white" />}
-            // onPress={() => setIsModalOpen(true)}
+            onPress={() => setIsModalOpen(true)}
           />
           <FlatList
             data={data}
@@ -125,6 +148,10 @@ export default function AddPeDeCuba() {
                 onRemove={(id: number) =>
                   setData((prev) => prev.filter((p) => p.id !== id))
                 }
+                handleEditProductClick={(v) => {
+                  setIsModalOpen(v);
+                  setSelectedProduct(item);
+                }}
               />
             )}
             contentContainerStyle={{
@@ -142,16 +169,25 @@ export default function AddPeDeCuba() {
     </>
   );
 }
+
 interface ProductCardP {
   product: ProductData;
   onRemove: (id: number) => void;
+  handleEditProductClick: (v: boolean) => void;
 }
-export function ProductCard({ product, onRemove }: ProductCardP) {
+export function ProductCard({
+  product,
+  onRemove,
+  handleEditProductClick,
+}: ProductCardP) {
   return (
     <View className="flex-row justify-between items-center bg-white p-6 rounded-md">
       <View>
         <View className="flex-row items-center gap-3">
-          <TouchableOpacity className="p-2 bg-blue-100 rounded-lg">
+          <TouchableOpacity
+            className="p-2 bg-blue-100 rounded-lg"
+            onPress={() => handleEditProductClick(true)}
+          >
             <Pencil color="blue" />
           </TouchableOpacity>
           <View>
@@ -178,5 +214,124 @@ export function ProductCard({ product, onRemove }: ProductCardP) {
         <CircleX color="white" size="32" fill="#F87171" />
       </TouchableOpacity>
     </View>
+  );
+}
+
+interface ProductInfoModalP {
+  product?: ProductData | null;
+  handleCloseDialog: () => void;
+  isDialogOpen: boolean;
+  handleSetProduct: (product: ProductData) => void;
+}
+export function ProductInfoModal({
+  handleCloseDialog,
+  product,
+  isDialogOpen,
+  handleSetProduct,
+}: ProductInfoModalP) {
+  const [productUnity, setProductUnity] = useState<"liters" | "kilogram">(
+    "kilogram"
+  );
+  const [productName, setProductName] = useState("");
+  const [productQuantity, setProductQuantity] = useState("");
+
+  function handleAddProduct() {
+    if (product) {
+      product = {
+        ...product,
+        name: productName,
+        quantity: parseInt(productQuantity),
+        unity: productUnity,
+      };
+      handleSetProduct(product);
+    } else {
+      const data: ProductData = {
+        id: Math.floor(Math.random() * 100),
+        name: productName,
+        quantity: parseInt(productQuantity),
+        unity: productUnity,
+        dateAdded: "08/07/25",
+        hourAdded: "11:15",
+      };
+      handleSetProduct(data);
+    }
+    onDialogClose();
+  }
+  function onDialogClose() {
+    setProductName("");
+    setProductQuantity("");
+    handleCloseDialog();
+  }
+
+  useEffect(() => {
+    if (product) {
+      setProductName(product.name);
+      setProductQuantity(String(product.quantity));
+    }
+  }, [product]);
+
+  return (
+    <Modal
+      transparent
+      animationType="fade"
+      className="bg-[#DEDEDE] py-3 px-3 rounded-b-lg"
+      visible={isDialogOpen}
+    >
+      <View
+        className="flex-1"
+        style={{
+          backgroundColor: "rgba(0, 0, 0, 0.5)",
+        }}
+      >
+        <Pressable className="flex-1" onPress={() => onDialogClose()} />
+        <View className="bg-white px-7 py-5 gap-4 rounded-t-3xl h-[350px]">
+          <Text className="text-zinc-950 font-bold text-3xl mb-1">
+            {product ? "Editar produto" : "Novo Produto"}
+          </Text>
+          <View className="justify-between gap-4">
+            <View>
+              <Text className="text-xl">Nome do produto</Text>
+              <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
+                <TextInput
+                  className="text-xl ml-2 flex-1"
+                  placeholder="Dep.100"
+                  value={productName}
+                  onChangeText={(v) => setProductName(v)}
+                />
+              </View>
+            </View>
+            <View>
+              <Text className="text-xl">Quantidade</Text>
+              <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
+                <TextInput
+                  className="text-xl ml-2 flex-1"
+                  placeholder="1.200"
+                  value={productQuantity}
+                  onChangeText={(v) => setProductQuantity(v)}
+                />
+                <TouchableOpacity
+                  onPress={() => {
+                    productUnity === "kilogram"
+                      ? setProductUnity("liters")
+                      : setProductUnity("kilogram");
+                  }}
+                >
+                  <Text className="text-lg">
+                    {productUnity === "kilogram" ? "kg" : "litros"}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+          <View className="flex-1 justify-end">
+            <DefaultButton
+              title={product ? "EDITAR PRODUTO" : "ADICIONAR PRODUTO"}
+              icon={<CirclePlus color="white" />}
+              onPress={() => handleAddProduct()}
+            />
+          </View>
+        </View>
+      </View>
+    </Modal>
   );
 }
