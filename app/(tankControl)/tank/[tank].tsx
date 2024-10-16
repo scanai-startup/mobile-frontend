@@ -1,7 +1,15 @@
 import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
 import { useLocalSearchParams } from "expo-router";
-import { Boxes, ChevronDown, Cylinder, Grape } from "lucide-react-native";
+import {
+  ArrowRightLeft,
+  Boxes,
+  ChevronDown,
+  Cylinder,
+  Grape,
+  Microscope,
+  Milk,
+} from "lucide-react-native";
 import React from "react";
 import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
@@ -18,14 +26,14 @@ export default function Tank() {
     },
     {
       name: "Análises de deposito",
-      icon: <Boxes size="28px" color="#000000" />,
+      icon: <Microscope size="28px" color="#000000" />,
       route: "/(tankControl)/tank/depositAnalysis/[depositAnalysis]",
       type: "tank",
       param: tank,
     },
     {
       name: "Envase e rotulagem",
-      icon: <Grape size="28px" color="#000000" />,
+      icon: <Milk size="28px" color="#000000" />,
       route: "",
       type: "",
       param: "",
@@ -39,7 +47,7 @@ export default function Tank() {
     },
     {
       name: "Realizar Trasfega",
-      icon: <Grape size="28px" color="#000000" />,
+      icon: <ArrowRightLeft size="28px" color="#000000" />,
       route: "",
       type: "",
       param: "",

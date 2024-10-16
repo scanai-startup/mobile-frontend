@@ -25,7 +25,7 @@ const data: Analysis[] = [
 export default function DailyAnalysis() {
   const { tank } = useLocalSearchParams();
 
-  console.log(tank);
+  console.log(tank, data.length);
 
   return (
     <SafeAreaView className="flex-1 bg-gray-100">
@@ -37,7 +37,7 @@ export default function DailyAnalysis() {
       <View className="p-4">
         <Link
           href={{
-            pathname: "/(tankControl)/tank/depositAnalysis/[depositAnalysis]",
+            pathname: "/(tankControl)/tank/depositAnalysis/[depositAnalysis]/",
             params: {
               tank: tank,
             },
@@ -53,6 +53,14 @@ export default function DailyAnalysis() {
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => <AnalysisCard item={item} />}
           contentContainerStyle={{ gap: 16 }}
+          ListEmptyComponent={
+            <View className="flex-1 justify-center items-center">
+              <Text className="text-gray-500 text-center mb-4">
+                Não há análises feitas ainda neste tanque
+              </Text>
+              <Text className="text-4xl">📊</Text>
+            </View>
+          }
         />
       </View>
     </SafeAreaView>

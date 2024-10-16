@@ -2,7 +2,14 @@ import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
-import { Boxes, Cylinder, Grape, Truck } from "lucide-react-native";
+import {
+  Boxes,
+  Cylinder,
+  Grape,
+  LucideBox,
+  Truck,
+  Wine,
+} from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
@@ -19,19 +26,14 @@ export default function Home() {
       route: "/(tabs)/shipment",
     },
     {
-      name: "Recepção de uvas",
-      icon: <Boxes size="28px" color="#000000" />,
-      route: "/(grapeReception)?nextHref=(grapeReception)/grapeReceptionP2",
-    },
-    {
-      name: "Iniciar nova produção",
-      icon: <Grape size="28px" color="#000000" />,
-      route: "",
-    },
-    {
       name: "Envase e Rotulagem",
-      icon: <Grape size="28px" color="#000000" />,
+      icon: <Wine size="28px" color="#000000" />,
       route: "/envaseERotulagem",
+    },
+    {
+      name: "Controle de estoque",
+      icon: <LucideBox size="28px" color="#000000" />,
+      route: "",
     },
   ];
   return (
