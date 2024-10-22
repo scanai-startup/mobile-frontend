@@ -1,17 +1,17 @@
+import AppHeader from "@/components/AppHeader";
+import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
-import { Search, Filter } from "lucide-react-native";
+import { Link, useRouter } from "expo-router";
+import { Search } from "lucide-react-native";
+import React, { useState } from "react";
 import {
+  FlatList,
+  Modal,
   Text,
   TextInput,
-  View,
   TouchableOpacity,
-  Modal,
-  FlatList,
+  View,
 } from "react-native";
-import { useState } from "react";
-import { Link, useRouter } from "expo-router";
-import AppHeader from "@/components/AppHeader";
-import React from "react";
 
 interface CardProps {
   title: string;
@@ -67,36 +67,56 @@ function Card({
     : { pathname: "/tank/[tank]", params: { tank: title } };
 
   return (
-    <Link href={href} style={{ marginBottom: 16, width: "100%" }} asChild>
-      <TouchableOpacity>
-        <View className="bg-white p-4 rounded-lg shadow flex-col">
-          <View className="flex-row justify-between items-center">
-            <Text className="text-lg font-bold">{title}</Text>
+    <Link href={href} asChild>
+      <TouchableOpacity style={{ marginBottom: 16, width: "100%" }}>
+        <View className="bg-white rounded-lg shadow flex-col border border-neutral-250">
+          <View className="flex-row p-4 justify-between items-center">
+            <Text className="text-2xl font-bold">{title}</Text>
             {isAvailable ? (
               <View className="bg-green-200 px-2 py-1 rounded-full">
-                <Text className="text-xs text-green-800">Disponível</Text>
+                <Text className="text-md text-green-800">Disponível</Text>
               </View>
             ) : (
               <View className="bg-red-200 px-2 py-1 rounded-full">
-                <Text className="text-xs text-red-800">Ocupado</Text>
+                <Text className="text-md text-red-800">Ocupado</Text>
               </View>
             )}
           </View>
           {!isAvailable && (
-            <View className="mt-2 space-y-1">
-              <View className="flex-row justify-between">
-                <Text className="text-base">Densidade:</Text>
-                <Text className="text-lg">{density} kg/m³</Text>
+            <>
+              <View className="w-full h-[1px] bg-neutral-250"></View>
+              <View className="p-4">
+                <View className="flex-row justify-between items-center">
+                  <Text className="text-xl">Densidade:</Text>
+                  <View className="flex-row justify-center items-end">
+                    <Text className="text-2xl font-semibold">{density} </Text>
+                    <Text className="text-base font-normal text-neutral-400">
+                      kg/m³
+                    </Text>
+                  </View>
+                </View>
+                <View className="flex-row justify-between">
+                  <Text className="text-xl">Temperatura:</Text>
+                  <View className="flex-row justify-center items-end">
+                    <Text className="text-2xl font-semibold">
+                      {temperature}{" "}
+                    </Text>
+                    <Text className="text-base font-normal text-neutral-400">
+                      °C
+                    </Text>
+                  </View>
+                </View>
+                <View className="flex-row justify-between">
+                  <Text className="text-xl">Pressão:</Text>
+                  <View className="flex-row justify-center items-end">
+                    <Text className="text-2xl font-semibold">{pressure} </Text>
+                    <Text className="text-base font-normal text-neutral-400">
+                      Pa
+                    </Text>
+                  </View>
+                </View>
               </View>
-              <View className="flex-row justify-between">
-                <Text className="text-base">Temperatura:</Text>
-                <Text className="text-lg">{temperature} °C</Text>
-              </View>
-              <View className="flex-row justify-between">
-                <Text className="text-base">Pressão:</Text>
-                <Text className="text-lg">{pressure} Pa</Text>
-              </View>
-            </View>
+            </>
           )}
         </View>
       </TouchableOpacity>
@@ -132,64 +152,70 @@ export default function TankControl() {
       pressure: 100000,
     },
     { title: "Tanque 6", isAvailable: true },
+    { title: "Tanque 8", isAvailable: true },
   ];
 
   return (
-    <SafeAreaView className="flex-1 p-4">
-      <AppHeader
-        showReturnButton
-        variant="secondary"
-        mainText="Controle de tanques"
-      />
-      <View>
-        <Text className="text-4xl text-black mt-4 font-bold">
-          Controle de tanques.
-        </Text>
-        <Text className="text-xl mt-2 mb-4">
-          Lista de todas as informações acessíveis no momento.
-        </Text>
-      </View>
-      <View className="flex flex-row items-center w-full mb-4">
-        <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg flex-1">
-          <Search size="25px" color="#9A9A9A" />
-          <TextInput
-            className="text-xl ml-2 flex-1"
-            placeholder="Digite o que deseja buscar..."
+    <>
+      <CustomStatusBar barStyle="dark-content" />
+      <SafeAreaView>
+        <AppHeader
+          showReturnButton
+          variant="secondary"
+          mainText="Controle de tanques"
+        />
+        <View className="px-7 flex-1">
+          <View>
+            <Text className="text-4xl text-black font-bold">
+              Controle de tanques.
+            </Text>
+            <Text className="text-xl mt-2 mb-4">
+              Lista de todas as informações acessíveis no momento.
+            </Text>
+          </View>
+          <View className="flex flex-row items-center w-full mb-4">
+            <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg flex-1">
+              <Search size="25px" color="#9A9A9A" />
+              <TextInput
+                className="text-xl ml-2 flex-1"
+                placeholder="Digite o que deseja buscar..."
+              />
+            </View>
+            <TouchableOpacity
+              onPress={() => setDrawerVisible(true)}
+              style={{
+                backgroundColor: "#007BFF",
+                paddingVertical: 14,
+                paddingHorizontal: 15,
+                borderRadius: 5,
+                marginLeft: 8,
+              }}
+            >
+              <Text style={{ color: "#FFFFFF", fontWeight: "semibold" }}>
+                Filtrar
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <FlatList
+            data={data}
+            renderItem={({ item }) => (
+              <Card
+                title={item.title}
+                isAvailable={item.isAvailable}
+                density={item.density}
+                temperature={item.temperature}
+                pressure={item.pressure == 0 ? 0 : undefined}
+              />
+            )}
+            keyExtractor={(item) => item.title}
+            showsVerticalScrollIndicator={false}
+          />
+          <FilterDrawer
+            visible={drawerVisible}
+            onClose={() => setDrawerVisible(false)}
           />
         </View>
-        <TouchableOpacity
-          onPress={() => setDrawerVisible(true)}
-          style={{
-            backgroundColor: "#007BFF",
-            paddingVertical: 14,
-            paddingHorizontal: 15,
-            borderRadius: 5,
-            marginLeft: 8,
-          }}
-        >
-          <Text style={{ color: "#FFFFFF", fontWeight: "semibold" }}>
-            Filtrar
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <FlatList
-        data={data}
-        renderItem={({ item }) => (
-          <Card
-            title={item.title}
-            isAvailable={item.isAvailable}
-            density={item.density}
-            temperature={item.temperature}
-            pressure={item.pressure == 0 ? 0 : undefined}
-          />
-        )}
-        keyExtractor={(item) => item.title}
-        className="flex-1"
-      />
-      <FilterDrawer
-        visible={drawerVisible}
-        onClose={() => setDrawerVisible(false)}
-      />
-    </SafeAreaView>
+      </SafeAreaView>
+    </>
   );
 }

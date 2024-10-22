@@ -2,14 +2,7 @@ import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
-import {
-  Boxes,
-  Cylinder,
-  Grape,
-  LucideBox,
-  Truck,
-  Wine,
-} from "lucide-react-native";
+import { Cylinder, LucideBox, Truck, Wine } from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
@@ -38,11 +31,8 @@ export default function Home() {
   ];
   return (
     <>
-      <CustomStatusBar backgroundColor="#18181b" />
-      <SafeAreaView
-        style={{ flex: 1, gap: 20 }}
-        edges={["right", "bottom", "left"]}
-      >
+      <CustomStatusBar backgroundColor="#18181b" barStyle="light-content" />
+      <SafeAreaView>
         <AppHeader mainText="Olá, Nome." />
         <View>
           <View>

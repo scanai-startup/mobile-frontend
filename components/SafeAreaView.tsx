@@ -1,3 +1,4 @@
+import React from "react";
 import {
   SafeAreaView as SafeArea,
   SafeAreaViewProps as props,
@@ -12,8 +13,9 @@ export default function SafeAreaView({ children, ...rest }: SafeAreaViewProps) {
     <SafeArea
       style={{
         flex: 1,
-        paddingHorizontal: 24,
+        gap: 20,
       }}
+      edges={["right", "left", "bottom"]}
       {...rest}
     >
       {children}
