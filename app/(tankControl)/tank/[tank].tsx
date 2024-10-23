@@ -37,7 +37,7 @@ export default function Tank() {
     {
       name: "Envase e rotulagem",
       icon: <Milk size="28px" color="#000000" />,
-      route: "/(tankControl)/tank/envaseERotulagem/[envase]",
+      route: "/envaseERotulagem/envase",
       type: "",
       param: "",
     },

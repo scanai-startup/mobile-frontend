@@ -70,7 +70,7 @@ export default function EnvaseERotulagem() {
           returnHref={router.back}
         />
         <View style={{ alignItems: "center", marginVertical: 20 }}>
-        <Link href="/(tankControl)/tank/envaseERotulagem/newFilLab/newFilLab" asChild>
+        <Link href="/envaseERotulagem/newFilLab/newFilLab" asChild>
           <TouchableOpacity
             style={{
               flexDirection: "row",
