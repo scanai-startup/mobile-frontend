@@ -34,7 +34,8 @@ export default function EmptyTank() {
     {
       name: "Envase e rotulagem",
       icon: <Milk size={28} color="#000000" />,
-      route: "",
+      route: "/(tankControl)/tank/envaseERotulagem/[envase]",
+      type: "tank",
     },
     {
       name: "Adicionar Vinho Base",

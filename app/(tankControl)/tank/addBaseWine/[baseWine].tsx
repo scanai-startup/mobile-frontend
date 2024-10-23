@@ -1,4 +1,5 @@
 import AppHeader from "@/components/AppHeader";
+import { useRouter } from "expo-router";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
@@ -9,6 +10,7 @@ import React from "react";
 import { FlatList, Text, View } from "react-native";
 
 export default function BaseWine() {
+  const router = useRouter();
   const { tank } = useLocalSearchParams();
 
   const data: ShipmentCardType[] = [
@@ -76,6 +78,7 @@ export default function BaseWine() {
           variant="secondary"
           mainText={tank as string}
           showReturnButton
+          returnHref={router.back}
         />
         <View className="flex-1 px-7 pb-4">
           <Text className="text-zinc-950 font-bold text-3xl mb-1">

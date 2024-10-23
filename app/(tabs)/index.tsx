@@ -28,7 +28,7 @@ export default function Home() {
     {
       name: "Envase e Rotulagem",
       icon: <Wine size="28px" color="#000000" />,
-      route: "/envaseERotulagem",
+      route: "/envaseERotulagem/envase",
     },
     {
       name: "Controle de estoque",

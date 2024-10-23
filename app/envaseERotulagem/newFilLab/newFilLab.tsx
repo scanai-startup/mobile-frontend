@@ -1,4 +1,5 @@
 import AppHeader from "@/components/AppHeader";
+import { useRouter } from "expo-router";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import DateInput from "@/components/DateInput";
 import FormFooter from "@/components/FormFooter";
@@ -82,7 +83,7 @@ export default function newFilLab() {
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedStage, setSelectedStage] = useState<StageInfo | null>(null);
-
+  const router = useRouter();
   return (
     <>
       <CustomStatusBar barStyle="dark-content" />
@@ -91,6 +92,7 @@ export default function newFilLab() {
           showReturnButton
           variant="secondary"
           mainText="Envase e Rotulagem"
+          returnHref={router.back}
         />
         <ScrollView contentContainerClassName="p-7 gap-6">
           <TouchableOpacity

@@ -60,7 +60,7 @@ function Card({
   temperature = 0,
   pressure = 0,
 }: CardProps) {
-  const router = useRouter();
+  
 
   const href = isAvailable
     ? { pathname: "/(tankControl)/[emptyTank]", params: { tank: title } }
@@ -106,6 +106,7 @@ function Card({
 
 export default function TankControl() {
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const router = useRouter();
 
   const data = [
     { title: "Tanque 1", isAvailable: true },
@@ -135,11 +136,12 @@ export default function TankControl() {
   ];
 
   return (
-    <SafeAreaView className="flex-1 p-4">
+    <SafeAreaView className="flex-1">
       <AppHeader
         showReturnButton
         variant="secondary"
         mainText="Controle de tanques"
+        returnHref={router.back}
       />
       <View>
         <Text className="text-4xl text-black mt-4 font-bold">

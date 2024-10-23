@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import { Link, useLocalSearchParams } from "expo-router";
 import SafeAreaView from "@/components/SafeAreaView";
 import AppHeader from "@/components/AppHeader";
+import { useRouter } from "expo-router";
 
 interface Analysis {
   id: string;
@@ -24,6 +25,7 @@ const data: Analysis[] = [
 
 export default function ListAnalysis() {
   const { tank } = useLocalSearchParams();
+  const router = useRouter();
 
   console.log(tank);
 
@@ -33,6 +35,7 @@ export default function ListAnalysis() {
         mainText={`LISTA ANALISES`}
         variant="secondary"
         showReturnButton
+        returnHref={router.back}
       />
       <View className="p-4">
         <Link

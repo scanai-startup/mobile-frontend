@@ -1,4 +1,5 @@
 import AppHeader from "@/components/AppHeader";
+import { useRouter } from "expo-router";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import DateInput from "@/components/DateInput";
 import { DefaultButton } from "@/components/DefaultButton";
@@ -25,6 +26,7 @@ interface ProductData {
   hourAdded: string;
 }
 export default function AddPeDeCuba() {
+  const router = useRouter();
   const { tank } = useLocalSearchParams();
   const [trasfegaDate, setTrasfegaDate] = useState<Date>(new Date());
   const [data, setData] = useState<ProductData[]>([
@@ -152,6 +154,7 @@ export default function AddPeDeCuba() {
           variant="secondary"
           mainText="Adicionar Pé de Cuba"
           showReturnButton
+          returnHref={router.back}
         />
         <View className="flex-1 gap-4 px-7 pb-4">
           <ProductInfoModal

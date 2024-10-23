@@ -1,5 +1,7 @@
 import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
+import { useRouter } from "expo-router";
+
 import { useLocalSearchParams } from "expo-router";
 import {
   ArrowRightLeft,
@@ -13,9 +15,10 @@ import {
 import React from "react";
 import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
+
 export default function Tank() {
   const { tank } = useLocalSearchParams();
-
+  const router = useRouter();
   const activityListItems = [
     {
       name: "Análises diárias",
@@ -34,7 +37,7 @@ export default function Tank() {
     {
       name: "Envase e rotulagem",
       icon: <Milk size="28px" color="#000000" />,
-      route: "",
+      route: "/envaseERotulagem/envase",
       type: "",
       param: "",
     },
@@ -48,7 +51,7 @@ export default function Tank() {
     {
       name: "Realizar Trasfega",
       icon: <ArrowRightLeft size="28px" color="#000000" />,
-      route: "",
+      route: "/(tankControl)/tank/realizarTrasfega/[trasfega]",
       type: "",
       param: "",
     },
@@ -63,7 +66,7 @@ export default function Tank() {
 
   return (
     <SafeAreaView className="flex-1 p-4">
-      <AppHeader showReturnButton variant="secondary" mainText={`${tank}`} />
+      <AppHeader showReturnButton variant="secondary" mainText={`${tank}`} returnHref={router.back} />
       <View>
         <Text className="text-zinc-950 font-bold text-2xl ml-7 mb-4">
           Ações

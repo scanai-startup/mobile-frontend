@@ -8,10 +8,12 @@ import {
 } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import SafeAreaView from "@/components/SafeAreaView";
+import { useRouter } from "expo-router";
 import AppHeader from "@/components/AppHeader";
 
 export default function DepositAnalysis() {
   const { tank } = useLocalSearchParams();
+  const router = useRouter();
 
   const [date, setDate] = useState("09/07/24");
   const [densityValue, setDensityValue] = useState("1030");
@@ -66,6 +68,7 @@ export default function DepositAnalysis() {
         mainText={`Nova análise depósito`}
         variant="secondary"
         showReturnButton
+        returnHref={router.back}
       />
       <ScrollView contentContainerStyle={{ padding: 4 }}>
         <Text className="text-2xl mb-4 text-black">{tank}</Text>
