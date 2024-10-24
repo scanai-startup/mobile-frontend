@@ -1,5 +1,4 @@
 import AppHeader from "@/components/AppHeader";
-import CustomStatusBar from "@/components/CustomStatusBar";
 import DateInput from "@/components/DateInput";
 import FormFooter from "@/components/FormFooter";
 import HourInput from "@/components/HourInput";
@@ -85,12 +84,12 @@ export default function newFilLab() {
 
   return (
     <>
-      <CustomStatusBar barStyle="dark-content" />
       <SafeAreaView style={{ flex: 1 }} edges={["right", "bottom", "left"]}>
         <AppHeader
           showReturnButton
           variant="secondary"
           mainText="Envase e Rotulagem"
+          returnHref="/envaseERotulagem"
         />
         <ScrollView contentContainerClassName="p-7 gap-6">
           <TouchableOpacity
@@ -213,7 +212,7 @@ export default function newFilLab() {
             </View>
           </View>
         </ScrollView>
-        <FormFooter nextHref="/" />
+        <FormFooter nextHref="/envaseERotulagem" />
       </SafeAreaView>
     </>
   );

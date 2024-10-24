@@ -59,29 +59,31 @@ const data = [
 ];
 const Card = ({ item }: { item: Item }) => {
   return (
-    <View className="max-w-96 w-96 h-56 p-2 shadow rounded-sm bg-white mb-3">
-      <View className="flex-row justify-between items-end mb-4">
-        <Text className="font-medium text-lg">LOTE {item.lote}</Text>
+    <View className="shadow bg-white mb-3 rounded-md border border-neutral-250">
+      <View className="flex-row justify-between items-center p-4">
+        <Text className="font-semibold text-2xl">LOTE {item.lote}</Text>
         <TouchableOpacity>
-          <Text className="color-blue-500">Detalhes</Text>
+          <Text className="text-md color-blue-500">Detalhes</Text>
         </TouchableOpacity>
       </View>
-      <View className="h-0.5 w-full flex-row justify-center bg-neutral-200" />
-      <View className="flex-row items-end justify-between mb-2">
-        <Text className="font-light">Produto</Text>
-        <Text className="font-medium text-lg">{item.produto}</Text>
-      </View>
-      <View className="flex-row items-end justify-between mb-2">
-        <Text className="font-light">Data</Text>
-        <Text className="font-medium text-lg">{item.data}</Text>
-      </View>
-      <View className="flex-row items-end justify-between mb-2">
-        <Text className="font-light">Volume</Text>
-        <Text className="font-medium text-lg">{item.volume}</Text>
-      </View>
-      <View className="flex-row items-end justify-between mb-2">
-        <Text className="font-light">Depósito</Text>
-        <Text className="font-medium text-lg">{item.deposito}</Text>
+      <View className="h-[1px] w-full flex-row justify-center bg-neutral-250" />
+      <View className="p-4">
+        <View className="flex-row items-center justify-between mb-2">
+          <Text className="font-light text-xl">Produto</Text>
+          <Text className="font-medium text-2xl">{item.produto}</Text>
+        </View>
+        <View className="flex-row items-center justify-between mb-2">
+          <Text className="font-light text-xl">Data</Text>
+          <Text className="font-medium text-2xl">{item.data}</Text>
+        </View>
+        <View className="flex-row items-center justify-between mb-2">
+          <Text className="font-light text-xl">Volume</Text>
+          <Text className="font-medium text-2xl">{item.volume}</Text>
+        </View>
+        <View className="flex-row items-center justify-between mb-2">
+          <Text className="font-light text-xl">Depósito</Text>
+          <Text className="font-medium text-2xl">{item.deposito}</Text>
+        </View>
       </View>
     </View>
   );
@@ -89,13 +91,14 @@ const Card = ({ item }: { item: Item }) => {
 
 export default function envaseERotulagem() {
   return (
-    <SafeAreaView style={{ flex: 1, gap: 20 }}>
+    <SafeAreaView>
       <AppHeader
         showReturnButton
         variant="secondary"
         mainText="Envase e Rotulagem"
+        returnHref="/(tabs)"
       />
-      <View className="px-7">
+      <View className="flex-1 px-7">
         <Link href="/envaseERotulagem/newFilLab" asChild>
           <DefaultButton
             title="ADICIONAR NOVO PROCESSO"

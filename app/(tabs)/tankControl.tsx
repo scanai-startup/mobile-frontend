@@ -1,7 +1,7 @@
 import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
-import { Link, useRouter } from "expo-router";
+import { Href, Link, useRouter } from "expo-router";
 import { Search } from "lucide-react-native";
 import React, { useState } from "react";
 import {
@@ -67,7 +67,7 @@ function Card({
     : { pathname: "/tank/[tank]", params: { tank: title } };
 
   return (
-    <Link href={href} asChild>
+    <Link href={href as Href} asChild>
       <TouchableOpacity style={{ marginBottom: 16, width: "100%" }}>
         <View className="bg-white rounded-lg shadow flex-col border border-neutral-250">
           <View className="flex-row p-4 justify-between items-center">
@@ -87,7 +87,7 @@ function Card({
               <View className="w-full h-[1px] bg-neutral-250"></View>
               <View className="p-4">
                 <View className="flex-row justify-between items-center">
-                  <Text className="text-xl">Densidade:</Text>
+                  <Text className="text-xl font-light">Densidade:</Text>
                   <View className="flex-row justify-center items-end">
                     <Text className="text-2xl font-semibold">{density} </Text>
                     <Text className="text-base font-normal text-neutral-400">
@@ -96,7 +96,7 @@ function Card({
                   </View>
                 </View>
                 <View className="flex-row justify-between">
-                  <Text className="text-xl">Temperatura:</Text>
+                  <Text className="text-xl font-light">Temperatura:</Text>
                   <View className="flex-row justify-center items-end">
                     <Text className="text-2xl font-semibold">
                       {temperature}{" "}
@@ -107,7 +107,7 @@ function Card({
                   </View>
                 </View>
                 <View className="flex-row justify-between">
-                  <Text className="text-xl">Pressão:</Text>
+                  <Text className="text-xl font-light">Pressão:</Text>
                   <View className="flex-row justify-center items-end">
                     <Text className="text-2xl font-semibold">{pressure} </Text>
                     <Text className="text-base font-normal text-neutral-400">

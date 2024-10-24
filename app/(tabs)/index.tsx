@@ -35,30 +35,28 @@ export default function Home() {
       <SafeAreaView>
         <AppHeader mainText="Olá, Nome." />
         <View>
-          <View>
-            <Text className="text-zinc-950 font-bold text-2xl ml-7 mb-4">
-              Atividades
-            </Text>
-            <FlatList
-              data={activityListItems}
-              keyExtractor={(item) => item.name}
-              renderItem={({ item }) => (
-                <ActivityCard
-                  title={item.name}
-                  icon={item.icon}
-                  route={item.route}
-                />
-              )}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{
-                paddingHorizontal: 25,
-                gap: 10,
-              }}
-            />
-          </View>
+          <Text className="text-zinc-950 font-bold text-2xl ml-7 mb-4">
+            Atividades
+          </Text>
+          <FlatList
+            data={activityListItems}
+            keyExtractor={(item) => item.name}
+            renderItem={({ item }) => (
+              <ActivityCard
+                title={item.name}
+                icon={item.icon}
+                route={item.route}
+              />
+            )}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingHorizontal: 25,
+              gap: 10,
+            }}
+          />
         </View>
-        <View className="px-7 mt-10">
+        <View className="px-7">
           <Text className="text-zinc-950 font-bold text-2xl mb-4">
             Relatório mais recente
           </Text>

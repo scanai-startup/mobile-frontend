@@ -7,7 +7,7 @@ interface AppHeaderProps {
   showReturnButton?: boolean;
   variant?: "primary" | "secondary";
   mainText: string;
-  returnHref?: Href<string>;
+  returnHref?: Href<string> | Href;
 }
 
 export default function AppHeader({

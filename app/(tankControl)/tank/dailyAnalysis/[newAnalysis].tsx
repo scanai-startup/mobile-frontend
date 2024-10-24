@@ -1,8 +1,9 @@
-import React from "react";
-import { View, Text, TouchableOpacity, FlatList } from "react-native";
-import { Link, useLocalSearchParams } from "expo-router";
-import SafeAreaView from "@/components/SafeAreaView";
 import AppHeader from "@/components/AppHeader";
+import { DefaultButton } from "@/components/DefaultButton";
+import SafeAreaView from "@/components/SafeAreaView";
+import { Link, useLocalSearchParams } from "expo-router";
+import React from "react";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
 interface Analysis {
   id: string;
@@ -28,13 +29,13 @@ export default function DailyAnalysis() {
   console.log(tank, data.length);
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
+    <SafeAreaView>
       <AppHeader
         mainText={`TNQ FER ${tank}`}
         variant="secondary"
         showReturnButton
       />
-      <View className="p-4">
+      <View className="flex-1 px-7 gap-4">
         <Link
           href={{
             pathname: "/(tankControl)/tank/depositAnalysis/[depositAnalysis]/",
@@ -44,9 +45,7 @@ export default function DailyAnalysis() {
           }}
           asChild
         >
-          <TouchableOpacity className="bg-blue-500 p-4 rounded-md items-center mb-4">
-            <Text className="text-white font-bold">ADICIONAR NOVA ANÁLISE</Text>
-          </TouchableOpacity>
+          <DefaultButton title="ADICIONAR NOVA ANÁLISE" />
         </Link>
         <FlatList
           data={data}
@@ -69,18 +68,18 @@ export default function DailyAnalysis() {
 
 const AnalysisCard = ({ item }: { item: Analysis }) => {
   return (
-    <View className="bg-white rounded-sm p-4 shadow">
-      <View className="flex-row justify-between items-center mb-3">
+    <View className="bg-white rounded-md shadow border border-neutral-250">
+      <View className="flex-row justify-between items-center p-4">
         <Text className="text-2xl font-bold">{item.date}</Text>
         <TouchableOpacity>
           <Text className="text-blue-500">Detalhes</Text>
         </TouchableOpacity>
       </View>
-      <View className="h-px bg-gray-200 mb-2" />
-      <View className="space-y-2">
+      <View className="h-px bg-neutral-250" />
+      <View className="p-4">
         <CardRow label="Etapa" value={item.stage} />
         <CardRow label="Densidade" value={item.density} />
-        <CardRow label="Temperatura" value={`${item.temperature}°`} />
+        <CardRow label="Temperatura" value={`${item.temperature} °C`} />
       </View>
     </View>
   );
@@ -88,7 +87,7 @@ const AnalysisCard = ({ item }: { item: Analysis }) => {
 
 const CardRow = ({ label, value }: { label: string; value: string }) => (
   <View className="flex-row justify-between">
-    <Text className="text-gray-500 text-lg">{label}</Text>
-    <Text className="font-medium text-xl">{value}</Text>
+    <Text className="text-xl font-light">{label}</Text>
+    <Text className="font-medium text-2xl">{value}</Text>
   </View>
 );

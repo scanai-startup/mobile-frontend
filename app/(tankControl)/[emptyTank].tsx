@@ -5,12 +5,8 @@ import { useLocalSearchParams } from "expo-router";
 import {
   AlertCircle,
   ArrowRightLeft,
-  Boxes,
-  Cylinder,
   Grape,
   GrapeIcon,
-  Microscope,
-  Milk,
 } from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, View } from "react-native";
@@ -19,23 +15,6 @@ export default function EmptyTank() {
   const { tank } = useLocalSearchParams();
 
   const activityListItems = [
-    {
-      name: "Análises diárias",
-      icon: <Cylinder size={28} color="#000000" />,
-      route: "/(tankControl)/tank/dailyAnalysis/[dailyAnalysis]",
-      type: "tank",
-    },
-    {
-      name: "Análises de depósito",
-      icon: <Microscope size={28} color="#000000" />,
-      route: "/(tankControl)/tank/depositAnalysis/[depositAnalysis]",
-      type: "tank",
-    },
-    {
-      name: "Envase e rotulagem",
-      icon: <Milk size={28} color="#000000" />,
-      route: "",
-    },
     {
       name: "Adicionar Vinho Base",
       icon: <GrapeIcon size={28} color="#000000" />,
@@ -56,8 +35,13 @@ export default function EmptyTank() {
   ];
 
   return (
-    <SafeAreaView className="flex-1 p-4">
-      <AppHeader showReturnButton variant="secondary" mainText={`${tank}`} />
+    <SafeAreaView>
+      <AppHeader
+        showReturnButton
+        variant="secondary"
+        mainText={`${tank}`}
+        returnHref="/(tabs)/tankControl"
+      />
       <View>
         <Text className="text-zinc-950 font-bold text-2xl ml-7 mb-4">
           Ações
@@ -82,7 +66,7 @@ export default function EmptyTank() {
           }}
         />
       </View>
-      <View className="flex-1 items-center justify-center">
+      <View className="mt-20 justify-center items-center">
         <AlertCircle size={48} color="gray" />
         <Text className="text-gray-600 text-lg font-semibold mt-4">
           Não há nenhum conteúdo neste tanque.

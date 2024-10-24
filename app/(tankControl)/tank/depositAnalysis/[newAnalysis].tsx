@@ -1,17 +1,18 @@
+import AppHeader from "@/components/AppHeader";
+import SafeAreaView from "@/components/SafeAreaView";
+import { Href, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import {
-  View,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
+  View,
 } from "react-native";
-import { useLocalSearchParams } from "expo-router";
-import SafeAreaView from "@/components/SafeAreaView";
-import AppHeader from "@/components/AppHeader";
 
 export default function DepositAnalysis() {
   const { tank } = useLocalSearchParams();
+  console.log(tank);
 
   const [date, setDate] = useState("09/07/24");
   const [densityValue, setDensityValue] = useState("1030");
@@ -61,11 +62,14 @@ export default function DepositAnalysis() {
   const [respUnit, setRespUnit] = useState("");
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView>
       <AppHeader
         mainText={`Nova análise depósito`}
         variant="secondary"
         showReturnButton
+        returnHref={
+          { pathname: "/tank/[tank]", params: { tank: tank } } as Href
+        }
       />
       <ScrollView contentContainerStyle={{ padding: 4 }}>
         <Text className="text-2xl mb-4 text-black">{tank}</Text>

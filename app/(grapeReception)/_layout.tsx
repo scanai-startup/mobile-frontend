@@ -30,7 +30,7 @@ export default function GrapeReceptionLayout() {
           showReturnButton={currRoute === "/" ? true : false}
           variant="secondary"
           mainText="Recepção de Uvas"
-          returnHref="/(tabs)"
+          returnHref="/(tabs)/shipment"
         />
         <Stack screenOptions={{ headerShown: false }} />
         <FormFooter
