@@ -39,7 +39,7 @@ export default function ListAnalysis() {
       <View className="p-4">
         <Link
           href={{
-            pathname: "/(tankControl)/tank/depositAnalysis/[newAnalysis]",
+            pathname: "/(tankControl)/tank/depositAnalysis/[dailyAnalysis]",
             params: {
               tank: tank,
             },
