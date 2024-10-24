@@ -45,24 +45,27 @@ export default function DailyAnalysis() {
         >
           <DefaultButton title="ADICIONAR NOVA ANÁLISE" />
         </Link>
+        <FlatList
+          data={data}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <AnalysisCard item={item} />}
+          contentContainerStyle={{ paddingBottom: 160 }}
+          ListEmptyComponent={
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text style={{ color: "#6B7280", fontSize: 16, marginBottom: 4 }}>
+                Não há análises feitas ainda neste tanque
+              </Text>
+              <Text style={{ fontSize: 40 }}>📊</Text>
+            </View>
+          }
+        />
       </View>
-
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <AnalysisCard item={item} />}
-        contentContainerStyle={{ paddingBottom: 160, paddingHorizontal: 16 }}
-        ListEmptyComponent={
-          <View
-            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
-          >
-            <Text style={{ color: "#6B7280", fontSize: 16, marginBottom: 4 }}>
-              Não há análises feitas ainda neste tanque
-            </Text>
-            <Text style={{ fontSize: 40 }}>📊</Text>
-          </View>
-        }
-      />
     </SafeAreaView>
   );
 }

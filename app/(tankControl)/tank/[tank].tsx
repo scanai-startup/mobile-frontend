@@ -35,8 +35,6 @@ export default function Tank() {
       name: "Envase e rotulagem",
       icon: <Milk size="28px" color="#000000" />,
       route: "/envaseERotulagem/envase",
-      type: "",
-      param: "",
     },
     {
       name: "Adicionar Vinho Base",

@@ -5,11 +5,8 @@ import { useLocalSearchParams } from "expo-router";
 import {
   AlertCircle,
   ArrowRightLeft,
-  Cylinder,
   Grape,
   GrapeIcon,
-  Microscope,
-  Milk,
 } from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, View } from "react-native";
@@ -18,24 +15,6 @@ export default function EmptyTank() {
   const { tank } = useLocalSearchParams();
 
   const activityListItems = [
-    {
-      name: "Análises diárias",
-      icon: <Cylinder size={28} color="#000000" />,
-      route: "/(tankControl)/tank/dailyAnalysis/[dailyAnalysis]",
-      type: "tank",
-    },
-    {
-      name: "Análises de depósito",
-      icon: <Microscope size={28} color="#000000" />,
-      route: "/(tankControl)/tank/depositAnalysis/[depositAnalysis]",
-      type: "tank",
-    },
-    {
-      name: "Envase e rotulagem",
-      icon: <Milk size={28} color="#000000" />,
-      route: "/(tankControl)/tank/envaseERotulagem/[envase]",
-      type: "tank",
-    },
     {
       name: "Adicionar Vinho Base",
       icon: <GrapeIcon size={28} color="#000000" />,
@@ -53,7 +32,9 @@ export default function EmptyTank() {
     {
       name: "Adicionar pé de Cuba",
       icon: <Grape size={28} color="#000000" />,
-      route: "",
+      route: "/(tankControl)/tank/addPeDeCuba/[addPeDeCuba]",
+      type: "tank",
+      param: tank,
     },
   ];
 
