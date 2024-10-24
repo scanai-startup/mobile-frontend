@@ -1,7 +1,7 @@
 import AppHeader from "@/components/AppHeader";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
@@ -25,8 +25,7 @@ const data: Analysis[] = [
 
 export default function DailyAnalysis() {
   const { tank } = useLocalSearchParams();
-
-  console.log(tank, data.length);
+  const router = useRouter();
 
   return (
     <SafeAreaView>
@@ -34,34 +33,36 @@ export default function DailyAnalysis() {
         mainText={`TNQ FER ${tank}`}
         variant="secondary"
         showReturnButton
+        returnHref={router.back}
       />
       <View className="flex-1 px-7 gap-4">
         <Link
           href={{
             pathname: "/(tankControl)/tank/depositAnalysis/[depositAnalysis]/",
-            params: {
-              tank: tank,
-            },
+            params: { tank: tank },
           }}
           asChild
         >
           <DefaultButton title="ADICIONAR NOVA ANÁLISE" />
         </Link>
-        <FlatList
-          data={data}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <AnalysisCard item={item} />}
-          contentContainerStyle={{ gap: 16 }}
-          ListEmptyComponent={
-            <View className="flex-1 justify-center items-center">
-              <Text className="text-gray-500 text-center mb-4">
-                Não há análises feitas ainda neste tanque
-              </Text>
-              <Text className="text-4xl">📊</Text>
-            </View>
-          }
-        />
       </View>
+
+      <FlatList
+        data={data}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => <AnalysisCard item={item} />}
+        contentContainerStyle={{ paddingBottom: 160, paddingHorizontal: 16 }}
+        ListEmptyComponent={
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            <Text style={{ color: "#6B7280", fontSize: 16, marginBottom: 4 }}>
+              Não há análises feitas ainda neste tanque
+            </Text>
+            <Text style={{ fontSize: 40 }}>📊</Text>
+          </View>
+        }
+      />
     </SafeAreaView>
   );
 }
@@ -72,7 +73,7 @@ const AnalysisCard = ({ item }: { item: Analysis }) => {
       <View className="flex-row justify-between items-center p-4">
         <Text className="text-2xl font-bold">{item.date}</Text>
         <TouchableOpacity>
-          <Text className="text-blue-500">Detalhes</Text>
+          <Text style={{ color: "#3B82F6" }}>Detalhes</Text>
         </TouchableOpacity>
       </View>
       <View className="h-px bg-neutral-250" />

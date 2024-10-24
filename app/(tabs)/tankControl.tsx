@@ -126,6 +126,7 @@ function Card({
 
 export default function TankControl() {
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const router = useRouter();
 
   const data = [
     { title: "Tanque 1", isAvailable: true },
@@ -163,6 +164,7 @@ export default function TankControl() {
           showReturnButton
           variant="secondary"
           mainText="Controle de tanques"
+          returnHref={router.back}
         />
         <View className="px-7 flex-1">
           <View>

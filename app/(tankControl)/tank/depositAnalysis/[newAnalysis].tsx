@@ -1,6 +1,6 @@
 import AppHeader from "@/components/AppHeader";
 import SafeAreaView from "@/components/SafeAreaView";
-import { Href, useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   ScrollView,
@@ -12,7 +12,7 @@ import {
 
 export default function DepositAnalysis() {
   const { tank } = useLocalSearchParams();
-  console.log(tank);
+  const router = useRouter();
 
   const [date, setDate] = useState("09/07/24");
   const [densityValue, setDensityValue] = useState("1030");
@@ -67,9 +67,7 @@ export default function DepositAnalysis() {
         mainText={`Nova análise depósito`}
         variant="secondary"
         showReturnButton
-        returnHref={
-          { pathname: "/tank/[tank]", params: { tank: tank } } as Href
-        }
+        returnHref={router.back}
       />
       <ScrollView contentContainerStyle={{ padding: 4 }}>
         <Text className="text-2xl mb-4 text-black">{tank}</Text>

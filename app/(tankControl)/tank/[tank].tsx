@@ -1,7 +1,7 @@
 import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
 import SafeAreaView from "@/components/SafeAreaView";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   ArrowRightLeft,
   ChevronDown,
@@ -15,7 +15,7 @@ import { FlatList, StyleSheet, Text, View } from "react-native";
 
 export default function Tank() {
   const { tank } = useLocalSearchParams();
-
+  const router = useRouter();
   const activityListItems = [
     {
       name: "Análises diárias",
@@ -34,7 +34,7 @@ export default function Tank() {
     {
       name: "Envase e rotulagem",
       icon: <Milk size="28px" color="#000000" />,
-      route: "",
+      route: "/envaseERotulagem/envase",
       type: "",
       param: "",
     },
@@ -48,7 +48,7 @@ export default function Tank() {
     {
       name: "Realizar Trasfega",
       icon: <ArrowRightLeft size="28px" color="#000000" />,
-      route: "",
+      route: "/(tankControl)/tank/realizarTrasfega/[trasfega]",
       type: "",
       param: "",
     },
@@ -67,7 +67,7 @@ export default function Tank() {
         showReturnButton
         variant="secondary"
         mainText={`${tank}`}
-        returnHref="/(tabs)/tankControl"
+        returnHref={router.back}
       />
       <View>
         <Text className="text-zinc-950 font-bold text-2xl ml-7 mb-4">

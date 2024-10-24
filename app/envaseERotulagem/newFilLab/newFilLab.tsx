@@ -4,6 +4,7 @@ import FormFooter from "@/components/FormFooter";
 import HourInput from "@/components/HourInput";
 import SafeAreaView from "@/components/SafeAreaView";
 import YesNoButtonField from "@/components/YesNoButtonField";
+import { useRouter } from "expo-router";
 import {
   ChevronsUpDown,
   Droplet,
@@ -81,7 +82,7 @@ export default function newFilLab() {
   );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedStage, setSelectedStage] = useState<StageInfo | null>(null);
-
+  const router = useRouter();
   return (
     <>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "bottom", "left"]}>
@@ -89,7 +90,7 @@ export default function newFilLab() {
           showReturnButton
           variant="secondary"
           mainText="Envase e Rotulagem"
-          returnHref="/envaseERotulagem"
+          returnHref={router.back}
         />
         <ScrollView contentContainerClassName="p-7 gap-6">
           <TouchableOpacity

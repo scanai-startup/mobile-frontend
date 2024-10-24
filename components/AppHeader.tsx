@@ -7,7 +7,7 @@ interface AppHeaderProps {
   showReturnButton?: boolean;
   variant?: "primary" | "secondary";
   mainText: string;
-  returnHref?: Href<string> | Href;
+  returnHref?: Href<string> | (() => void); // Modificado para aceitar função ou string
 }
 
 export default function AppHeader({
@@ -17,6 +17,7 @@ export default function AppHeader({
   mainText,
 }: AppHeaderProps) {
   const OSPadding = Platform.OS === "ios" ? 0 : 20;
+
   return (
     <View
       style={{
@@ -29,10 +30,17 @@ export default function AppHeader({
       className="flex-row items-center"
     >
       {showReturnButton ? (
-        <Link href={returnHref}>
-          <ChevronLeft color="#171717" />
-        </Link>
+        typeof returnHref === "function" ? (
+          <TouchableOpacity onPress={returnHref}>
+            <ChevronLeft color="#171717" />
+          </TouchableOpacity>
+        ) : (
+          <Link href={returnHref}>
+            <ChevronLeft color="#171717" />
+          </Link>
+        )
       ) : null}
+
       <View
         style={{
           gap: variant === "primary" ? 10 : 0,
@@ -62,7 +70,6 @@ export default function AppHeader({
           </View>
         ) : null}
       </View>
-      {/* <TabBarIcon name="information-circle" style={{ color: "white" }} /> */}
     </View>
   );
 }
