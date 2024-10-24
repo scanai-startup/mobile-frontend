@@ -1,10 +1,9 @@
-import React from "react";
-import { useRouter } from "expo-router";
-import { View, Text, TouchableOpacity, FlatList } from "react-native";
-import { Link, useLocalSearchParams } from "expo-router";
-import SafeAreaView from "@/components/SafeAreaView";
 import AppHeader from "@/components/AppHeader";
-import AntDesign from "@expo/vector-icons/AntDesign";
+import { DefaultButton } from "@/components/DefaultButton";
+import SafeAreaView from "@/components/SafeAreaView";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import React from "react";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
 interface Analysis {
   id: string;
@@ -29,15 +28,14 @@ export default function DailyAnalysis() {
   const router = useRouter();
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#F3F4F6" }}>
+    <SafeAreaView>
       <AppHeader
         mainText={`TNQ FER ${tank}`}
         variant="secondary"
         showReturnButton
         returnHref={router.back}
       />
-
-      <View style={{ alignItems: "center", marginVertical: 20 }}>
+      <View className="flex-1 px-7 gap-4">
         <Link
           href={{
             pathname: "/(tankControl)/tank/depositAnalysis/[depositAnalysis]/",
@@ -45,80 +43,55 @@ export default function DailyAnalysis() {
           }}
           asChild
         >
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: "#3B82F6",
-              borderRadius: 12,
-              paddingHorizontal: 24,
-              paddingVertical: 12,
-            }}
-          >
-            <AntDesign name="pluscircle" size={24} color="white" />
-            <Text
+          <DefaultButton title="ADICIONAR NOVA ANÁLISE" />
+        </Link>
+        <FlatList
+          data={data}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <AnalysisCard item={item} />}
+          contentContainerStyle={{ paddingBottom: 160 }}
+          ListEmptyComponent={
+            <View
               style={{
-                color: "white",
-                fontWeight: "600",
-                fontSize: 16,
-                marginLeft: 8,
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              ADICIONAR NOVA ANÁLISE
-            </Text>
-          </TouchableOpacity>
-        </Link>
+              <Text style={{ color: "#6B7280", fontSize: 16, marginBottom: 4 }}>
+                Não há análises feitas ainda neste tanque
+              </Text>
+              <Text style={{ fontSize: 40 }}>📊</Text>
+            </View>
+          }
+        />
       </View>
-
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <AnalysisCard item={item} />}
-        contentContainerStyle={{ paddingBottom: 160, paddingHorizontal: 16 }}
-        ListEmptyComponent={
-          <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-            <Text style={{ color: "#6B7280", fontSize: 16, marginBottom: 4 }}>
-              Não há análises feitas ainda neste tanque
-            </Text>
-            <Text style={{ fontSize: 40 }}>📊</Text>
-          </View>
-        }
-      />
     </SafeAreaView>
   );
 }
 
 const AnalysisCard = ({ item }: { item: Analysis }) => {
   return (
-    <View
-      style={{
-        backgroundColor: "white",
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: "#E5E7EB",
-        padding: 16,
-        marginBottom: 12,
-      }}
-    >
-      <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 8 }}>
-        <Text style={{ fontWeight: "600", fontSize: 18 }}>{item.date}</Text>
+    <View className="bg-white rounded-md shadow border border-neutral-250">
+      <View className="flex-row justify-between items-center p-4">
+        <Text className="text-2xl font-bold">{item.date}</Text>
         <TouchableOpacity>
           <Text style={{ color: "#3B82F6" }}>Detalhes</Text>
         </TouchableOpacity>
       </View>
-      <View style={{ height: 1, backgroundColor: "#E5E7EB", marginVertical: 8 }} />
-      <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 8 }}>
-        <Text style={{ color: "#6B7280", fontSize: 16 }}>Etapa</Text>
-        <Text style={{ fontWeight: "600", fontSize: 16 }}>{item.stage}</Text>
-      </View>
-      <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 8 }}>
-        <Text style={{ color: "#6B7280", fontSize: 16 }}>Densidade</Text>
-        <Text style={{ fontWeight: "600", fontSize: 16 }}>{item.density}</Text>
-      </View>
-      <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 8 }}>
-        <Text style={{ color: "#6B7280", fontSize: 16 }}>Temperatura</Text>
-        <Text style={{ fontWeight: "600", fontSize: 16 }}>{item.temperature}°</Text>
+      <View className="h-px bg-neutral-250" />
+      <View className="p-4">
+        <CardRow label="Etapa" value={item.stage} />
+        <CardRow label="Densidade" value={item.density} />
+        <CardRow label="Temperatura" value={`${item.temperature} °C`} />
       </View>
     </View>
   );
 };
+
+const CardRow = ({ label, value }: { label: string; value: string }) => (
+  <View className="flex-row justify-between">
+    <Text className="text-xl font-light">{label}</Text>
+    <Text className="font-medium text-2xl">{value}</Text>
+  </View>
+);

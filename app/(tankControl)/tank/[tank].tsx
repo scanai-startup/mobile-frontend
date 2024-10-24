@@ -1,11 +1,9 @@
 import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
-import { useRouter } from "expo-router";
-
-import { useLocalSearchParams } from "expo-router";
+import SafeAreaView from "@/components/SafeAreaView";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import {
   ArrowRightLeft,
-  Boxes,
   ChevronDown,
   Cylinder,
   Grape,
@@ -13,8 +11,7 @@ import {
   Milk,
 } from "lucide-react-native";
 import React from "react";
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
-
+import { FlatList, StyleSheet, Text, View } from "react-native";
 
 export default function Tank() {
   const { tank } = useLocalSearchParams();
@@ -30,7 +27,7 @@ export default function Tank() {
     {
       name: "Análises de deposito",
       icon: <Microscope size="28px" color="#000000" />,
-      route: "/(tankControl)/tank/depositAnalysis/[depositAnalysis]",
+      route: "/(tankControl)/tank/depositAnalysis/listAnalysis/[listAnalysis]",
       type: "tank",
       param: tank,
     },
@@ -38,8 +35,6 @@ export default function Tank() {
       name: "Envase e rotulagem",
       icon: <Milk size="28px" color="#000000" />,
       route: "/envaseERotulagem/envase",
-      type: "",
-      param: "",
     },
     {
       name: "Adicionar Vinho Base",
@@ -65,8 +60,13 @@ export default function Tank() {
   ];
 
   return (
-    <SafeAreaView className="flex-1 p-4">
-      <AppHeader showReturnButton variant="secondary" mainText={`${tank}`} returnHref={router.back} />
+    <SafeAreaView>
+      <AppHeader
+        showReturnButton
+        variant="secondary"
+        mainText={`${tank}`}
+        returnHref={router.back}
+      />
       <View>
         <Text className="text-zinc-950 font-bold text-2xl ml-7 mb-4">
           Ações
@@ -91,11 +91,13 @@ export default function Tank() {
           }}
         />
       </View>
-      <View className="mt-4">
-        <Text className="text-2xl">Remessas associadas</Text>
-        <Card />
+      <View className="px-7 gap-4">
+        <View>
+          <Text className="text-2xl">Remessas associadas</Text>
+          <Card />
+        </View>
+        <CardNotEmpty />
       </View>
-      <CardNotEmpty />
     </SafeAreaView>
   );
 }

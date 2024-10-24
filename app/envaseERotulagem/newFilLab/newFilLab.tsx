@@ -1,11 +1,10 @@
 import AppHeader from "@/components/AppHeader";
-import { useRouter } from "expo-router";
-import CustomStatusBar from "@/components/CustomStatusBar";
 import DateInput from "@/components/DateInput";
 import FormFooter from "@/components/FormFooter";
 import HourInput from "@/components/HourInput";
 import SafeAreaView from "@/components/SafeAreaView";
 import YesNoButtonField from "@/components/YesNoButtonField";
+import { useRouter } from "expo-router";
 import {
   ChevronsUpDown,
   Droplet,
@@ -86,7 +85,6 @@ export default function newFilLab() {
   const router = useRouter();
   return (
     <>
-      <CustomStatusBar barStyle="dark-content" />
       <SafeAreaView style={{ flex: 1 }} edges={["right", "bottom", "left"]}>
         <AppHeader
           showReturnButton
@@ -215,7 +213,7 @@ export default function newFilLab() {
             </View>
           </View>
         </ScrollView>
-        <FormFooter nextHref="/" />
+        <FormFooter nextHref="/envaseERotulagem" />
       </SafeAreaView>
     </>
   );

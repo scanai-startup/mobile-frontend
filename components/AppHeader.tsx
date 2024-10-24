@@ -17,7 +17,7 @@ export default function AppHeader({
   mainText,
 }: AppHeaderProps) {
   const OSPadding = Platform.OS === "ios" ? 0 : 20;
-  
+
   return (
     <View
       style={{
@@ -40,7 +40,7 @@ export default function AppHeader({
           </Link>
         )
       ) : null}
-      
+
       <View
         style={{
           gap: variant === "primary" ? 10 : 0,

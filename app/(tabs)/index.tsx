@@ -2,14 +2,7 @@ import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
-import {
-  Boxes,
-  Cylinder,
-  Grape,
-  LucideBox,
-  Truck,
-  Wine,
-} from "lucide-react-native";
+import { Cylinder, LucideBox, Truck, Wine } from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
@@ -38,37 +31,32 @@ export default function Home() {
   ];
   return (
     <>
-      <CustomStatusBar backgroundColor="#18181b" />
-      <SafeAreaView
-        style={{ flex: 1, gap: 20 }}
-        edges={["right", "bottom", "left"]}
-      >
+      <CustomStatusBar backgroundColor="#18181b" barStyle="light-content" />
+      <SafeAreaView>
         <AppHeader mainText="Olá, Nome." />
         <View>
-          <View>
-            <Text className="text-zinc-950 font-bold text-2xl ml-7 mb-4">
-              Atividades
-            </Text>
-            <FlatList
-              data={activityListItems}
-              keyExtractor={(item) => item.name}
-              renderItem={({ item }) => (
-                <ActivityCard
-                  title={item.name}
-                  icon={item.icon}
-                  route={item.route}
-                />
-              )}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={{
-                paddingHorizontal: 25,
-                gap: 10,
-              }}
-            />
-          </View>
+          <Text className="text-zinc-950 font-bold text-2xl ml-7 mb-4">
+            Atividades
+          </Text>
+          <FlatList
+            data={activityListItems}
+            keyExtractor={(item) => item.name}
+            renderItem={({ item }) => (
+              <ActivityCard
+                title={item.name}
+                icon={item.icon}
+                route={item.route}
+              />
+            )}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingHorizontal: 25,
+              gap: 10,
+            }}
+          />
         </View>
-        <View className="px-7 mt-10">
+        <View className="px-7">
           <Text className="text-zinc-950 font-bold text-2xl mb-4">
             Relatório mais recente
           </Text>

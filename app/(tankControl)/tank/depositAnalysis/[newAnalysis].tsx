@@ -1,15 +1,14 @@
+import AppHeader from "@/components/AppHeader";
+import SafeAreaView from "@/components/SafeAreaView";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  View,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
-  ScrollView,
+  View,
 } from "react-native";
-import { useLocalSearchParams } from "expo-router";
-import SafeAreaView from "@/components/SafeAreaView";
-import { useRouter } from "expo-router";
-import AppHeader from "@/components/AppHeader";
 
 export default function DepositAnalysis() {
   const { tank } = useLocalSearchParams();
@@ -63,7 +62,7 @@ export default function DepositAnalysis() {
   const [respUnit, setRespUnit] = useState("");
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView>
       <AppHeader
         mainText={`Nova análise depósito`}
         variant="secondary"

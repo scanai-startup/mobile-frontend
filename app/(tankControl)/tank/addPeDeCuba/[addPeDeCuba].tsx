@@ -1,10 +1,8 @@
 import AppHeader from "@/components/AppHeader";
-import { useRouter } from "expo-router";
-import CustomStatusBar from "@/components/CustomStatusBar";
 import DateInput from "@/components/DateInput";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { CirclePlus, CircleX, Minus, Pencil, Plus } from "lucide-react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -145,7 +143,6 @@ export default function AddPeDeCuba() {
 
   return (
     <>
-      <CustomStatusBar barStyle="dark-content" />
       <SafeAreaView
         style={{ flex: 1, gap: 20 }}
         edges={["right", "bottom", "left"]}

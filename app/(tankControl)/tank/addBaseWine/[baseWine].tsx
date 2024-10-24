@@ -1,11 +1,9 @@
 import AppHeader from "@/components/AppHeader";
-import { useRouter } from "expo-router";
-import CustomStatusBar from "@/components/CustomStatusBar";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
 import ShipmentCard from "@/components/ShipmentCard";
 import { ShipmentCardType } from "@/types/ShipmentCardType";
-import { Href, Link, useLocalSearchParams } from "expo-router";
+import { Href, Link, useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
 import { FlatList, Text, View } from "react-native";
 
@@ -69,7 +67,6 @@ export default function BaseWine() {
   };
   return (
     <>
-      <CustomStatusBar barStyle="dark-content" />
       <SafeAreaView
         style={{ flex: 1, gap: 20 }}
         edges={["right", "bottom", "left"]}

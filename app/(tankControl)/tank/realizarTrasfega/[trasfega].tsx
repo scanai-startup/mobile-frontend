@@ -1,9 +1,8 @@
-import SafeAreaView from "@/components/SafeAreaView";
-import { Text, View, TouchableOpacity, FlatList } from "react-native";
-import { useState } from "react";
-import { useRouter } from "expo-router";
 import AppHeader from "@/components/AppHeader";
-import React from "react";
+import SafeAreaView from "@/components/SafeAreaView";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
 interface CardProps {
   title: string;
@@ -13,7 +12,13 @@ interface CardProps {
   onSelect: () => void;
 }
 
-function Card({ title, density = "", temperature = 0, pressure = 0, onSelect }: CardProps) {
+function Card({
+  title,
+  density = "",
+  temperature = 0,
+  pressure = 0,
+  onSelect,
+}: CardProps) {
   return (
     <TouchableOpacity style={{ marginBottom: 16, width: "100%" }}>
       <View className="bg-white p-4 rounded-lg shadow flex-col">
@@ -29,7 +34,9 @@ function Card({ title, density = "", temperature = 0, pressure = 0, onSelect }: 
               borderRadius: 5,
             }}
           >
-            <Text style={{ color: "#FFFFFF", fontWeight: "bold" }}>Selecionar</Text>
+            <Text style={{ color: "#FFFFFF", fontWeight: "bold" }}>
+              Selecionar
+            </Text>
           </TouchableOpacity>
         </View>
 
@@ -56,7 +63,7 @@ function Card({ title, density = "", temperature = 0, pressure = 0, onSelect }: 
 export default function RealizarTrasfega() {
   const [selectedTank, setSelectedTank] = useState<string | null>(null);
   const router = useRouter();
-  
+
   const data = [
     {
       title: "Tanque 2",
@@ -83,9 +90,16 @@ export default function RealizarTrasfega() {
 
   return (
     <SafeAreaView className="flex-1">
-      <AppHeader showReturnButton variant="secondary" mainText="Realizar Trasfega" returnHref={router.back} />
+      <AppHeader
+        showReturnButton
+        variant="secondary"
+        mainText="Realizar Trasfega"
+        returnHref={router.back}
+      />
       <View>
-        <Text className="text-4xl text-black mt-4 font-bold">Trasfega de Tanques</Text>
+        <Text className="text-4xl text-black mt-4 font-bold">
+          Trasfega de Tanques
+        </Text>
         <Text className="text-xl mt-2 mb-4">
           Selecione o tanque de origem para realizar a trasfega.
         </Text>
@@ -108,9 +122,13 @@ export default function RealizarTrasfega() {
 
       {selectedTank && (
         <View style={{ padding: 20 }}>
-          <Text className="text-lg font-bold">Tanque selecionado: {selectedTank}</Text>
+          <Text className="text-lg font-bold">
+            Tanque selecionado: {selectedTank}
+          </Text>
           <TouchableOpacity
-            onPress={() => console.log(`Realizar trasfega do tanque ${selectedTank}`)}
+            onPress={() =>
+              console.log(`Realizar trasfega do tanque ${selectedTank}`)
+            }
             style={{
               backgroundColor: "#28A745",
               paddingVertical: 14,
@@ -119,7 +137,9 @@ export default function RealizarTrasfega() {
               marginTop: 16,
             }}
           >
-            <Text style={{ color: "#FFFFFF", fontWeight: "bold" }}>Confirmar Trasfega</Text>
+            <Text style={{ color: "#FFFFFF", fontWeight: "bold" }}>
+              Confirmar Trasfega
+            </Text>
           </TouchableOpacity>
         </View>
       )}

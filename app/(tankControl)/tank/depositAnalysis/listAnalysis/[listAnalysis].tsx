@@ -1,9 +1,8 @@
-import React from "react";
-import { View, Text, TouchableOpacity, FlatList } from "react-native";
-import { Link, useLocalSearchParams } from "expo-router";
-import SafeAreaView from "@/components/SafeAreaView";
 import AppHeader from "@/components/AppHeader";
-import { useRouter } from "expo-router";
+import SafeAreaView from "@/components/SafeAreaView";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import React from "react";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
 interface Analysis {
   id: string;
@@ -30,7 +29,7 @@ export default function ListAnalysis() {
   console.log(tank);
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
+    <SafeAreaView>
       <AppHeader
         mainText={`LISTA ANALISES`}
         variant="secondary"
@@ -43,7 +42,6 @@ export default function ListAnalysis() {
             pathname: "/(tankControl)/tank/depositAnalysis/[newAnalysis]",
             params: {
               tank: tank,
-              newAnalysis: "",
             },
           }}
           asChild
