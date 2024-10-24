@@ -89,14 +89,18 @@ export default function RealizarTrasfega() {
   ];
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView>
       <AppHeader
         showReturnButton
         variant="secondary"
         mainText="Realizar Trasfega"
         returnHref={router.back}
       />
-      <View>
+      <View
+        style={{
+          paddingHorizontal: 20,
+        }}
+      >
         <Text className="text-4xl text-black mt-4 font-bold">
           Trasfega de Tanques
         </Text>
@@ -118,6 +122,9 @@ export default function RealizarTrasfega() {
         )}
         keyExtractor={(item) => item.title}
         className="flex-1"
+        style={{
+          paddingHorizontal: 20,
+        }}
       />
 
       {selectedTank && (
