@@ -1,11 +1,19 @@
-import { Button } from "@/components/Button";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
-import React from "react";
-import { Image, Text, View } from "react-native";
+import axios from "axios";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
+
+import IP_PC from "react-native-dotenv";
 
 export default function Login() {
+  const [matricula, setMatricula] = useState("");
+  const [senha, setSenha] = useState("");
+
+  const router = useRouter();
+
   return (
     <>
       <CustomStatusBar barStyle="dark-content" />
@@ -20,15 +28,25 @@ export default function Login() {
               Desfrute da <B>inovação</B> que a <B>Scan.AI</B> pode oferecer.
             </Text>
             <View className="w-full mb-6 mt-20 gap-2">
-              <InputBox title="Nome de usuário" placeholder="carlos_andrade" />
+              <InputBox
+                title="Nome de usuário"
+                placeholder="carlos_andrade"
+                onChangeText={setMatricula}
+              />
               <InputBox
                 title="Senha"
                 placeholder="************"
                 secureTextEntry={true}
+                onChangeText={setSenha}
               />
             </View>
-            <View className="flex w-full items-center mt-16">
-              <Button placeholder="Acessar" route="/(tabs)" />
+            <View className="flex w-full items-center mt-14">
+              <Button
+                placeholder="Acessar"
+                route="/(tabs)"
+                matricula={matricula}
+                senha={senha}
+              />
               <Text className="mt-4 text-[#9B9B9B] text-[10px]">
                 © 2024 Scan.AI. Todos os direitos reservados.
               </Text>
@@ -51,3 +69,43 @@ export default function Login() {
 const B = (props: any) => (
   <Text style={{ fontWeight: "bold" }}>{props.children}</Text>
 );
+
+function Button({
+  placeholder,
+  route,
+  matricula,
+  senha,
+}: {
+  placeholder: string;
+  route: string;
+  matricula: string;
+  senha: string;
+}) {
+  const router = useRouter();
+
+  const fetch = async () => {
+    try {
+      const response = await axios.post(
+        `http://${process.env.IP_PUBLIC_IP}:8080/auth/login`,
+        {
+          matricula: matricula,
+          senha: senha,
+        }
+      );
+      console.log(response.data);
+
+      router.push("/(tabs)/");
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  return (
+    <TouchableOpacity
+      className="bg-[#171717] w-full flex items-center rounded-lg p-4"
+      onPress={() => fetch()}
+    >
+      <Text className="text-white text-lg font-medium ">{placeholder}</Text>
+    </TouchableOpacity>
+  );
+}
