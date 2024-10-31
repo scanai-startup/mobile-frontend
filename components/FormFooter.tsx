@@ -12,6 +12,7 @@ export default function FormFooter({
   isReturnButtonEnabled = false,
 }: FormFooterP) {
   const router = useRouter();
+
   return (
     <View
       style={{

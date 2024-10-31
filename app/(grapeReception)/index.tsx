@@ -1,29 +1,57 @@
 import DateInput from "@/components/DateInput";
 import { DefaultButton } from "@/components/DefaultButton";
+import { useNewShipmentContext } from "@/context/NewShipmentContext";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
+import { CameraType, CameraView, useCameraPermissions } from "expo-camera";
 import { ScanText } from "lucide-react-native";
-import React, { useState } from "react";
-import { StyleSheet, Modal } from "react-native";
+import React, { useEffect, useState } from "react";
 import {
+  Modal,
   ScrollView,
+  StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
-import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 
 export default function GrapeReception() {
+  const { shipmentData, setShipmentData } = useNewShipmentContext(); // gets the shipment data context
   const [isHourModalOpen, setIsHourModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedHour, setSelectedHour] = useState(new Date());
-
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
+
+  useEffect(() => {
+    // everytime the date and/or the hour changes the function gets called
+    handleInputChange("datachegada", selectedDateTimeToIso());
+  }, [selectedDate, selectedHour]);
+
+  function selectedDateTimeToIso() {
+    // join the date and time into a iso format
+    const hourLength = selectedHour.toISOString().length;
+    return (
+      selectedDate.toISOString().substring(0, 10) +
+      "T" +
+      selectedHour.toISOString().substring(11, hourLength)
+    );
+  }
+
+  function handleHourPickEvent(event: DateTimePickerEvent, date: Date) {
+    if (event.type === "set") {
+      setSelectedHour(date);
+    }
+    setIsHourModalOpen(false);
+  }
+
+  function handleInputChange(field: string, value: string | number) {
+    // function called everytime the user interacts with the form fields
+    setShipmentData({ ...shipmentData, [field]: value });
+  }
 
   if (!permission) {
     return <View />;
@@ -38,13 +66,6 @@ export default function GrapeReception() {
         </TouchableOpacity>
       </View>
     );
-  }
-
-  function handleHourPickEvent(event: DateTimePickerEvent, date: Date) {
-    if (event.type === "set") {
-      setSelectedHour(date);
-    }
-    setIsHourModalOpen(false);
   }
 
   return (
@@ -67,7 +88,13 @@ export default function GrapeReception() {
           <View>
             <Text className="text-xl">Número da carrada</Text>
             <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
-              <TextInput className="text-xl ml-2 flex-1" placeholder="3°" />
+              <TextInput
+                className="text-xl ml-2 flex-1"
+                placeholder="3°"
+                onChangeText={(value) =>
+                  handleInputChange("numerotalao", Number(value))
+                }
+              />
             </View>
           </View>
           <View>
@@ -76,6 +103,9 @@ export default function GrapeReception() {
               <TextInput
                 className="text-xl ml-2 flex-1"
                 placeholder="101 - AIREN"
+                onChangeText={(value) =>
+                  handleInputChange("numerolote", Number(value))
+                }
               />
             </View>
           </View>
@@ -101,14 +131,26 @@ export default function GrapeReception() {
           <View>
             <Text className="text-xl">Caixas</Text>
             <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
-              <TextInput className="text-xl ml-2 flex-1" placeholder="540" />
+              <TextInput
+                className="text-xl ml-2 flex-1"
+                placeholder="540"
+                onChangeText={(value) =>
+                  handleInputChange("numerotalao", Number(value))
+                }
+              />
               <Text>unidades</Text>
             </View>
           </View>
           <View>
             <Text className="text-xl">Peso</Text>
             <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
-              <TextInput className="text-xl ml-2 flex-1" placeholder="1.450" />
+              <TextInput
+                className="text-xl ml-2 flex-1"
+                placeholder="1.450"
+                onChangeText={(value) =>
+                  handleInputChange("peso", Number(value))
+                }
+              />
               <Text>kg</Text>
             </View>
           </View>
