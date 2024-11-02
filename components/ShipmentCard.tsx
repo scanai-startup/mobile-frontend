@@ -1,9 +1,9 @@
-import { ShipmentCardType } from "@/types/ShipmentCardType";
+import IShipmentCard from "@/types/IShipmentCard";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 interface ShipmentCardP {
-  shipment: ShipmentCardType;
+  shipment: IShipmentCard;
   variant?: string;
 }
 
@@ -17,10 +17,10 @@ export default function ShipmentCard({
       <View className="flex-row justify-between items-center p-5">
         <View className="flex-row gap-1 items-center">
           <Text className="text-2xl font-semibold" style={{ color: "#171717" }}>
-            {shipment.number}
+            {shipment.numerolote}
           </Text>
           <Text className="text-base text-neutral-400">
-            {shipment.ticket}° Talão
+            {shipment.numerotalao}° Talão
           </Text>
         </View>
         {variant === "primary" ? (
@@ -56,7 +56,7 @@ export default function ShipmentCard({
             Data recebido
           </Text>
           <Text className="text-2xl font-semibold text-neutral-900">
-            {shipment.date}
+            {new Date(shipment.datachegada).toLocaleDateString()}
           </Text>
         </View>
         <View className="flex-row justify-between items-center">
@@ -68,7 +68,7 @@ export default function ShipmentCard({
         <View className="flex-row justify-between items-center">
           <Text className="text-xl text-neutral-900 font-light">Tipo</Text>
           <Text className="text-2xl font-semibold text-neutral-900">
-            {shipment.type}
+            {shipment.tipovinho}
           </Text>
         </View>
       </View>

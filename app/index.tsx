@@ -1,13 +1,11 @@
+import apiInstance from "@/api/apiInstance";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
-import axios from "axios";
 import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import React, { useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
-
-import IP_PC from "react-native-dotenv";
-
 export default function Login() {
   const [matricula, setMatricula] = useState("");
   const [senha, setSenha] = useState("");
@@ -85,15 +83,11 @@ function Button({
 
   const fetch = async () => {
     try {
-      const response = await axios.post(
-        `http://${process.env.IP_PUBLIC_IP}:8080/auth/login`,
-        {
-          matricula: matricula,
-          senha: senha,
-        }
-      );
-      console.log(response.data);
-
+      const response = await apiInstance.post("/auth/login", {
+        matricula: matricula,
+        senha: senha,
+      });
+      await SecureStore.setItemAsync("user-token", response.data.token);
       router.push("/(tabs)/");
     } catch (e) {
       console.log(e);

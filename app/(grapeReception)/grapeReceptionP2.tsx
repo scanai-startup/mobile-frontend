@@ -1,8 +1,13 @@
 import YesNoButtonField from "@/components/YesNoButtonField";
+import { useNewShipmentContext } from "@/context/NewShipmentContext";
 import React from "react";
 import { ScrollView, Text, TextInput, View } from "react-native";
 
 export default function GrapeRepectionP2() {
+  const { shipmentData, setShipmentData } = useNewShipmentContext();
+  function handleInputChange(field: string, value: string | number) {
+    setShipmentData({ ...shipmentData, [field]: value });
+  }
   return (
     <View className="flex-1">
       <View className="flex flex-1 gap-2 px-7 mt-6">
@@ -16,6 +21,7 @@ export default function GrapeRepectionP2() {
               <TextInput
                 className="text-xl ml-2 flex-1"
                 placeholder="Sanidade"
+                onChangeText={(value) => handleInputChange("sanidade", value)}
               />
             </View>
           </View>
@@ -25,7 +31,8 @@ export default function GrapeRepectionP2() {
               <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
                 <TextInput
                   className="text-xl ml-2 flex-1"
-                  placeholder="Sanidade"
+                  placeholder="1.5"
+                  onChangeText={(value) => handleInputChange("so2", value)}
                 />
               </View>
             </View>
@@ -45,6 +52,9 @@ export default function GrapeRepectionP2() {
               <TextInput
                 className="text-xl ml-2 flex-1"
                 placeholder="ex: VB - Vinho branco"
+                onChangeText={(value) =>
+                  handleInputChange("tipodevinho", value)
+                }
               />
             </View>
           </View>
