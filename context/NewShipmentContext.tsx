@@ -12,7 +12,7 @@ interface IShipmentData {
   sanidade: number;
   so2: string;
   tipodevinho: string;
-  fkmostro: number;
+  fkmostro?: number;
 }
 
 interface ShipmentContextType {
@@ -39,7 +39,6 @@ export function NewShipmentContextProvider({
     sanidade: 0,
     so2: "",
     tipodevinho: "",
-    fkmostro: 1, //TODO: this field must be obtained automatically, thus
     // add any other missing properties here
   });
 

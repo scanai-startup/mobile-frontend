@@ -1,9 +1,11 @@
+import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
 import { Href, Link, useRouter } from "expo-router";
 import { Search } from "lucide-react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import * as SecureStore from "expo-secure-store";
 import {
   FlatList,
   Modal,
@@ -124,11 +126,16 @@ function Card({
   );
 }
 
+interface Data {
+  tipo: "string";
+  numero: "string";
+  valid: true;
+}
+
 export default function TankControl() {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const router = useRouter();
-
-  const data = [
+  const [data, setData] = useState<any[]>([
     { title: "Tanque 1", isAvailable: true },
     {
       title: "Tanque 2",
@@ -154,7 +161,26 @@ export default function TankControl() {
     },
     { title: "Tanque 6", isAvailable: true },
     { title: "Tanque 8", isAvailable: true },
-  ];
+  ]);
+
+  // const getDepositos = async () => {
+  //   try {
+  //     const token = await SecureStore.getItemAsync("user-token");
+  //     const response = await apiInstance.get("/deposito/getAll", {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     });
+
+  //     setData(response.data);
+
+  //     console.log(response.data);
+  //   } catch (error) {
+  //     console.error("Erro ao buscar depósitos:", error);
+  //   }
+  // };
+
+  //getDepositos();
 
   return (
     <>
@@ -200,16 +226,18 @@ export default function TankControl() {
           </View>
           <FlatList
             data={data}
-            renderItem={({ item }) => (
-              <Card
-                title={item.title}
-                isAvailable={item.isAvailable}
-                density={item.density}
-                temperature={item.temperature}
-                pressure={item.pressure == 0 ? 0 : undefined}
-              />
-            )}
-            keyExtractor={(item) => item.title}
+            renderItem={({ item }) => {
+              return (
+                <Card
+                  title={item.title}
+                  isAvailable={item.isAvailable}
+                  density={"0"}
+                  temperature={20}
+                  pressure={item.pressure == 0 ? 0 : undefined}
+                />
+              );
+            }}
+            keyExtractor={(item) => item.numero}
             showsVerticalScrollIndicator={false}
           />
           <FilterDrawer
