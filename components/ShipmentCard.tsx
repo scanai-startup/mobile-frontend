@@ -1,3 +1,4 @@
+import { useShipmentStore } from "@/context/remessasContext";
 import IShipmentCard from "@/types/IShipmentCard";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
@@ -11,7 +12,10 @@ export default function ShipmentCard({
   shipment,
   variant = "primary",
 }: ShipmentCardP) {
-  const [selectedCard, setSelectedCard] = useState(false);
+  const toggleShipment = useShipmentStore((state) => state.toggleShipment);
+  const isSelected = useShipmentStore((state) =>
+    state.isShipmentSelected(shipment.id)
+  );
 
   return (
     <View className="bg-white rounded-md border border-neutral-250">
@@ -30,14 +34,14 @@ export default function ShipmentCard({
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
-            onPress={() => setSelectedCard(!selectedCard)}
+            onPress={() => toggleShipment(shipment.id)}
             className={
               "border rounded-md px-2 py-1 border-blue-500" +
-              (selectedCard ? " bg-blue-500" : "")
+              (isSelected ? " bg-blue-500" : "")
             }
           >
-            <Text className={selectedCard ? "text-white" : "text-blue-500"}>
-              {selectedCard ? "Selecionado" : "Selecionar"}
+            <Text className={isSelected ? "text-white" : "text-blue-500"}>
+              {isSelected ? "Selecionado" : "Selecionar"}
             </Text>
           </TouchableOpacity>
         )}

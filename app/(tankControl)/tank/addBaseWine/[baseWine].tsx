@@ -2,23 +2,29 @@ import AppHeader from "@/components/AppHeader";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
 import ShipmentCard from "@/components/ShipmentCard";
-import { ShipmentCardType } from "@/types/ShipmentCardType";
 import { Href, Link, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import apiInstance from "@/api/apiInstance";
+import { useShipmentStore } from "@/context/remessasContext";
+
+//TODO: TERMINAR A PARTE DE ASSOCIAÇÃO DA REMESSA COM O DEPOSITO QUANDO FOR
+//DEDICIDO O QUE É PRA FAZER
 
 export default function BaseWine() {
   const router = useRouter();
   const { tank } = useLocalSearchParams();
   const [data, setData] = useState();
+  const selectedShipments = useShipmentStore(
+    (state) => state.selectedShipments
+  );
 
   useEffect(() => {
-    getDepositos();
+    getRemessas();
   }, []);
 
-  const getDepositos = async () => {
+  const getRemessas = async () => {
     try {
       const token = await SecureStore.getItemAsync("user-token");
       const response = await apiInstance.get("/uva/getAll", {
@@ -35,7 +41,22 @@ export default function BaseWine() {
     }
   };
 
-  //getDepositos();
+  const handleSubmit = async () => {
+    try {
+      const token = await SecureStore.getItemAsync("user-token");
+      // const response = await apiInstance.get("/", {
+      //   headers: {
+      //     Authorization: `Bearer ${token}`,
+      //   },
+      // });
+
+      console.log("Remessas associadas", selectedShipments);
+    } catch (error) {
+      console.error("Erro ao buscar depósitos:", error);
+    }
+  };
+
+  //getRemessas();
 
   // const data: ShipmentCardType[] = [
   //   {
@@ -98,7 +119,7 @@ export default function BaseWine() {
           ></FlatList>
           <View className="mt-4">
             <Link href={href} asChild>
-              <DefaultButton title="Concluir" />
+              <DefaultButton title="Concluir" onPress={handleSubmit} />
             </Link>
           </View>
         </View>
