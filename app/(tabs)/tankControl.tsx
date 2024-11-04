@@ -135,50 +135,31 @@ interface Data {
 export default function TankControl() {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const router = useRouter();
-  const [data, setData] = useState<any[]>([
-    { title: "Tanque 1", isAvailable: true },
-    {
-      title: "Tanque 2",
-      isAvailable: false,
-      density: "980",
-      temperature: 22,
-      pressure: 100000,
-    },
-    {
-      title: "Tanque 3",
-      isAvailable: false,
-      density: "980",
-      temperature: 22,
-      pressure: 100000,
-    },
-    { title: "Tanque 4", isAvailable: true },
-    {
-      title: "Tanque 5",
-      isAvailable: false,
-      density: "980",
-      temperature: 22,
-      pressure: 100000,
-    },
-    { title: "Tanque 6", isAvailable: true },
-    { title: "Tanque 8", isAvailable: true },
-  ]);
+  const [data, setData] = useState<any[]>([]);
 
-  // const getDepositos = async () => {
-  //   try {
-  //     const token = await SecureStore.getItemAsync("user-token");
-  //     const response = await apiInstance.get("/deposito/getAll", {
-  //       headers: {
-  //         Authorization: `Bearer ${token}`,
-  //       },
-  //     });
+  useEffect(() => {
+    getDepositos();
+  }, []);
 
-  //     setData(response.data);
+  const getDepositos = async () => {
+    try {
+      const token = await SecureStore.getItemAsync("user-token");
+      const response = await apiInstance.get(
+        "/deposito/findDepositosComAnalises",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-  //     console.log(response.data);
-  //   } catch (error) {
-  //     console.error("Erro ao buscar depósitos:", error);
-  //   }
-  // };
+      setData(response.data);
+
+      console.log(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar depósitos:", error);
+    }
+  };
 
   //getDepositos();
 
@@ -229,8 +210,8 @@ export default function TankControl() {
             renderItem={({ item }) => {
               return (
                 <Card
-                  title={item.title}
-                  isAvailable={item.isAvailable}
+                  title={item.deposito}
+                  isAvailable={item.tempMostro == null ? true : item.tempMostro}
                   density={"0"}
                   temperature={20}
                   pressure={item.pressure == 0 ? 0 : undefined}

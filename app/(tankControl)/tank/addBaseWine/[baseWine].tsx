@@ -4,63 +4,58 @@ import SafeAreaView from "@/components/SafeAreaView";
 import ShipmentCard from "@/components/ShipmentCard";
 import { ShipmentCardType } from "@/types/ShipmentCardType";
 import { Href, Link, useLocalSearchParams, useRouter } from "expo-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
+import * as SecureStore from "expo-secure-store";
+import apiInstance from "@/api/apiInstance";
 
 export default function BaseWine() {
   const router = useRouter();
   const { tank } = useLocalSearchParams();
+  const [data, setData] = useState();
 
-  const data: ShipmentCardType[] = [
-    {
-      number: 101,
-      ticket: 1,
-      id: 12345678,
-      date: "21/10/2022",
-      casta: "Airen",
-      type: "Vinho branco",
-    },
-    {
-      number: 102,
-      ticket: 2,
-      id: 87654321,
-      date: "22/10/2022",
-      casta: "Merlot",
-      type: "Vinho tinto",
-    },
-    {
-      number: 103,
-      ticket: 3,
-      id: 98765432,
-      date: "23/10/2022",
-      casta: "Chardonnay",
-      type: "Vinho branco",
-    },
-    {
-      number: 104,
-      ticket: 4,
-      id: 56789012,
-      date: "24/10/2022",
-      casta: "Cabernet Sauvignon",
-      type: "Vinho tinto",
-    },
-    {
-      number: 105,
-      ticket: 5,
-      id: 34567890,
-      date: "25/10/2022",
-      casta: "Pinot Noir",
-      type: "Vinho tinto",
-    },
-    {
-      number: 106,
-      ticket: 6,
-      id: 90123456,
-      date: "26/10/2022",
-      casta: "Sauvignon Blanc",
-      type: "Vinho branco",
-    },
-  ];
+  useEffect(() => {
+    getDepositos();
+  }, []);
+
+  const getDepositos = async () => {
+    try {
+      const token = await SecureStore.getItemAsync("user-token");
+      const response = await apiInstance.get("/uva/getAll", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setData(response.data);
+
+      console.log(response.data);
+    } catch (error) {
+      console.error("Erro ao buscar depósitos:", error);
+    }
+  };
+
+  //getDepositos();
+
+  // const data: ShipmentCardType[] = [
+  //   {
+  //     number: 101,
+  //     ticket: 1,
+  //     id: 12345678,
+  //     date: "21/10/2022",
+  //     casta: "Airen",
+  //     type: "Vinho branco",
+  //   },
+  //   {
+  //     number: 102,
+  //     ticket: 2,
+  //     id: 87654321,
+  //     date: "22/10/2022",
+  //     casta: "Merlot",
+  //     type: "Vinho tinto",
+  //   },
+  // ];
+
   const href: Href = {
     pathname: "/tank/[tank]",
     params: { tank: tank as string },

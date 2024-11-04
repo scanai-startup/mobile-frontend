@@ -12,12 +12,13 @@ export default function ShipmentCard({
   variant = "primary",
 }: ShipmentCardP) {
   const [selectedCard, setSelectedCard] = useState(false);
+
   return (
     <View className="bg-white rounded-md border border-neutral-250">
       <View className="flex-row justify-between items-center p-5">
         <View className="flex-row gap-1 items-center">
           <Text className="text-2xl font-semibold" style={{ color: "#171717" }}>
-            {shipment.numerolote}
+            {shipment.id}
           </Text>
           <Text className="text-base text-neutral-400">
             {shipment.numerotalao}° Talão
