@@ -1,6 +1,7 @@
 import DateInput from "@/components/DateInput";
 import { DefaultButton } from "@/components/DefaultButton";
-import { useNewShipmentContext } from "@/context/NewShipmentContext";
+import { useShipmentStore } from "@/context/NewShipmentContext";
+
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
@@ -18,7 +19,7 @@ import {
 } from "react-native";
 
 export default function GrapeReception() {
-  const { shipmentData, setShipmentData } = useNewShipmentContext(); // gets the shipment data context
+  const { shipmentData } = useShipmentStore(); // gets the shipment data context
   const [isHourModalOpen, setIsHourModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedHour, setSelectedHour] = useState(new Date());
@@ -50,7 +51,7 @@ export default function GrapeReception() {
 
   function handleInputChange(field: string, value: string | number) {
     // function called everytime the user interacts with the form fields
-    setShipmentData({ ...shipmentData, [field]: value });
+    //setShipmentData({ ...shipmentData, [field]: value });
   }
 
   if (!permission) {
@@ -94,6 +95,7 @@ export default function GrapeReception() {
                 onChangeText={(value) =>
                   handleInputChange("numerotalao", Number(value))
                 }
+                keyboardType="numeric"
               />
             </View>
           </View>
@@ -137,6 +139,7 @@ export default function GrapeReception() {
                 onChangeText={(value) =>
                   handleInputChange("numerotalao", Number(value))
                 }
+                keyboardType="numeric"
               />
               <Text>unidades</Text>
             </View>
@@ -150,6 +153,7 @@ export default function GrapeReception() {
                 onChangeText={(value) =>
                   handleInputChange("peso", Number(value))
                 }
+                keyboardType="numeric"
               />
               <Text>kg</Text>
             </View>

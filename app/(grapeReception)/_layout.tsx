@@ -2,10 +2,8 @@ import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
-import {
-  NewShipmentContextProvider,
-  useNewShipmentContext,
-} from "@/context/NewShipmentContext";
+import { useShipmentStore } from "@/context/NewShipmentContext";
+
 import { Href, Link, Stack, usePathname, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import React, { useEffect, useState } from "react";
@@ -38,13 +36,11 @@ export default function GrapeReceptionLayout() {
           mainText="Recepção de Uvas"
           returnHref="/(tabs)/shipment"
         />
-        <NewShipmentContextProvider>
-          <Stack screenOptions={{ headerShown: false }} />
-          <FormFooter
-            nextHref={nextHref as Href<string>}
-            isReturnButtonEnabled={currRoute === "/" ? false : true}
-          />
-        </NewShipmentContextProvider>
+        <Stack screenOptions={{ headerShown: false }} />
+        <FormFooter
+          nextHref={nextHref as Href<string>}
+          isReturnButtonEnabled={currRoute === "/" ? false : true}
+        />
       </SafeAreaView>
     </>
   );
@@ -59,11 +55,12 @@ interface FormFooterP {
 
 function FormFooter({ nextHref, isReturnButtonEnabled = false }: FormFooterP) {
   const router = useRouter();
-  const { shipmentData } = useNewShipmentContext();
+  const { shipmentData } = useShipmentStore();
+
   async function handleDataSubmit() {
     const token = await SecureStore.getItemAsync("user-token");
     console.log(shipmentData);
-    console.log(token);
+
     apiInstance
       .post("/uva/register", shipmentData, {
         headers: {
