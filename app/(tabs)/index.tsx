@@ -2,11 +2,13 @@ import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
+import { useTokenStore } from "@/context/userData";
 import { Cylinder, LucideBox, Truck, Wine } from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
 export default function Home() {
+  const { subject } = useTokenStore();
   const activityListItems = [
     {
       name: "Gestão de tanques",
@@ -33,7 +35,7 @@ export default function Home() {
     <>
       <CustomStatusBar backgroundColor="#18181b" barStyle="light-content" />
       <SafeAreaView>
-        <AppHeader mainText="Olá, Nome." />
+        <AppHeader mainText={`Olá, ${subject}`} />
         <View>
           <Text className="text-zinc-950 font-bold text-2xl ml-7 mb-4">
             Atividades
