@@ -2,6 +2,7 @@ import apiInstance from "@/api/apiInstance";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
+import { useTokenStore } from "@/context/userData";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import React, { useState } from "react";
@@ -80,6 +81,7 @@ function Button({
   senha: string;
 }) {
   const router = useRouter();
+  const { setToken } = useTokenStore();
 
   const fetch = async () => {
     try {
@@ -87,7 +89,11 @@ function Button({
         matricula: matricula,
         senha: senha,
       });
-      await SecureStore.setItemAsync("user-token", response.data.token);
+      const token = response.data.token;
+
+      setToken(token);
+      await SecureStore.setItemAsync("user-token", token);
+
       router.push("/(tabs)/");
     } catch (e) {
       console.log(e);
