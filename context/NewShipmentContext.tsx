@@ -23,10 +23,11 @@ interface ShipmentState {
 export const useShipmentStore = create<ShipmentState>((set) => ({
   shipmentData: {
     numerotalao: 0,
+    qttcaixa: 0,
     numerolote: 0,
     peso: 0,
     fkviticultor: 1,
-    fkfuncionario: 1,
+    fkfuncionario: 0,
     casta: "Airen",
     datachegada: "",
     sanidade: 0,

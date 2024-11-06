@@ -1,6 +1,7 @@
 import DateInput from "@/components/DateInput";
 import { DefaultButton } from "@/components/DefaultButton";
 import { useShipmentStore } from "@/context/NewShipmentContext";
+import { useTokenStore } from "@/context/userData";
 
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -26,6 +27,12 @@ export default function GrapeReception() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [facing, setFacing] = useState<CameraType>("back");
   const [permission, requestPermission] = useCameraPermissions();
+  const { updateShipmentData } = useShipmentStore();
+  const { userId } = useTokenStore();
+
+  useEffect(() => {
+    if (userId) updateShipmentData({ ["fkfuncionario"]: userId });
+  }, []);
 
   useEffect(() => {
     // everytime the date and/or the hour changes the function gets called
@@ -50,8 +57,7 @@ export default function GrapeReception() {
   }
 
   function handleInputChange(field: string, value: string | number) {
-    // function called everytime the user interacts with the form fields
-    //setShipmentData({ ...shipmentData, [field]: value });
+    updateShipmentData({ [field]: value });
   }
 
   if (!permission) {
@@ -100,11 +106,21 @@ export default function GrapeReception() {
             </View>
           </View>
           <View>
+            <Text className="text-xl">Casta</Text>
+            <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
+              <TextInput
+                className="text-xl ml-2 flex-1"
+                placeholder="AIREN"
+                onChangeText={(value) => handleInputChange("casta", value)}
+              />
+            </View>
+          </View>
+          <View>
             <Text className="text-xl">Lote</Text>
             <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
               <TextInput
                 className="text-xl ml-2 flex-1"
-                placeholder="101 - AIREN"
+                placeholder="101"
                 onChangeText={(value) =>
                   handleInputChange("numerolote", Number(value))
                 }
@@ -137,7 +153,7 @@ export default function GrapeReception() {
                 className="text-xl ml-2 flex-1"
                 placeholder="540"
                 onChangeText={(value) =>
-                  handleInputChange("numerotalao", Number(value))
+                  handleInputChange("qttcaixa", Number(value))
                 }
                 keyboardType="numeric"
               />
