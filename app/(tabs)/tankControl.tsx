@@ -218,7 +218,7 @@ export default function TankControl() {
                 />
               );
             }}
-            keyExtractor={(item) => item.numero}
+            keyExtractor={(item) => item.deposito}
             showsVerticalScrollIndicator={false}
           />
           <FilterDrawer

@@ -23,7 +23,7 @@ export default function Shipment() {
       })
       .then((r) => {
         setShipments(r.data);
-        // console.log("renderizou");
+        console.log("\n", r.data);
       })
       .catch((e) => {
         console.log(e);
