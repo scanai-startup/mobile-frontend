@@ -2,9 +2,9 @@ import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
-import { Href, Link, useRouter } from "expo-router";
+import { Href, Link, useFocusEffect, useRouter } from "expo-router";
 import { Search } from "lucide-react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import * as SecureStore from "expo-secure-store";
 import {
   FlatList,
@@ -137,9 +137,13 @@ export default function TankControl() {
   const router = useRouter();
   const [data, setData] = useState<any[]>([]);
 
-  useEffect(() => {
-    getDepositos();
-  }, []);
+  useFocusEffect(
+    // calls the api everytime the screen gets displayed
+    useCallback(() => {
+      getDepositos();
+      return;
+    }, [])
+  );
 
   const getDepositos = async () => {
     try {
@@ -154,8 +158,6 @@ export default function TankControl() {
       );
 
       setData(response.data);
-
-      console.log(response.data);
     } catch (error) {
       console.error("Erro ao buscar depósitos:", error);
     }
@@ -207,19 +209,32 @@ export default function TankControl() {
           </View>
           <FlatList
             data={data}
-            renderItem={({ item }) => {
-              return (
-                <Card
-                  title={item.deposito}
-                  isAvailable={item.tempMostro == null ? true : item.tempMostro}
-                  density={"0"}
-                  temperature={20}
-                  pressure={item.pressure == 0 ? 0 : undefined}
-                />
-              );
-            }}
             keyExtractor={(item) => item.deposito}
-            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => {
+              if (item.conteudo != null) {
+                return (
+                  <Card
+                    title={item.deposito}
+                    isAvailable={false}
+                    density={"0"}
+                    temperature={20}
+                    pressure={item.pressure === 0 ? 0 : undefined}
+                  />
+                );
+              } else {
+                return (
+                  <Card
+                    title={item.deposito}
+                    isAvailable={
+                      item.tempMostro == null ? true : item.tempMostro
+                    }
+                    density={"0"}
+                    temperature={20}
+                    pressure={item.pressure === 0 ? 0 : undefined}
+                  />
+                );
+              }
+            }}
           />
           <FilterDrawer
             visible={drawerVisible}
