@@ -2,12 +2,19 @@ import AppHeader from "@/components/AppHeader";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
 import ShipmentCard from "@/components/ShipmentCard";
-import { Href, Link, useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import {
+  Href,
+  Link,
+  useFocusEffect,
+  useLocalSearchParams,
+  useRouter,
+} from "expo-router";
+import React, { useCallback, useEffect, useState } from "react";
 import { FlatList, Text, View } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import apiInstance from "@/api/apiInstance";
 import { useShipmentStore } from "@/context/remessasContext";
+import { useTokenStore } from "@/context/userData";
 
 //TODO: TERMINAR A PARTE DE ASSOCIAÇÃO DA REMESSA COM O DEPOSITO QUANDO FOR
 //DEDICIDO O QUE É PRA FAZER
@@ -19,10 +26,17 @@ export default function BaseWine() {
   const selectedShipments = useShipmentStore(
     (state) => state.selectedShipments
   );
+  const { userId } = useTokenStore();
 
-  useEffect(() => {
-    getRemessas();
-  }, []);
+  console.log("TANQUEEEE", tank);
+
+  useFocusEffect(
+    // calls the api everytime the screen gets displayed
+    useCallback(() => {
+      getRemessas();
+      return;
+    }, [])
+  );
 
   const getRemessas = async () => {
     try {
@@ -44,15 +58,23 @@ export default function BaseWine() {
   const handleSubmit = async () => {
     try {
       const token = await SecureStore.getItemAsync("user-token");
-      // const response = await apiInstance.get("/", {
-      //   headers: {
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // });
+      const response = await apiInstance.get("/vinculodepositoremessas", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          remessaUvaIdList: selectedShipments,
+          //TODO: NEED TO WAIT THE IMPLEMENTATION GET THE DEPOSIT ID WHEN
+          //API CALL IS NEEDED
+          depositoId: 0,
+          funcionarioId: userId,
+        },
+      });
 
       console.log("Remessas associadas", selectedShipments);
+      console.log("response", response.data);
     } catch (error) {
-      console.error("Erro ao buscar depósitos:", error);
+      console.error("Erro ao associar remessas:", error);
     }
   };
 
