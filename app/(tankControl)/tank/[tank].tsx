@@ -14,48 +14,50 @@ import React from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 
 export default function Tank() {
-  const { tank } = useLocalSearchParams();
+  const { tank, id } = useLocalSearchParams();
   const router = useRouter();
+
   const activityListItems = [
     {
       name: "Análises diárias",
       icon: <Cylinder size="28px" color="#000000" />,
       route: "/(tankControl)/tank/dailyAnalysis/[dailyAnalysis]",
       type: "tank",
-      param: tank,
+      param: [tank, id],
     },
     {
       name: "Análises de deposito",
       icon: <Microscope size="28px" color="#000000" />,
       route: "/(tankControl)/tank/depositAnalysis/listAnalysis/[listAnalysis]",
       type: "tank",
-      param: tank,
+      param: [tank, id],
     },
     {
       name: "Envase e rotulagem",
       icon: <Milk size="28px" color="#000000" />,
       route: "/envaseERotulagem/envase",
+      param: [tank, id],
     },
     {
       name: "Adicionar Vinho Base",
       icon: <Grape size="28px" color="#000000" />,
       route: "/(tankControl)/tank/addBaseWine/[addBaseWine]",
       type: "tank",
-      param: tank,
+      param: [tank, id],
     },
     {
       name: "Realizar Trasfega",
       icon: <ArrowRightLeft size="28px" color="#000000" />,
       route: "/(tankControl)/tank/realizarTrasfega/[trasfega]",
       type: "",
-      param: "",
+      param: [tank, id],
     },
     {
       name: "Adicionar pé de Cuba",
       icon: <Grape size="28px" color="#000000" />,
       route: "/(tankControl)/tank/addPeDeCuba/[addPeDeCuba]",
       type: "tank",
-      param: tank,
+      param: [tank, id],
     },
   ];
 
@@ -74,15 +76,17 @@ export default function Tank() {
         <FlatList
           data={activityListItems}
           keyExtractor={(item) => item.name}
-          renderItem={({ item }) => (
-            <ActivityCard
-              title={item.name}
-              icon={item.icon}
-              route={item.route}
-              type={item.type}
-              param={item.param}
-            />
-          )}
+          renderItem={({ item }) => {
+            return (
+              <ActivityCard
+                title={item.name}
+                icon={item.icon}
+                route={item.route}
+                type={item.type}
+                param={item.param}
+              />
+            );
+          }}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
