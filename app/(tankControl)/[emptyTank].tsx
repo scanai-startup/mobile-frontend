@@ -30,7 +30,7 @@ export default function EmptyTank() {
       param: tank,
     },
     {
-      name: "Adicionar pé de Cuba",
+      name: "Iniciar pé de Cuba",
       icon: <Grape size={28} color="#000000" />,
       route: "/(tankControl)/tank/addPeDeCuba/[addPeDeCuba]",
       type: "tank",

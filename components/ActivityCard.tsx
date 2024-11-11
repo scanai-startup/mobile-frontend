@@ -7,7 +7,10 @@ interface ActivityCardProps {
   title: string;
   route: string | any;
   type?: string;
-  param?: string | string[];
+  param?: {
+    tank: string;
+    id?: number;
+  }[];
 }
 
 export default function ActivityCard({
@@ -15,10 +18,9 @@ export default function ActivityCard({
   title,
   route,
   type = "",
-  param = "",
+  param = [],
 }: ActivityCardProps) {
-  const navigation = useNavigation();
-  const finalParam = type === "tank" ? param : null;
+  const [tank, id] = param.length > 0 ? param : [undefined, undefined];
 
   return (
     <Link
@@ -30,7 +32,7 @@ export default function ActivityCard({
       }}
       href={{
         pathname: route,
-        params: { tank: finalParam },
+        params: { tank: tank, id: id },
       }}
       asChild
     >

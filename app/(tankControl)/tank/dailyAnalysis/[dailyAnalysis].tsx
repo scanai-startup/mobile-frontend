@@ -25,7 +25,7 @@ const data: Analysis[] = [
 ];
 
 export default function DailyAnalysis() {
-  const { tank } = useLocalSearchParams();
+  const { tank, id } = useLocalSearchParams();
   const router = useRouter();
   const [trasfegaDate, setTrasfegaDate] = useState<Date>(new Date());
 

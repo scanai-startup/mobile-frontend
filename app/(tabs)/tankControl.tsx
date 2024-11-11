@@ -2,9 +2,9 @@ import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
-import { Href, Link, useRouter } from "expo-router";
+import { Href, Link, useFocusEffect, useRouter } from "expo-router";
 import { Search } from "lucide-react-native";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import * as SecureStore from "expo-secure-store";
 import {
   FlatList,
@@ -16,8 +16,9 @@ import {
 } from "react-native";
 
 interface CardProps {
+  id: number;
   title: string;
-  isAvailable: boolean;
+  isAvailable: boolean | string;
   density?: string;
   temperature?: number;
   pressure?: 0;
@@ -61,12 +62,17 @@ function Card({
   density = "",
   temperature = 0,
   pressure = 0,
+  id = 0,
 }: CardProps) {
-  const router = useRouter();
+  const href =
+    isAvailable != "Edge"
+      ? {
+          pathname: "/(tankControl)/[emptyTank]",
+          params: { tank: title, id: id },
+        }
+      : { pathname: "/tank/[tank]", params: { tank: title, id: id } };
 
-  const href = isAvailable
-    ? { pathname: "/(tankControl)/[emptyTank]", params: { tank: title } }
-    : { pathname: "/tank/[tank]", params: { tank: title } };
+  console.log(id);
 
   return (
     <Link href={href as Href} asChild>
@@ -74,7 +80,11 @@ function Card({
         <View className="bg-white rounded-lg shadow flex-col border border-neutral-250">
           <View className="flex-row p-4 justify-between items-center">
             <Text className="text-2xl font-bold">{title}</Text>
-            {isAvailable ? (
+            {isAvailable == "Edge" ? (
+              <View className="bg-red-200 px-2 py-1 rounded-full">
+                <Text className="text-md text-red-800">Ocupado</Text>
+              </View>
+            ) : isAvailable ? (
               <View className="bg-green-200 px-2 py-1 rounded-full">
                 <Text className="text-md text-green-800">Disponível</Text>
               </View>
@@ -126,26 +136,24 @@ function Card({
   );
 }
 
-interface Data {
-  tipo: "string";
-  numero: "string";
-  valid: true;
-}
-
 export default function TankControl() {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const router = useRouter();
   const [data, setData] = useState<any[]>([]);
 
-  useEffect(() => {
-    getDepositos();
-  }, []);
+  useFocusEffect(
+    // calls the api everytime the screen gets displayed
+    useCallback(() => {
+      getDepositos();
+      return;
+    }, [])
+  );
 
   const getDepositos = async () => {
     try {
       const token = await SecureStore.getItemAsync("user-token");
       const response = await apiInstance.get(
-        "/deposito/findDepositosComAnalises",
+        "/deposito/getAllDepositosWithInformations",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -154,14 +162,10 @@ export default function TankControl() {
       );
 
       setData(response.data);
-
-      console.log(response.data);
     } catch (error) {
       console.error("Erro ao buscar depósitos:", error);
     }
   };
-
-  //getDepositos();
 
   return (
     <>
@@ -207,19 +211,34 @@ export default function TankControl() {
           </View>
           <FlatList
             data={data}
-            renderItem={({ item }) => {
-              return (
-                <Card
-                  title={item.deposito}
-                  isAvailable={item.tempMostro == null ? true : item.tempMostro}
-                  density={"0"}
-                  temperature={20}
-                  pressure={item.pressure == 0 ? 0 : undefined}
-                />
-              );
-            }}
             keyExtractor={(item) => item.deposito}
-            showsVerticalScrollIndicator={false}
+            renderItem={({ item }) => {
+              if (item.conteudo != null) {
+                return (
+                  <Card
+                    id={item.idDeposito}
+                    title={item.deposito}
+                    isAvailable={"Edge"}
+                    density={"0"}
+                    temperature={20}
+                    pressure={item.pressure === 0 ? 0 : undefined}
+                  />
+                );
+              } else {
+                return (
+                  <Card
+                    id={item.idDeposito}
+                    title={item.deposito}
+                    isAvailable={
+                      item.tempMostro == null ? true : item.tempMostro
+                    }
+                    density={"0"}
+                    temperature={20}
+                    pressure={item.pressure === 0 ? 0 : undefined}
+                  />
+                );
+              }
+            }}
           />
           <FilterDrawer
             visible={drawerVisible}
