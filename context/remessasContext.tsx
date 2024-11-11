@@ -4,6 +4,7 @@ interface ShipmentState {
   selectedShipments: number[];
   toggleShipment: (shipmentId: number) => void;
   isShipmentSelected: (shipmentId: number) => boolean;
+  clearShipments: () => void;
 }
 
 export const useShipmentStore = create<ShipmentState>((set, get) => ({
@@ -25,5 +26,8 @@ export const useShipmentStore = create<ShipmentState>((set, get) => ({
   isShipmentSelected: (shipmentId) => {
     const { selectedShipments } = get();
     return selectedShipments.includes(shipmentId);
+  },
+  clearShipments: () => {
+    set({ selectedShipments: [] });
   },
 }));

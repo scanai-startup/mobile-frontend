@@ -1,7 +1,8 @@
 import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
 import SafeAreaView from "@/components/SafeAreaView";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useShipmentStore } from "@/context/remessasContext";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import {
   ArrowRightLeft,
   ChevronDown,
@@ -10,12 +11,20 @@ import {
   Microscope,
   Milk,
 } from "lucide-react-native";
-import React from "react";
+import React, { useCallback } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
 
 export default function Tank() {
   const { tank, id } = useLocalSearchParams();
   const router = useRouter();
+  const { clearShipments } = useShipmentStore();
+
+  useFocusEffect(
+    useCallback(() => {
+      clearShipments();
+      return;
+    }, [])
+  );
 
   const activityListItems = [
     {
@@ -23,41 +32,41 @@ export default function Tank() {
       icon: <Cylinder size="28px" color="#000000" />,
       route: "/(tankControl)/tank/dailyAnalysis/[dailyAnalysis]",
       type: "tank",
-      param: [tank, id],
+      param: [{ tank: tank as string, id: Number(id) }],
     },
     {
       name: "Análises de deposito",
       icon: <Microscope size="28px" color="#000000" />,
       route: "/(tankControl)/tank/depositAnalysis/listAnalysis/[listAnalysis]",
       type: "tank",
-      param: [tank, id],
+      param: [{ tank: tank as string, id: Number(id) }],
     },
     {
       name: "Envase e rotulagem",
       icon: <Milk size="28px" color="#000000" />,
       route: "/envaseERotulagem/envase",
-      param: [tank, id],
+      param: [{ tank: tank as string, id: Number(id) }],
     },
     {
       name: "Adicionar Vinho Base",
       icon: <Grape size="28px" color="#000000" />,
       route: "/(tankControl)/tank/addBaseWine/[addBaseWine]",
       type: "tank",
-      param: [tank, id],
+      param: [{ tank: tank as string, id: Number(id) }],
     },
     {
       name: "Realizar Trasfega",
       icon: <ArrowRightLeft size="28px" color="#000000" />,
       route: "/(tankControl)/tank/realizarTrasfega/[trasfega]",
       type: "",
-      param: [tank, id],
+      param: [{ tank: tank as string, id: Number(id) }],
     },
     {
       name: "Adicionar pé de Cuba",
       icon: <Grape size="28px" color="#000000" />,
       route: "/(tankControl)/tank/addPeDeCuba/[addPeDeCuba]",
       type: "tank",
-      param: [tank, id],
+      param: [{ tank: tank as string, id: Number(id) }],
     },
   ];
 

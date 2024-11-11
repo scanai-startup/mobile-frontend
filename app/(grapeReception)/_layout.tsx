@@ -59,7 +59,6 @@ function FormFooter({ nextHref, isReturnButtonEnabled = false }: FormFooterP) {
 
   async function handleDataSubmit() {
     const token = await SecureStore.getItemAsync("user-token");
-    console.log(shipmentData);
 
     apiInstance
       .post("/uva/register", shipmentData, {
@@ -67,7 +66,8 @@ function FormFooter({ nextHref, isReturnButtonEnabled = false }: FormFooterP) {
           Authorization: `Bearer ${token}`,
         },
       })
-      .then(() => {
+      .then((res) => {
+        console.log(res.request);
         router.navigate("/(tabs)/shipment"); // navigate back to the shipments list
       })
       .catch((e) => {

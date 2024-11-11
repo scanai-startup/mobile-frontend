@@ -18,12 +18,11 @@ export default function Shipment() {
     apiInstance
       .get("/uva/getAll", {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: "Bearer " + token,
         },
       })
       .then((r) => {
         setShipments(r.data);
-        console.log("\n", r.data);
       })
       .catch((e) => {
         console.log(e);

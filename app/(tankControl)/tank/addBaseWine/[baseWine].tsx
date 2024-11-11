@@ -1,7 +1,10 @@
+import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
 import ShipmentCard from "@/components/ShipmentCard";
+import { useShipmentStore } from "@/context/remessasContext";
+import { useTokenStore } from "@/context/userData";
 import {
   Href,
   Link,
@@ -9,26 +12,22 @@ import {
   useLocalSearchParams,
   useRouter,
 } from "expo-router";
-import React, { useCallback, useEffect, useState } from "react";
-import { FlatList, Text, View } from "react-native";
 import * as SecureStore from "expo-secure-store";
-import apiInstance from "@/api/apiInstance";
-import { useShipmentStore } from "@/context/remessasContext";
-import { useTokenStore } from "@/context/userData";
+import React, { useCallback, useState } from "react";
+import { FlatList, Text, View } from "react-native";
 
 //TODO: TERMINAR A PARTE DE ASSOCIAÇÃO DA REMESSA COM O DEPOSITO QUANDO FOR
 //DEDICIDO O QUE É PRA FAZER
 
 export default function BaseWine() {
   const router = useRouter();
-  const { tank } = useLocalSearchParams();
+  const { tank, id } = useLocalSearchParams();
   const [data, setData] = useState();
   const selectedShipments = useShipmentStore(
     (state) => state.selectedShipments
   );
+  const { clearShipments } = useShipmentStore();
   const { userId } = useTokenStore();
-
-  console.log("TANQUEEEE", tank);
 
   useFocusEffect(
     // calls the api everytime the screen gets displayed
@@ -46,36 +45,32 @@ export default function BaseWine() {
           Authorization: `Bearer ${token}`,
         },
       });
-
       setData(response.data);
-
-      console.log(response.data);
     } catch (error) {
       console.error("Erro ao buscar depósitos:", error);
     }
   };
 
   const handleSubmit = async () => {
-    try {
-      const token = await SecureStore.getItemAsync("user-token");
-      const response = await apiInstance.get("/vinculodepositoremessas", {
+    const token = await SecureStore.getItemAsync("user-token");
+    const data = {
+      remessaUvaIdList: selectedShipments,
+      depositoId: id,
+      funcionarioId: userId,
+    };
+    apiInstance
+      .post("/vinculodepositoremessas", data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        params: {
-          remessaUvaIdList: selectedShipments,
-          //TODO: NEED TO WAIT THE IMPLEMENTATION GET THE DEPOSIT ID WHEN
-          //API CALL IS NEEDED
-          depositoId: 0,
-          funcionarioId: userId,
-        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        clearShipments();
+      })
+      .catch((err) => {
+        console.log(err.request);
       });
-
-      console.log("Remessas associadas", selectedShipments);
-      console.log("response", response.data);
-    } catch (error) {
-      console.error("Erro ao associar remessas:", error);
-    }
   };
 
   //getRemessas();
