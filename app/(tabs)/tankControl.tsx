@@ -3,9 +3,9 @@ import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
 import { Href, Link, useFocusEffect, useRouter } from "expo-router";
-import { Search } from "lucide-react-native";
-import React, { useCallback, useEffect, useState } from "react";
 import * as SecureStore from "expo-secure-store";
+import { Search } from "lucide-react-native";
+import React, { useCallback, useState } from "react";
 import {
   FlatList,
   Modal,
@@ -160,7 +160,7 @@ export default function TankControl() {
           },
         }
       );
-
+      console.log(response.data);
       setData(response.data);
     } catch (error) {
       console.error("Erro ao buscar depósitos:", error);
@@ -219,9 +219,6 @@ export default function TankControl() {
                     id={item.idDeposito}
                     title={item.deposito}
                     isAvailable={"Edge"}
-                    density={"0"}
-                    temperature={20}
-                    pressure={item.pressure === 0 ? 0 : undefined}
                   />
                 );
               } else {

@@ -1,18 +1,19 @@
 import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
 import SafeAreaView from "@/components/SafeAreaView";
-import { useLocalSearchParams } from "expo-router";
+import { useShipmentStore } from "@/context/remessasContext";
+import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import {
   AlertCircle,
   ArrowRightLeft,
   Grape,
   GrapeIcon,
 } from "lucide-react-native";
-import React from "react";
+import React, { useCallback } from "react";
 import { FlatList, Text, View } from "react-native";
 
 export default function EmptyTank() {
-  const { tank } = useLocalSearchParams();
+  const { tank, id } = useLocalSearchParams();
 
   const activityListItems = [
     {
@@ -20,23 +21,32 @@ export default function EmptyTank() {
       icon: <GrapeIcon size={28} color="#000000" />,
       route: "/(tankControl)/tank/addBaseWine/[addBaseWine]",
       type: "tank",
-      param: tank,
+      param: [{ tank: tank as string, id: Number(id) }],
     },
     {
       name: "Realizar Trasfega",
       icon: <ArrowRightLeft size={28} color="#000000" />,
       route: "/(tankControl)/tank/realizarTrasfega/[trasfega]",
       type: "tank",
-      param: tank,
+      param: [{ tank: tank as string, id: Number(id) }],
     },
     {
       name: "Iniciar pé de Cuba",
       icon: <Grape size={28} color="#000000" />,
       route: "/(tankControl)/tank/addPeDeCuba/[addPeDeCuba]",
       type: "tank",
-      param: tank,
+      param: [{ tank: tank as string, id: Number(id) }],
     },
   ];
+
+  const { clearShipments } = useShipmentStore();
+
+  useFocusEffect(
+    useCallback(() => {
+      clearShipments();
+      return;
+    }, [])
+  );
 
   return (
     <SafeAreaView>
@@ -59,7 +69,7 @@ export default function EmptyTank() {
               icon={item.icon}
               route={item.route}
               type={item.type}
-              param={tank}
+              param={item.param}
             />
           )}
           horizontal

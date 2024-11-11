@@ -1,4 +1,4 @@
-import { Link, useNavigation } from "expo-router";
+import { Link } from "expo-router";
 import React from "react";
 import { Text, TouchableOpacity } from "react-native";
 
@@ -20,7 +20,15 @@ export default function ActivityCard({
   type = "",
   param = [],
 }: ActivityCardProps) {
-  const [tank, id] = param.length > 0 ? param : [undefined, undefined];
+  const href =
+    param.length > 0
+      ? {
+          pathname: route,
+          params: param[0],
+        }
+      : {
+          pathname: route,
+        };
 
   return (
     <Link
@@ -30,10 +38,7 @@ export default function ActivityCard({
         width: 130,
         gap: 8,
       }}
-      href={{
-        pathname: route,
-        params: { tank: tank, id: id },
-      }}
+      href={href}
       asChild
     >
       <TouchableOpacity className="bg-white justify-between rounded-lg">
