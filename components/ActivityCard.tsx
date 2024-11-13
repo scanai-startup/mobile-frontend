@@ -6,10 +6,12 @@ interface ActivityCardProps {
   icon: any;
   title: string;
   route: string | any;
-  type?: string;
+  // type?: string;
   param?: {
     tank: string;
-    id?: number;
+    depositId?: number;
+    content?: string;
+    contentId?: number;
   }[];
 }
 
@@ -17,7 +19,7 @@ export default function ActivityCard({
   icon,
   title,
   route,
-  type = "",
+  //type = "",
   param = [],
 }: ActivityCardProps) {
   const href =

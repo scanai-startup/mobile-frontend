@@ -1,10 +1,13 @@
+import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
 import DateInput from "@/components/DateInput";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
-import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import { useTokenStore } from "@/context/userData";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import React, { useState } from "react";
-import { ScrollView, Text, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
 
 interface Analysis {
   id: string;
@@ -14,20 +17,52 @@ interface Analysis {
   temperature: string;
 }
 
-const data: Analysis[] = [
-  {
-    id: "1",
-    date: "09/07/24",
-    stage: "Tomada espuma",
-    density: "996",
-    temperature: "20",
-  },
-];
-
+// const data: Analysis[] = [
+//   {
+//     id: "1",
+//     date: "09/07/24",
+//     stage: "Tomada espuma",
+//     density: "996",
+//     temperature: "20",
+//   },
+// ];
+//! IMPORTANT: this component is currently working with deposits with mostro only
+//TODO: handle the logic with another types of content inside of the deposits
 export default function DailyAnalysis() {
-  const { tank, id } = useLocalSearchParams();
+  const { tank, content, contentId } = useLocalSearchParams();
   const router = useRouter();
-  const [trasfegaDate, setTrasfegaDate] = useState<Date>(new Date());
+  const [date, setDate] = useState<Date>(new Date());
+  const [density, setDensity] = useState("");
+  const [temperature, setTemperature] = useState("");
+  const { userId } = useTokenStore();
+
+  async function handleSubmit() {
+    const token = await SecureStore.getItemAsync("user-token");
+    if (content === "Mostro") {
+      apiInstance
+        .post(
+          "/analisediariamostro/register",
+          {
+            fkmostro: contentId,
+            fkfuncionario: userId,
+            densidade: density,
+            data: date,
+            temperatura: temperature,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        )
+        .then((res) => {
+          router.back();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }
 
   return (
     <SafeAreaView className="flex-1">
@@ -42,9 +77,9 @@ export default function DailyAnalysis() {
         <Text className="text-4xl text-black mt-4 font-bold">{tank}</Text>
         <View className="mt-4">
           <DateInput
-            questionTitle="Data da trasfega"
-            selectedDate={trasfegaDate}
-            setSelectedDate={(date) => setTrasfegaDate(date)}
+            questionTitle="Data"
+            selectedDate={date}
+            setSelectedDate={(date) => setDate(date)}
           />
           <View className="mb-4 mt-4">
             <Text className="text-lg mb-2">Densidade</Text>
@@ -52,41 +87,28 @@ export default function DailyAnalysis() {
               <TextInput
                 className="flex-1 bg-[#DEDEDE] py-3 px-3 rounded-lg h-14 placeholder-gray-400"
                 keyboardType="numeric"
-                defaultValue="1030"
-              />
-              <TextInput
-                className="flex-1 bg-[#DEDEDE] py-3 px-3 rounded-lg h-14 placeholder-gray-400"
-                defaultValue="°C"
+                placeholder="1030"
+                onChangeText={(value) => setDensity(value)}
               />
             </View>
           </View>
           <View className="mb-4">
             <Text className="text-lg mb-2">Temperatura</Text>
-            <View className="flex-row items-center gap-4">
+            <View className="flex-row items-center gap-4 bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
               <TextInput
-                className="flex-1 bg-[#DEDEDE] py-3 px-3 rounded-lg h-14 placeholder-gray-400"
+                className="flex-1 placeholder-gray-400"
                 keyboardType="numeric"
-                defaultValue="24"
+                placeholder="24"
+                onChangeText={(value) => setTemperature(value)}
               />
-              <TextInput
-                className="flex-1 bg-[#DEDEDE] py-3 px-3 rounded-lg h-14 placeholder-gray-400"
-                defaultValue="Kg/m3"
-              />
+              <Text>°C</Text>
             </View>
           </View>
         </View>
       </View>
 
       <View className="px-5 py-4">
-        <Link
-          href={{
-            pathname: "/(tankControl)/tank/[tank]",
-            params: { tank: tank as string },
-          }}
-          asChild
-        >
-          <DefaultButton title="Concluir" />
-        </Link>
+        <DefaultButton title="Concluir" onPress={handleSubmit} />
       </View>
     </SafeAreaView>
   );
