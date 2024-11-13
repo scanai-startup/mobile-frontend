@@ -16,12 +16,9 @@ import * as SecureStore from "expo-secure-store";
 import React, { useCallback, useState } from "react";
 import { FlatList, Text, View } from "react-native";
 
-//TODO: TERMINAR A PARTE DE ASSOCIAÇÃO DA REMESSA COM O DEPOSITO QUANDO FOR
-//DEDICIDO O QUE É PRA FAZER
-
 export default function BaseWine() {
   const router = useRouter();
-  const { tank, id } = useLocalSearchParams();
+  const { tank, depositId } = useLocalSearchParams();
   const [data, setData] = useState();
   const selectedShipments = useShipmentStore(
     (state) => state.selectedShipments
@@ -55,7 +52,7 @@ export default function BaseWine() {
     const token = await SecureStore.getItemAsync("user-token");
     const data = {
       remessaUvaIdList: selectedShipments,
-      depositoId: id,
+      depositoId: depositId,
       funcionarioId: userId,
     };
     apiInstance
@@ -65,8 +62,17 @@ export default function BaseWine() {
         },
       })
       .then((res) => {
-        console.log(res.data);
+        const data = res.data;
         clearShipments();
+        router.navigate({
+          pathname: "/tank/[tank]",
+          params: {
+            tank: tank as string,
+            depositId: data.depositoId,
+            content: "Mostro",
+            contentId: data.mostroId,
+          },
+        });
       })
       .catch((err) => {
         console.log(err.request);

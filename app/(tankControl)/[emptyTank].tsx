@@ -13,32 +13,28 @@ import React, { useCallback } from "react";
 import { FlatList, Text, View } from "react-native";
 
 export default function EmptyTank() {
-  const { tank, id } = useLocalSearchParams();
+  const { tank, depositId } = useLocalSearchParams();
 
   const activityListItems = [
     {
       name: "Adicionar Vinho Base",
       icon: <GrapeIcon size={28} color="#000000" />,
       route: "/(tankControl)/tank/addBaseWine/[addBaseWine]",
-      type: "tank",
-      param: [{ tank: tank as string, id: Number(id) }],
+      param: [{ tank: tank as string, depositId: Number(depositId) }],
     },
     {
       name: "Realizar Trasfega",
       icon: <ArrowRightLeft size={28} color="#000000" />,
       route: "/(tankControl)/tank/realizarTrasfega/[trasfega]",
-      type: "tank",
-      param: [{ tank: tank as string, id: Number(id) }],
+      param: [{ tank: tank as string, depositId: Number(depositId) }],
     },
     {
       name: "Iniciar pé de Cuba",
       icon: <Grape size={28} color="#000000" />,
       route: "/(tankControl)/tank/addPeDeCuba/[addPeDeCuba]",
-      type: "tank",
-      param: [{ tank: tank as string, id: Number(id) }],
+      param: [{ tank: tank as string, depositId: Number(depositId) }],
     },
   ];
-
   const { clearShipments } = useShipmentStore();
 
   useFocusEffect(
@@ -68,7 +64,7 @@ export default function EmptyTank() {
               title={item.name}
               icon={item.icon}
               route={item.route}
-              type={item.type}
+              //type={item.type}
               param={item.param}
             />
           )}

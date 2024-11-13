@@ -16,12 +16,14 @@ import {
 } from "react-native";
 
 interface CardProps {
-  id: number;
+  depositId: number;
   title: string;
   isAvailable: boolean | string;
-  density?: string;
+  density?: 0;
   temperature?: number;
   pressure?: 0;
+  content?: string;
+  contentId?: number;
 }
 
 function FilterDrawer({
@@ -59,20 +61,28 @@ function FilterDrawer({
 function Card({
   title,
   isAvailable,
-  density = "",
+  density = 0,
   temperature = 0,
   pressure = 0,
-  id = 0,
+  depositId,
+  content = "",
+  contentId = 0,
 }: CardProps) {
   const href =
     isAvailable != "Edge"
       ? {
           pathname: "/(tankControl)/[emptyTank]",
-          params: { tank: title, id: id },
+          params: { tank: title, depositId: depositId },
         }
-      : { pathname: "/tank/[tank]", params: { tank: title, id: id } };
-
-  console.log(id);
+      : {
+          pathname: "/tank/[tank]",
+          params: {
+            tank: title,
+            depositId: depositId,
+            content: content,
+            contentId: contentId,
+          },
+        };
 
   return (
     <Link href={href as Href} asChild>
@@ -94,7 +104,7 @@ function Card({
               </View>
             )}
           </View>
-          {!isAvailable && (
+          {isAvailable === "Edge" && temperature ? (
             <>
               <View className="w-full h-[1px] bg-neutral-250"></View>
               <View className="p-4">
@@ -118,18 +128,22 @@ function Card({
                     </Text>
                   </View>
                 </View>
-                <View className="flex-row justify-between">
-                  <Text className="text-xl font-light">Pressão:</Text>
-                  <View className="flex-row justify-center items-end">
-                    <Text className="text-2xl font-semibold">{pressure} </Text>
-                    <Text className="text-base font-normal text-neutral-400">
-                      Pa
-                    </Text>
+                {pressure && (
+                  <View className="flex-row justify-between">
+                    <Text className="text-xl font-light">Pressão:</Text>
+                    <View className="flex-row justify-center items-end">
+                      <Text className="text-2xl font-semibold">
+                        {pressure}{" "}
+                      </Text>
+                      <Text className="text-base font-normal text-neutral-400">
+                        Pa
+                      </Text>
+                    </View>
                   </View>
-                </View>
+                )}
               </View>
             </>
-          )}
+          ) : null}
         </View>
       </TouchableOpacity>
     </Link>
@@ -160,7 +174,6 @@ export default function TankControl() {
           },
         }
       );
-      console.log(response.data);
       setData(response.data);
     } catch (error) {
       console.error("Erro ao buscar depósitos:", error);
@@ -214,22 +227,35 @@ export default function TankControl() {
             keyExtractor={(item) => item.deposito}
             renderItem={({ item }) => {
               if (item.conteudo != null) {
-                return (
+                return item.temperatura ? (
                   <Card
-                    id={item.idDeposito}
+                    depositId={item.idDeposito}
                     title={item.deposito}
                     isAvailable={"Edge"}
+                    content={item.conteudo}
+                    contentId={item.idConteudo}
+                    density={item.densidade}
+                    temperature={item.temperatura}
+                    pressure={item.pressao ? item.pressao : null}
+                  />
+                ) : (
+                  <Card
+                    depositId={item.idDeposito}
+                    title={item.deposito}
+                    isAvailable={"Edge"}
+                    content={item.conteudo}
+                    contentId={item.idConteudo}
                   />
                 );
               } else {
                 return (
                   <Card
-                    id={item.idDeposito}
+                    depositId={item.idDeposito}
                     title={item.deposito}
                     isAvailable={
                       item.tempMostro == null ? true : item.tempMostro
                     }
-                    density={"0"}
+                    density={0}
                     temperature={20}
                     pressure={item.pressure === 0 ? 0 : undefined}
                   />
