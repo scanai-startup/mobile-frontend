@@ -25,7 +25,6 @@ interface ProductData {
   quantity: number;
   unity: "L" | "KG";
   dateAdded: string;
-  hourAdded: string;
 }
 export default function AddPeDeCuba() {
   const router = useRouter();
@@ -238,7 +237,7 @@ interface ProductCardP {
   handleEditProductClick: (v: boolean) => void;
   onChangeProductQuantity: (operation: string) => void;
 }
-export function ProductCard({
+function ProductCard({
   product,
   onRemove,
   handleEditProductClick,
@@ -271,7 +270,7 @@ export function ProductCard({
           </Text>
           <View className="flex-row justify-between pr-2">
             <Text className="text-sm">{product.dateAdded}</Text>
-            <Text className="text-sm">{product.hourAdded}</Text>
+            {/* <Text className="text-sm">{product.hourAdded}</Text> */}
           </View>
         </View>
       </View>
@@ -288,7 +287,7 @@ interface ProductInfoModalP {
   isDialogOpen: boolean;
   handleProductAction: (product: ProductData) => void;
 }
-export function ProductInfoModal({
+function ProductInfoModal({
   handleCloseDialog,
   product,
   isDialogOpen,
@@ -300,7 +299,6 @@ export function ProductInfoModal({
 
   function handleAddProduct() {
     // if the component recieved a product it means that the user is editing a product
-    const addedHour = new Date().toLocaleTimeString();
     const addedDate = new Date().toLocaleDateString();
     if (product) {
       product = {
@@ -311,7 +309,6 @@ export function ProductInfoModal({
         dateAdded:
           addedDate.slice(0, addedDate.length - 4) +
           addedDate.slice(8, addedDate.length),
-        hourAdded: addedHour.slice(0, addedHour.length - 6),
       };
       handleProductAction(product);
     } else {
@@ -324,7 +321,6 @@ export function ProductInfoModal({
         dateAdded:
           addedDate.slice(0, addedDate.length - 4) +
           addedDate.slice(8, addedDate.length),
-        hourAdded: addedHour.slice(0, addedHour.length - 6),
       };
       handleProductAction(data);
     }
