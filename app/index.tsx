@@ -3,6 +3,7 @@ import CustomStatusBar from "@/components/CustomStatusBar";
 import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useTokenStore } from "@/context/userData";
+import { useToast } from "@/hooks/useToast";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import React, { useState } from "react";
@@ -82,6 +83,7 @@ function Button({
 }) {
   const router = useRouter();
   const { setToken } = useTokenStore();
+  const toast = useToast();
 
   const fetch = async () => {
     try {
@@ -90,13 +92,17 @@ function Button({
         senha: senha,
       });
       const token = response.data.token;
-
       setToken(token);
       await SecureStore.setItemAsync("user-token", token);
-
       router.push("/(tabs)/");
+      toast({ heading: "Sucesso", message: "Seja bem-vindo!" });
     } catch (e) {
-      console.log(e);
+      toast({
+        heading: "Erro",
+        message: "Houve um erro, por favor verifique suas credenciais.",
+        type: "error",
+      });
+    } finally {
     }
   };
 

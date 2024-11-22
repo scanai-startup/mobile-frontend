@@ -98,6 +98,12 @@ export default function Tank() {
           data={activityListItems}
           keyExtractor={(item) => item.name}
           renderItem={({ item }) => {
+            if (
+              content === "Pé de Cuba" &&
+              item.name === "Adicionar pé de Cuba"
+            ) {
+              return <></>;
+            }
             return (
               <ActivityCard
                 title={item.name}

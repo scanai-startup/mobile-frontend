@@ -1,8 +1,12 @@
+import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
 import DateInput from "@/components/DateInput";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
-import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import { useTokenStore } from "@/context/userData";
+import { useToast } from "@/hooks/useToast";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import { CirclePlus, CircleX, Minus, Pencil, Plus } from "lucide-react-native";
 import React, { useEffect, useRef, useState } from "react";
 import {
@@ -19,77 +23,83 @@ interface ProductData {
   id: number;
   name: string;
   quantity: number;
-  unity: string;
+  unity: "L" | "KG";
   dateAdded: string;
   hourAdded: string;
 }
 export default function AddPeDeCuba() {
   const router = useRouter();
-  const { tank } = useLocalSearchParams();
+  const toast = useToast();
+  const { tank, depositId } = useLocalSearchParams();
   const [trasfegaDate, setTrasfegaDate] = useState<Date>(new Date());
-  const [data, setData] = useState<ProductData[]>([
-    {
-      id: 1,
-      name: "Dep.100",
-      quantity: 900,
-      unity: "liters",
-      dateAdded: "08/07/25",
-      hourAdded: "11:15",
-    },
-    {
-      id: 2,
-      name: "Dap.",
-      quantity: 800,
-      unity: "liters",
-      dateAdded: "08/07/25",
-      hourAdded: "12:30",
-    },
-    {
-      id: 3,
-      name: "Nutristat",
-      quantity: 20,
-      unity: "kilogram",
-      dateAdded: "08/07/25",
-      hourAdded: "13:45",
-    },
-    {
-      id: 4,
-      name: "Zoc",
-      quantity: 10,
-      unity: "kilogram",
-      dateAdded: "08/07/25",
-      hourAdded: "15:00",
-    },
-    {
-      id: 5,
-      name: "Dep.200",
-      quantity: 100,
-      unity: "liters",
-      dateAdded: "12/08/25",
-      hourAdded: "18:15",
-    },
-  ]);
+  const [products, setProducts] = useState<ProductData[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<ProductData | null>();
+  const [volume, setVolume] = useState<number>();
+  const { userId } = useTokenStore();
   const lastProductUpdateRef = useRef<{
     [key: number]: { date: string; hour: string };
   }>({});
 
   function handleProductAction(product: ProductData) {
     // adding or editing any product will trigger this function
-    const pIndex = data.findIndex((p) => p.id === product.id);
+    const pIndex = products.findIndex((p) => p.id === product.id);
     if (pIndex !== -1) {
-      setData((prev) => prev.map((p, i) => (i === pIndex ? product : p)));
+      setProducts((prev) => prev.map((p, i) => (i === pIndex ? product : p)));
       selectedProduct ? setSelectedProduct(null) : null;
       return;
     }
-    setData((prev) => [...prev, product]);
+    setProducts((prev) => [...prev, product]);
   }
 
   function onDialogClose() {
     // when closing the dialog this funcion will be called
     setIsModalOpen(false);
     setSelectedProduct(null);
+  }
+
+  async function handleAddPeDeCuba() {
+    const token = await SecureStore.getItemAsync("user-token");
+    const productsData = products.map((p) => {
+      return {
+        nome: p.name,
+        quantidade: p.quantity,
+        unidadeDeMedida: p.unity,
+      };
+    });
+    const data = {
+      fkdeposito: depositId,
+      fkfuncionario: userId,
+      datainicio: trasfegaDate.toISOString(),
+      volume: volume,
+      produtos: productsData,
+    };
+    apiInstance
+      .post("/pedecuba/register", data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        const data = res.data;
+        toast({
+          heading: "Sucesso",
+          message: "Pé de cuba cadastrado com sucesso",
+          type: "success",
+        });
+        router.navigate({
+          pathname: "/tank/[tank]",
+          params: {
+            tank: tank as string,
+            depositId: depositId,
+            content: "Pé de Cuba",
+            contentId: data.id,
+          },
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   function handleChangeProductQuantity(
@@ -105,7 +115,7 @@ export default function AddPeDeCuba() {
     const lastUpdate = lastProductUpdateRef.current[product.id] || {};
 
     if (lastUpdate.date === formatedDate && lastUpdate.hour === formatedHour) {
-      setData((prev) =>
+      setProducts((prev) =>
         prev.map((p) =>
           p.id === product.id
             ? {
@@ -119,7 +129,7 @@ export default function AddPeDeCuba() {
         )
       );
     } else {
-      setData((prev) =>
+      setProducts((prev) =>
         prev.map((p) =>
           p.id === product.id
             ? {
@@ -167,20 +177,13 @@ export default function AddPeDeCuba() {
           />
           <View className="flex-row justify-between gap-8">
             <View className="flex-1">
-              <Text className="text-xl">Dep. N°</Text>
-              <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
-                <TextInput
-                  className="text-xl ml-2 flex-1"
-                  value={tank as string}
-                />
-              </View>
-            </View>
-            <View className="flex-1">
               <Text className="text-xl">Litros</Text>
               <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
                 <TextInput
                   className="text-xl ml-2 flex-1"
                   placeholder="1.200"
+                  onChangeText={(v) => setVolume(Number(v))}
+                  keyboardType="numeric"
                 />
               </View>
             </View>
@@ -194,14 +197,14 @@ export default function AddPeDeCuba() {
             onPress={() => setIsModalOpen(true)}
           />
           <FlatList
-            data={data}
+            data={products}
             keyExtractor={(item) => String(item.id)}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) => (
               <ProductCard
                 product={item}
                 onRemove={(id: number) =>
-                  setData((prev) => prev.filter((p) => p.id !== id))
+                  setProducts((prev) => prev.filter((p) => p.id !== id))
                 }
                 handleEditProductClick={(v) => {
                   setIsModalOpen(v);
@@ -222,12 +225,7 @@ export default function AddPeDeCuba() {
               </View>
             }
           ></FlatList>
-          <Link href="/" asChild>
-            <DefaultButton
-              title="CONCLUIR"
-              onPress={() => setIsModalOpen(true)}
-            />
-          </Link>
+          <DefaultButton title="CONCLUIR" onPress={() => handleAddPeDeCuba()} />
         </View>
       </SafeAreaView>
     </>
@@ -268,7 +266,7 @@ export function ProductCard({
         </View>
         <View className="flex-1">
           <Text className="text-xl font-semibold max-w-52" numberOfLines={1}>
-            {product.quantity} {product.unity === "liters" ? "litros" : "kg"} de{" "}
+            {product.quantity} {product.unity === "KG" ? "kg" : "L"} de{" "}
             {product.name}
           </Text>
           <View className="flex-row justify-between pr-2">
@@ -296,9 +294,7 @@ export function ProductInfoModal({
   isDialogOpen,
   handleProductAction,
 }: ProductInfoModalP) {
-  const [productUnity, setProductUnity] = useState<"liters" | "kilogram">(
-    "liters"
-  );
+  const [productUnity, setProductUnity] = useState<"L" | "KG">("L");
   const [productName, setProductName] = useState("");
   const [productQuantity, setProductQuantity] = useState("");
 
@@ -321,7 +317,7 @@ export function ProductInfoModal({
     } else {
       // otherwise, its adding a product
       const data: ProductData = {
-        id: Math.floor(Math.random() * 100),
+        id: Math.floor(Math.random() * 100), //!important: we need ids to control the items rendering, maybe using uuid?
         name: productName,
         quantity: parseInt(productQuantity),
         unity: productUnity,
@@ -387,16 +383,17 @@ export function ProductInfoModal({
                   placeholder="1.200"
                   value={productQuantity}
                   onChangeText={(v) => setProductQuantity(v)}
+                  keyboardType="numeric"
                 />
                 <TouchableOpacity
                   onPress={() => {
-                    productUnity === "kilogram"
-                      ? setProductUnity("liters")
-                      : setProductUnity("kilogram");
+                    productUnity === "KG"
+                      ? setProductUnity("L")
+                      : setProductUnity("KG");
                   }}
                 >
                   <Text className="text-lg">
-                    {productUnity === "kilogram" ? "kg" : "litros"}
+                    {productUnity === "KG" ? "kg" : "L"}
                   </Text>
                 </TouchableOpacity>
               </View>
