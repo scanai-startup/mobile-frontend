@@ -1,30 +1,18 @@
 //! important: need to refac this screen later
 
 import apiInstance from "@/api/apiInstance";
+import AddOrEditProductModal from "@/components/AddOrEditProductModal";
 import AppHeader from "@/components/AppHeader";
 import { DefaultButton } from "@/components/DefaultButton";
+import ProductCard from "@/components/ProductCard";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useToast } from "@/hooks/useToast";
+import IProduct from "@/types/IProduct";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import { CirclePlus, CircleX, Pencil } from "lucide-react-native";
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  FlatList,
-  Modal,
-  Pressable,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-interface IProduct {
-  id: number;
-  name: string;
-  amount: number;
-  unit: "KG" | "L";
-  updatedDate: string;
-}
+import { CirclePlus } from "lucide-react-native";
+import React, { useCallback, useState } from "react";
+import { FlatList, Text, View } from "react-native";
 
 export default function AddProduct() {
   const router = useRouter();
@@ -33,6 +21,7 @@ export default function AddProduct() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState<IProduct | null>();
   const { contentId } = useLocalSearchParams();
+
   async function getAllProducts() {
     const token = await SecureStore.getItemAsync("user-token");
     apiInstance
@@ -73,6 +62,7 @@ export default function AddProduct() {
       })
       .then(() => {
         toast({ heading: "Sucesso", message: `${name} removido com sucesso.` });
+        setProducts((prev) => prev.filter((p) => p.id !== id));
       })
       .catch(() => {
         toast({
@@ -80,9 +70,6 @@ export default function AddProduct() {
           message: `Erro ao remover o produto ${name}, tente novamente.`,
           type: "error",
         });
-      })
-      .finally(() => {
-        setProducts((prev) => prev.filter((p) => p.id !== id));
       });
   }
   function onDialogClose() {
@@ -95,6 +82,37 @@ export default function AddProduct() {
     const pIndex = products.findIndex((p) => p.id === product.id);
     const token = await SecureStore.getItemAsync("user-token");
     if (pIndex !== -1) {
+      const data = {
+        id: product.id,
+        fkpedecuba: contentId,
+        nome: product.name,
+        quantidade: product.amount,
+        unidade: product.unit,
+      };
+      apiInstance
+        .put("/produtoadcpedecuba/update", data, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          toast({
+            heading: "Sucesso",
+            message: "Produto editado com sucesso.",
+            type: "success",
+          });
+          setProducts((prev) => {
+            const updatedProducts = [...prev];
+            updatedProducts[pIndex] = product;
+            return updatedProducts;
+          });
+        })
+        .catch((err) => {
+          toast({
+            heading: "Erro",
+            message:
+              "Erro ao salvar as alterações do produto, tente novamente.",
+            type: "error",
+          });
+        });
       return;
     }
     apiInstance
@@ -153,7 +171,7 @@ export default function AddProduct() {
           returnHref={router.back}
         />
         <View className="flex-1 gap-4 px-7 pb-4">
-          <ProductInfoModal
+          <AddOrEditProductModal
             handleCloseDialog={() => onDialogClose()}
             isDialogOpen={isModalOpen}
             handleProductAction={(p) => handleProductAction(p)}
@@ -194,161 +212,5 @@ export default function AddProduct() {
         </View>
       </SafeAreaView>
     </>
-  );
-}
-interface IProdCard {
-  product: IProduct;
-  onRemove: (id: number) => void;
-  handleEditProductClick: (value: boolean) => void;
-}
-function ProductCard({ product, onRemove, handleEditProductClick }: IProdCard) {
-  return (
-    <View className="flex-row justify-between items-center bg-white p-6 rounded-md">
-      <View className="flex-row flex-1 items-center gap-3">
-        <TouchableOpacity
-          className="p-2 bg-blue-100 rounded-lg"
-          onPress={() => handleEditProductClick(true)}
-        >
-          <Pencil color="blue" />
-        </TouchableOpacity>
-        <View className="flex-1">
-          <Text className="text-xl font-semibold max-w-52" numberOfLines={1}>
-            {product.amount} {product.unit === "KG" ? "kg" : "L"} de{" "}
-            {product.name}
-          </Text>
-          <View className="flex-row justify-between pr-2">
-            <Text className="text-sm">{product.updatedDate}</Text>
-          </View>
-        </View>
-      </View>
-      <TouchableOpacity onPress={() => onRemove(product.id)}>
-        <CircleX color="white" size="32" fill="#F87171" />
-      </TouchableOpacity>
-    </View>
-  );
-}
-
-interface ProductInfoModalP {
-  product?: IProduct | null;
-  handleCloseDialog: () => void;
-  isDialogOpen: boolean;
-  handleProductAction: (product: IProduct) => void;
-}
-function ProductInfoModal({
-  handleCloseDialog,
-  product,
-  isDialogOpen,
-  handleProductAction,
-}: ProductInfoModalP) {
-  const [productUnity, setProductUnity] = useState<"L" | "KG">("L");
-  const [productName, setProductName] = useState("");
-  const [productQuantity, setProductQuantity] = useState("");
-
-  function handleAddProduct() {
-    // if the component recieved a product it means that the user is editing a product
-    const date = new Date().toLocaleDateString();
-    if (product) {
-      product = {
-        ...product,
-        name: productName,
-        amount: parseInt(productQuantity),
-        unit: productUnity,
-        updatedDate:
-          date.slice(0, date.length - 4) + date.slice(8, date.length),
-      };
-      handleProductAction(product);
-    } else {
-      // otherwise, its adding a product
-      const data: IProduct = {
-        id: Math.floor(Math.random() * 100), //!important: we need ids to control the items rendering, maybe using uuid?
-        name: productName,
-        amount: parseInt(productQuantity),
-        unit: productUnity,
-        updatedDate:
-          date.slice(0, date.length - 4) + date.slice(8, date.length),
-      };
-      handleProductAction(data);
-    }
-    onDialogClose();
-  }
-
-  function onDialogClose() {
-    // function to clear all the input values and close the dialog
-    setProductName("");
-    setProductQuantity("");
-    handleCloseDialog();
-  }
-
-  useEffect(() => {
-    if (product) {
-      setProductName(product.name);
-      setProductQuantity(String(product.amount));
-    }
-  }, [product]);
-
-  return (
-    <Modal
-      transparent
-      animationType="fade"
-      className="bg-[#DEDEDE] py-3 px-3 rounded-b-lg"
-      visible={isDialogOpen}
-    >
-      <View
-        className="flex-1"
-        style={{
-          backgroundColor: "rgba(0, 0, 0, 0.5)",
-        }}
-      >
-        <Pressable className="flex-1" onPress={() => onDialogClose()} />
-        <View className="bg-white px-7 py-5 gap-4 rounded-t-3xl h-[350px]">
-          <Text className="text-zinc-950 font-bold text-3xl mb-1">
-            {product ? "Editar produto" : "Novo Produto"}
-          </Text>
-          <View className="justify-between gap-4">
-            <View>
-              <Text className="text-xl">Nome do produto</Text>
-              <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
-                <TextInput
-                  className="text-xl ml-2 flex-1"
-                  placeholder="Dep.100"
-                  value={productName}
-                  onChangeText={(v) => setProductName(v)}
-                />
-              </View>
-            </View>
-            <View>
-              <Text className="text-xl">Quantidade</Text>
-              <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
-                <TextInput
-                  className="text-xl ml-2 flex-1"
-                  placeholder="1.200"
-                  value={productQuantity}
-                  onChangeText={(v) => setProductQuantity(v)}
-                  keyboardType="numeric"
-                />
-                <TouchableOpacity
-                  onPress={() => {
-                    productUnity === "KG"
-                      ? setProductUnity("L")
-                      : setProductUnity("KG");
-                  }}
-                >
-                  <Text className="text-lg">
-                    {productUnity === "KG" ? "kg" : "L"}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-          <View className="flex-1 justify-end">
-            <DefaultButton
-              title={product ? "EDITAR PRODUTO" : "ADICIONAR PRODUTO"}
-              icon={<CirclePlus color="white" />}
-              onPress={() => handleAddProduct()}
-            />
-          </View>
-        </View>
-      </View>
-    </Modal>
   );
 }
