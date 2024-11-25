@@ -94,7 +94,7 @@ export default function Tank() {
         showReturnButton
         variant="secondary"
         mainText={`${tank}`}
-        returnHref={router.back}
+        returnHref="/(tabs)/tankControl"
       />
       <View>
         <Text className="text-zinc-950 font-bold text-2xl ml-7 mb-4">

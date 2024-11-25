@@ -4,6 +4,7 @@ import DateInput from "@/components/DateInput";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useTokenStore } from "@/context/userData";
+import { useToast } from "@/hooks/useToast";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import React, { useState } from "react";
@@ -31,6 +32,7 @@ interface Analysis {
 export default function DailyAnalysis() {
   const { tank, content, contentId } = useLocalSearchParams();
   const router = useRouter();
+  const toast = useToast();
   const [date, setDate] = useState<Date>(new Date());
   const [density, setDensity] = useState("");
   const [temperature, setTemperature] = useState("");
@@ -38,30 +40,55 @@ export default function DailyAnalysis() {
 
   async function handleSubmit() {
     const token = await SecureStore.getItemAsync("user-token");
-    if (content === "Mostro") {
-      apiInstance
-        .post(
-          "/analisediariamostro/register",
-          {
-            fkmostro: contentId,
-            fkfuncionario: userId,
-            densidade: density,
-            data: date,
-            temperatura: temperature,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((res) => {
-          router.back();
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    console.log(token);
+    let endpoint = "";
+    let data = {};
+    console.log(content);
+    switch (content) {
+      case "Mostro":
+        endpoint = "/analisediariamostro/register";
+        data = {
+          fkmostro: contentId,
+          fkfuncionario: userId,
+          densidade: density,
+          data: date,
+          temperatura: temperature,
+        };
+        break;
+      case "Pé de Cuba":
+        endpoint = "/analisepedecuba/register";
+        data = {
+          fkpedecuba: contentId,
+          fkfuncionario: userId,
+          densidade: density,
+          data: date,
+          temperatura: temperature,
+        };
+        break;
+      default:
+        break;
     }
+    apiInstance
+      .post(endpoint, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(() => {
+        toast({
+          heading: "Sucesso",
+          message: "Nova análise criada com sucesso.",
+          type: "success",
+        });
+        router.back();
+      })
+      .catch(() => {
+        toast({
+          heading: "Erro",
+          message: "A análise não pôde ser criada, tente novamente.",
+          type: "error",
+        });
+      });
   }
 
   return (
