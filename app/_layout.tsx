@@ -8,7 +8,9 @@ import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
+import Toast from "react-native-toast-message";
 
+import { toastConfig } from "@/constants/ToastConfig";
 import React from "react";
 import { StatusBar } from "react-native";
 import "../global.css";
@@ -38,6 +40,7 @@ export default function RootLayout() {
     <ThemeProvider value={color}>
       <StatusBar barStyle="default" />
       <Stack screenOptions={{ headerShown: false }} />
+      <Toast config={toastConfig} />
     </ThemeProvider>
   );
 }

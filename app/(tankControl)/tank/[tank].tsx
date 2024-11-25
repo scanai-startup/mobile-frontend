@@ -10,6 +10,7 @@ import {
   Grape,
   Microscope,
   Milk,
+  TestTubeDiagonal,
 } from "lucide-react-native";
 import React, { useCallback } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
@@ -25,7 +26,7 @@ export default function Tank() {
       return;
     }, [])
   );
-  const activityListItems = [
+  let activityListItems = [
     {
       name: "Análises diárias",
       icon: <Cylinder size="28px" color="#000000" />,
@@ -69,33 +70,38 @@ export default function Tank() {
       param: [{ tank: tank as string, depositId: Number(depositId) }],
     },
     {
-      name: "Adicionar pé de Cuba",
-      icon: <Grape size="28px" color="#000000" />,
-      route: "/(tankControl)/tank/addPeDeCuba/[addPeDeCuba]",
+      name: "Controle de produtos",
+      icon: <TestTubeDiagonal size="28px" color="#000000" />,
+      route: "/(tankControl)/tank/addProduct/[addProduct]",
       //type: "tank",
       param: [
         {
           tank: tank as string,
-          depositId: Number(depositId),
+          contentId: contentId,
         },
       ],
     },
   ];
-
+  function filterActivityItems() {
+    if (content !== "Vinho" && content !== "Pé de Cuba") {
+      return activityListItems.filter((i) => i.name !== "Controle de produtos");
+    }
+    return activityListItems;
+  }
   return (
     <SafeAreaView>
       <AppHeader
         showReturnButton
         variant="secondary"
         mainText={`${tank}`}
-        returnHref={router.back}
+        returnHref="/(tabs)/tankControl"
       />
       <View>
         <Text className="text-zinc-950 font-bold text-2xl ml-7 mb-4">
           Ações
         </Text>
         <FlatList
-          data={activityListItems}
+          data={filterActivityItems()}
           keyExtractor={(item) => item.name}
           renderItem={({ item }) => {
             return (
