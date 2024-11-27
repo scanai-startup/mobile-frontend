@@ -4,9 +4,10 @@ import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useShipmentStore } from "@/context/NewShipmentContext";
 
-import { Href, Link, Stack, usePathname, useRouter } from "expo-router";
+import { Link, Stack, usePathname, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useEffect, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 export default function GrapeReceptionLayout() {
@@ -38,7 +39,7 @@ export default function GrapeReceptionLayout() {
         />
         <Stack screenOptions={{ headerShown: false }} />
         <FormFooter
-          nextHref={nextHref as Href<string>}
+          nextHref={nextHref}
           isReturnButtonEnabled={currRoute === "/" ? false : true}
         />
       </SafeAreaView>
@@ -49,7 +50,7 @@ export default function GrapeReceptionLayout() {
 //! but the context being used will change based on the data that the
 //! user will provide (i dont know know to make this a reusable component in these circunstances)
 interface FormFooterP {
-  nextHref: Href<string>;
+  nextHref: string;
   isReturnButtonEnabled?: boolean;
 }
 

@@ -6,7 +6,7 @@ import { useTokenStore } from "@/context/userData";
 import { useToast } from "@/hooks/useToast";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 export default function Login() {
   const [matricula, setMatricula] = useState("");

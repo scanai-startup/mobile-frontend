@@ -5,7 +5,8 @@ import SafeAreaView from "@/components/SafeAreaView";
 import { Href, Link, useFocusEffect, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { Search } from "lucide-react-native";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
+import React from "react";
 import {
   FlatList,
   Modal,
