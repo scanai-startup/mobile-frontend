@@ -27,7 +27,7 @@ export const useShipmentStore = create<ShipmentState>((set) => ({
     numerolote: 0,
     peso: 0,
     fkviticultor: 1,
-    fkfuncionario: 0,
+    fkfuncionario: 1,
     casta: "Airen",
     datachegada: "",
     sanidade: 0,

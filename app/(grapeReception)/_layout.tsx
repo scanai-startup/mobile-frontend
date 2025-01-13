@@ -1,16 +1,35 @@
 import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
+import FormFooter from "@/components/FormFooter";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useShipmentStore } from "@/context/NewShipmentContext";
 
-import { Link, Stack, usePathname, useRouter } from "expo-router";
+import { Stack, usePathname, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import React from "react";
-import { useEffect, useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
 
 export default function GrapeReceptionLayout() {
+  const router = useRouter();
+  const { shipmentData } = useShipmentStore();
+
+  async function handleDataSubmit() {
+    const token = await SecureStore.getItemAsync("user-token");
+
+    apiInstance
+      .post("/uva/register", shipmentData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.request);
+        router.navigate("/(tabs)/shipment"); // navigate back to the shipments list
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }
   const [nextHref, setNextHref] = useState("");
   const currRoute = usePathname();
   const routes = [
@@ -41,75 +60,9 @@ export default function GrapeReceptionLayout() {
         <FormFooter
           nextHref={nextHref}
           isReturnButtonEnabled={currRoute === "/" ? false : true}
+          handleDataSubmit={handleDataSubmit}
         />
       </SafeAreaView>
     </>
-  );
-}
-//! IMPORTANT: made this because the formFooter is a reusable component,
-//! but the context being used will change based on the data that the
-//! user will provide (i dont know know to make this a reusable component in these circunstances)
-interface FormFooterP {
-  nextHref: string;
-  isReturnButtonEnabled?: boolean;
-}
-
-function FormFooter({ nextHref, isReturnButtonEnabled = false }: FormFooterP) {
-  const router = useRouter();
-  const { shipmentData } = useShipmentStore();
-
-  async function handleDataSubmit() {
-    const token = await SecureStore.getItemAsync("user-token");
-
-    apiInstance
-      .post("/uva/register", shipmentData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        console.log(res.request);
-        router.navigate("/(tabs)/shipment"); // navigate back to the shipments list
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  }
-  return (
-    <View
-      style={{
-        height: 80,
-        borderTopWidth: 1,
-        paddingHorizontal: 20,
-        borderTopColor: "#C0C0C0",
-      }}
-    >
-      <View className="flex-1 flex-row items-center justify-between px-14">
-        <TouchableOpacity
-          onPress={() => router.dismiss(1)}
-          disabled={!isReturnButtonEnabled}
-        >
-          <Text
-            className="text-xl"
-            style={{
-              color: isReturnButtonEnabled ? "#93c5fd" : "#C0C0C0",
-            }}
-          >
-            Anterior
-          </Text>
-        </TouchableOpacity>
-        {isReturnButtonEnabled ? (
-          <TouchableOpacity onPress={handleDataSubmit}>
-            <Text className="text-xl text-blue-500">Concluir</Text>
-          </TouchableOpacity>
-        ) : (
-          <Link href={nextHref} asChild>
-            <TouchableOpacity>
-              <Text className="text-xl text-blue-500">Próximo</Text>
-            </TouchableOpacity>
-          </Link>
-        )}
-      </View>
-    </View>
   );
 }
