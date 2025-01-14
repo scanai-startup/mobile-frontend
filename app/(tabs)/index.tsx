@@ -18,7 +18,7 @@ export default function Home() {
     {
       name: "Criar vinho",
       icon: <Wine size="28px" color="#000000" />,
-      route: "",
+      route: "/(newWine)/",
     },
     {
       name: "Gestão de remessas",
