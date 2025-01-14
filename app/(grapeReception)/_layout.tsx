@@ -2,7 +2,7 @@ import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
-import { useShipmentStore } from "@/context/NewShipmentContext";
+import { useShipmentStore } from "@/store/NewShipmentContext";
 
 import { Link, Stack, usePathname, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";

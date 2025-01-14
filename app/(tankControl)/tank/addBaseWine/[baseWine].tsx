@@ -3,8 +3,8 @@ import AppHeader from "@/components/AppHeader";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
 import ShipmentCard from "@/components/ShipmentCard";
-import { useShipmentStore } from "@/context/remessasContext";
-import { useTokenStore } from "@/context/userData";
+import { useShipmentStore } from "@/store/remessasContext";
+import { useTokenStore } from "@/store/userData";
 import {
   Href,
   Link,

@@ -1,5 +1,5 @@
 import YesNoButtonField from "@/components/YesNoButtonField";
-import { useShipmentStore } from "@/context/NewShipmentContext";
+import { useShipmentStore } from "@/store/NewShipmentContext";
 
 import React from "react";
 import { ScrollView, Text, TextInput, View } from "react-native";

@@ -2,7 +2,7 @@ import apiInstance from "@/api/apiInstance";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
-import { useTokenStore } from "@/context/userData";
+import { useTokenStore } from "@/store/userData";
 import { useToast } from "@/hooks/useToast";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
