@@ -1,4 +1,4 @@
-import { Href, Link } from "expo-router";
+import { Href, Link, useRouter } from "expo-router";
 import { Bell, ChevronLeft } from "lucide-react-native";
 import React from "react";
 import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
@@ -7,7 +7,7 @@ interface AppHeaderProps {
   showReturnButton?: boolean;
   variant?: "primary" | "secondary";
   mainText: string;
-  returnHref?: Href<string> | (() => void); // Modificado para aceitar função ou string
+  returnHref?: string | (() => void); // Modificado para aceitar função ou string
 }
 
 export default function AppHeader({
@@ -17,6 +17,7 @@ export default function AppHeader({
   mainText,
 }: AppHeaderProps) {
   const OSPadding = Platform.OS === "ios" ? 0 : 20;
+  const router = useRouter()
 
   return (
     <View
@@ -35,9 +36,9 @@ export default function AppHeader({
             <ChevronLeft color="#171717" />
           </TouchableOpacity>
         ) : (
-          <Link href={returnHref}>
+          <TouchableOpacity onPress={() => router.push(returnHref)}>
             <ChevronLeft color="#171717" />
-          </Link>
+          </TouchableOpacity>
         )
       ) : null}
 

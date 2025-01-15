@@ -8,6 +8,7 @@ import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import React from "react";
 export default function Login() {
   const [matricula, setMatricula] = useState("");
   const [senha, setSenha] = useState("");
@@ -92,6 +93,7 @@ function Button({
         senha: senha,
       });
       const token = response.data.token;
+      console.log(response.data)
       setToken(token);
       await SecureStore.setItemAsync("user-token", token);
       router.push("/(tabs)/");
