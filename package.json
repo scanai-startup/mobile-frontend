@@ -1,5 +1,5 @@
 {
-  "name": "scanai-mockup",
+  "name": "scanai",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "type": "commonjs",
