@@ -1,7 +1,7 @@
 import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
 import SafeAreaView from "@/components/SafeAreaView";
-import { useShipmentStore } from "@/context/remessasContext";
+import { useShipmentStore } from "@/store/remessasContext";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
 import {
   AlertCircle,

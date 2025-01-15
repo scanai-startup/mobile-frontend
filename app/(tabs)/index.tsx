@@ -2,7 +2,7 @@ import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
-import { useTokenStore } from "@/context/userData";
+import { useTokenStore } from "@/store/userData";
 import { Cylinder, LucideBox, Tag, Truck, Wine } from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";

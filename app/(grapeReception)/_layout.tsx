@@ -3,7 +3,7 @@ import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import FormFooter from "@/components/FormFooter";
 import SafeAreaView from "@/components/SafeAreaView";
-import { useShipmentStore } from "@/context/NewShipmentContext";
+import { useShipmentStore } from "@/store/NewShipmentContext";
 
 import { Stack, usePathname, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
