@@ -3,7 +3,7 @@ import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useTokenStore } from "@/store/userData";
-import { Cylinder, LucideBox, Truck, Wine } from "lucide-react-native";
+import { Cylinder, LucideBox, Tag, Truck, Wine } from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
@@ -16,13 +16,18 @@ export default function Home() {
       route: "/(tabs)/tankControl",
     },
     {
+      name: "Criar vinho",
+      icon: <Wine size="28px" color="#000000" />,
+      route: "/(newWine)/",
+    },
+    {
       name: "Gestão de remessas",
       icon: <Truck size="28px" color="#000000" />,
       route: "/(tabs)/shipment",
     },
     {
       name: "Envase e Rotulagem",
-      icon: <Wine size="28px" color="#000000" />,
+      icon: <Tag size="28px" color="#000000" />,
       route: "/envaseERotulagem/envase",
     },
     {

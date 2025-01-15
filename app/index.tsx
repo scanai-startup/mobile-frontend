@@ -102,7 +102,7 @@ function Button({
         message: "Houve um erro, por favor verifique suas credenciais.",
         type: "error",
       });
-    } finally {
+      console.log(e);
     }
   };
 

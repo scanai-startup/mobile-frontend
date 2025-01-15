@@ -1,5 +1,6 @@
 import DateInput from "@/components/DateInput";
 import { DefaultButton } from "@/components/DefaultButton";
+import { InputBox } from "@/components/Input";
 import { useShipmentStore } from "@/store/NewShipmentContext";
 import { useTokenStore } from "@/store/userData";
 
@@ -14,7 +15,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -92,41 +92,26 @@ export default function GrapeReception() {
             selectedDate={selectedDate}
             setSelectedDate={(date) => setSelectedDate(date)}
           />
-          <View>
-            <Text className="text-xl">Número da carrada</Text>
-            <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
-              <TextInput
-                className="text-xl ml-2 flex-1"
-                placeholder="3°"
-                onChangeText={(value) =>
-                  handleInputChange("numerotalao", Number(value))
-                }
-                keyboardType="numeric"
-              />
-            </View>
-          </View>
-          <View>
-            <Text className="text-xl">Casta</Text>
-            <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
-              <TextInput
-                className="text-xl ml-2 flex-1"
-                placeholder="AIREN"
-                onChangeText={(value) => handleInputChange("casta", value)}
-              />
-            </View>
-          </View>
-          <View>
-            <Text className="text-xl">Lote</Text>
-            <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
-              <TextInput
-                className="text-xl ml-2 flex-1"
-                placeholder="101"
-                onChangeText={(value) =>
-                  handleInputChange("numerolote", Number(value))
-                }
-              />
-            </View>
-          </View>
+          <InputBox
+            title="Número da carrada"
+            placeholder="3°"
+            onChangeText={(value) =>
+              handleInputChange("numerotalao", Number(value))
+            }
+            keyboardType="numeric"
+          />
+          <InputBox
+            title="Casta"
+            placeholder="AIREN"
+            onChangeText={(value) => handleInputChange("casta", value)}
+          />
+          <InputBox
+            title="Lote"
+            placeholder="101"
+            onChangeText={(value) =>
+              handleInputChange("numerolote", Number(value))
+            }
+          />
           <View>
             <Text className="text-xl">Horário de saída</Text>
             <View className="flex flex-col justify-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
@@ -146,34 +131,22 @@ export default function GrapeReception() {
               )}
             </View>
           </View>
-          <View>
-            <Text className="text-xl">Caixas</Text>
-            <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
-              <TextInput
-                className="text-xl ml-2 flex-1"
-                placeholder="540"
-                onChangeText={(value) =>
-                  handleInputChange("qttcaixa", Number(value))
-                }
-                keyboardType="numeric"
-              />
-              <Text>unidades</Text>
-            </View>
-          </View>
-          <View>
-            <Text className="text-xl">Peso</Text>
-            <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
-              <TextInput
-                className="text-xl ml-2 flex-1"
-                placeholder="1.450"
-                onChangeText={(value) =>
-                  handleInputChange("peso", Number(value))
-                }
-                keyboardType="numeric"
-              />
-              <Text>kg</Text>
-            </View>
-          </View>
+          <InputBox
+            title="Caixas"
+            auxText="unidades"
+            placeholder="540"
+            onChangeText={(value) =>
+              handleInputChange("qttcaixa", Number(value))
+            }
+            keyboardType="numeric"
+          />
+          <InputBox
+            title="Peso"
+            auxText="kg"
+            placeholder="1.450"
+            onChangeText={(value) => handleInputChange("peso", Number(value))}
+            keyboardType="numeric"
+          />
         </ScrollView>
       </View>
 

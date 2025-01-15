@@ -3,16 +3,17 @@ import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 interface FormFooterP {
-  nextHref: Href<string>;
+  nextHref: string;
   isReturnButtonEnabled?: boolean;
+  handleDataSubmit: () => Promise<void>;
 }
 
 export default function FormFooter({
   nextHref,
   isReturnButtonEnabled = false,
+  handleDataSubmit,
 }: FormFooterP) {
   const router = useRouter();
-
   return (
     <View
       style={{
@@ -36,11 +37,17 @@ export default function FormFooter({
             Anterior
           </Text>
         </TouchableOpacity>
-        <Link href={nextHref} asChild>
-          <TouchableOpacity>
-            <Text className="text-xl text-blue-500">Próximo</Text>
+        {isReturnButtonEnabled ? (
+          <TouchableOpacity onPress={handleDataSubmit}>
+            <Text className="text-xl text-blue-500">Concluir</Text>
           </TouchableOpacity>
-        </Link>
+        ) : (
+          <Link href={nextHref as Href} asChild>
+            <TouchableOpacity>
+              <Text className="text-xl text-blue-500">Próximo</Text>
+            </TouchableOpacity>
+          </Link>
+        )}
       </View>
     </View>
   );
