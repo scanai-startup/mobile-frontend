@@ -1,4 +1,4 @@
-import { Link, useRouter } from "expo-router";
+import { Href, Link, useRouter } from "expo-router";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
@@ -42,7 +42,7 @@ export default function FormFooter({
             <Text className="text-xl text-blue-500">Concluir</Text>
           </TouchableOpacity>
         ) : (
-          <Link href={nextHref} asChild>
+          <Link href={nextHref as Href} asChild>
             <TouchableOpacity>
               <Text className="text-xl text-blue-500">Próximo</Text>
             </TouchableOpacity>
