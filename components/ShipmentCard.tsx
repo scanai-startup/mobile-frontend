@@ -1,4 +1,4 @@
-import { useShipmentStore } from "@/context/remessasContext";
+import { useShipmentStore } from "@/store/remessasContext";
 import IShipmentCard from "@/types/IShipmentCard";
 import React, { useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
