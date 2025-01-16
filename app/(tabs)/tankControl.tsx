@@ -202,10 +202,10 @@ export default function TankControl() {
             </Text>
           </View>
           <View className="flex flex-row items-center w-full mb-4">
-            <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg flex-1">
+            <View className="flex flex-row items-center bg-[#DEDEDE] py-0 px-3 rounded-lg flex-1">
               <Search size="25px" color="#9A9A9A" />
               <TextInput
-                className="text-xl ml-2 flex-1"
+                className="text-base ml-2 flex-1 py-0"
                 placeholder="Digite o que deseja buscar..."
               />
             </View>
