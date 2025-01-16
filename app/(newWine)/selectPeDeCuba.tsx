@@ -1,12 +1,25 @@
 import SafeAreaView from "@/components/SafeAreaView";
 import TankCard from "@/components/TankCard";
-import { useTanksStore } from "@/store/TanksContext";
+import ITankData from "@/types/ITankData";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Search } from "lucide-react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FlatList, Text, TextInput, View } from "react-native";
 
 export default function SelectPeDeCuba() {
-  const { tanksData } = useTanksStore();
+  const [tanksData, setTanksData] = useState<ITankData[]>([]);
+  async function getTanksDataFromLocal() {
+    try {
+      const data = await AsyncStorage.getItem("tanksData");
+      data && setTanksData(JSON.parse(data));
+    } catch (err) {
+      console.error("Erro ao recuperar dados do armazenamento local: ", err);
+    }
+  }
+  useEffect(() => {
+    getTanksDataFromLocal();
+  }, []);
+
   return (
     <>
       <SafeAreaView>

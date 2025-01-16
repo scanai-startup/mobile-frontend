@@ -1,8 +1,8 @@
 import apiInstance from "@/api/apiInstance";
 import SafeAreaView from "@/components/SafeAreaView";
 import TankCard from "@/components/TankCard";
-import { useTanksStore } from "@/store/TanksContext";
 import ITankData from "@/types/ITankData";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { Search } from "lucide-react-native";
@@ -11,7 +11,6 @@ import { FlatList, Text, TextInput, View } from "react-native";
 
 export default function SelectMostroView() {
   const [data, setData] = useState<ITankData[]>([]);
-  const { setTanksData } = useTanksStore();
   useFocusEffect(
     // calls the api everytime the screen gets displayed
     useCallback(() => {
@@ -19,6 +18,15 @@ export default function SelectMostroView() {
       return;
     }, [])
   );
+
+  const syncTanksToLocalStorage = async (data: any) => {
+    try {
+      const json = JSON.stringify(data);
+      await AsyncStorage.setItem("tanksData", json);
+    } catch (err) {
+      console.log("Erro ao converter para json: ", err);
+    }
+  };
 
   const getDepositos = async () => {
     try {
@@ -32,7 +40,7 @@ export default function SelectMostroView() {
         }
       );
       setData(response.data.filter((t: ITankData) => t.conteudo === "Mostro"));
-      setTanksData(response.data);
+      syncTanksToLocalStorage(response.data);
     } catch (error) {
       console.error("Erro ao buscar depósitos:", error);
     }
@@ -64,23 +72,14 @@ export default function SelectMostroView() {
             renderItem={({ item }) => {
               return item.temperatura ? (
                 <TankCard
-                  depositId={item.idDeposito}
                   title={item.deposito}
                   isAvailable={"Edge"}
-                  content={item.conteudo}
-                  contentId={item.idConteudo}
                   density={item.densidade}
                   temperature={item.temperatura}
                   pressure={item.pressao ? item.pressao : null}
                 />
               ) : (
-                <TankCard
-                  depositId={item.idDeposito}
-                  title={item.deposito}
-                  isAvailable={"Edge"}
-                  content={item.conteudo}
-                  contentId={item.idConteudo}
-                />
+                <TankCard title={item.deposito} isAvailable={"Edge"} />
               );
             }}
           />

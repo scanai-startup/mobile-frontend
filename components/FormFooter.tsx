@@ -6,12 +6,14 @@ interface FormFooterP {
   nextHref: string;
   isReturnButtonEnabled?: boolean;
   handleDataSubmit: () => Promise<void>;
+  isLastPage: boolean;
 }
 
 export default function FormFooter({
   nextHref,
   isReturnButtonEnabled = false,
   handleDataSubmit,
+  isLastPage,
 }: FormFooterP) {
   const router = useRouter();
   return (
@@ -37,7 +39,7 @@ export default function FormFooter({
             Anterior
           </Text>
         </TouchableOpacity>
-        {isReturnButtonEnabled ? (
+        {isReturnButtonEnabled && isLastPage ? (
           <TouchableOpacity onPress={handleDataSubmit}>
             <Text className="text-xl text-blue-500">Concluir</Text>
           </TouchableOpacity>
