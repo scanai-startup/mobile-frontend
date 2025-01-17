@@ -22,12 +22,12 @@ export default function YesNoButtonField({
     <View className="justify-start">
       <Text className="text-lg mb-2">{question}</Text>
       <View className="gap-2">
-        <View className="flex-row flex-wrap items-center">
+        <View className="flex-row flex-wrap items-center" onTouchStart={handleYesClick}>
           <TouchableOpacity
             className={`px-7 py-5 rounded mr-2 ${
               buttonState === "yes" ? "bg-green-400" : "bg-gray-300"
             }`}
-            onPress={handleYesClick}
+            
           >
             <Check
               color={buttonState === "yes" ? "#15803d" : "#9ca3af"}
@@ -42,12 +42,11 @@ export default function YesNoButtonField({
             </Text>
           </View>
         </View>
-        <View className="flex-row flex-wrap items-center">
+        <View className="flex-row flex-wrap items-center" onTouchStart={handleNoClick}>
           <TouchableOpacity
             className={`px-7 py-5 rounded mr-2 ${
               buttonState === "no" ? "bg-red-400" : "bg-gray-300"
             }`}
-            onPress={handleNoClick}
           >
             <X
               width={20}
