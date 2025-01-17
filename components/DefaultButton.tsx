@@ -5,7 +5,7 @@ import { TouchableOpacityProps } from "react-native-gesture-handler";
 interface DefaultButtonP extends TouchableOpacityProps {
   icon?: ReactElement;
   title: string;
-  className: string;
+  className?: string;
 }
 
 export const DefaultButton = forwardRef(
