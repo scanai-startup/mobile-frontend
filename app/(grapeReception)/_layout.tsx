@@ -60,7 +60,8 @@ export default function GrapeReceptionLayout() {
         <FormFooter
           nextHref={nextHref}
           isReturnButtonEnabled={currRoute === "/" ? false : true}
-          handleDataSubmit={handleDataSubmit}
+          isLastPage={nextHref === "/(tabs)/" && true}
+          handleDataSubmit={() => handleDataSubmit()}
         />
       </SafeAreaView>
     </>

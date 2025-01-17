@@ -6,7 +6,7 @@ interface FormFooterP {
   nextHref: string | { pathname: string; params: any };
   isReturnButtonEnabled?: boolean;
   isNextButtonEnabled?: boolean;
-  handleDataSubmit?: () => Promise<void>;
+  handleDataSubmit?: () => void;
   isLastPage: boolean;
 }
 
@@ -43,9 +43,9 @@ export default function FormFooter({
             Anterior
           </Text>
         </TouchableOpacity>
-        {isReturnButtonEnabled && isLastPage ? (
+        {isReturnButtonEnabled && isLastPage && handleDataSubmit ? (
           <TouchableOpacity
-            onPress={handleDataSubmit}
+            onPress={() => handleDataSubmit()}
             disabled={!isNextButtonEnabled}
           >
             <Text className={nextButtonStyles}>Concluir</Text>
