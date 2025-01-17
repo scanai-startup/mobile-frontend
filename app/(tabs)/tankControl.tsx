@@ -5,8 +5,7 @@ import SafeAreaView from "@/components/SafeAreaView";
 import { Href, Link, useFocusEffect, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { Search } from "lucide-react-native";
-import { useCallback, useState } from "react";
-import React from "react";
+import React, { useCallback, useState } from "react";
 import {
   FlatList,
   Modal,
@@ -205,7 +204,7 @@ export default function TankControl() {
             <View className="flex flex-row items-center bg-[#DEDEDE] py-0 px-3 rounded-lg flex-1">
               <Search size="25px" color="#9A9A9A" />
               <TextInput
-                className="text-base ml-2 flex-1 py-0"
+                className="text-base ml-2 flex-1 py-0 h-14"
                 placeholder="Digite o que deseja buscar..."
               />
             </View>

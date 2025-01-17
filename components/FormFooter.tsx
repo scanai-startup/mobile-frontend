@@ -3,17 +3,23 @@ import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 interface FormFooterP {
-  nextHref: string;
+  nextHref: string | { pathname: string; params: any };
   isReturnButtonEnabled?: boolean;
-  handleDataSubmit: () => Promise<void>;
+  isNextButtonEnabled?: boolean;
+  handleDataSubmit?: () => void;
+  isLastPage: boolean;
 }
 
 export default function FormFooter({
   nextHref,
   isReturnButtonEnabled = false,
+  isNextButtonEnabled = true,
   handleDataSubmit,
+  isLastPage,
 }: FormFooterP) {
   const router = useRouter();
+  const nextButtonStyles =
+    "text-xl " + (isNextButtonEnabled ? "text-blue-500" : "text-[#C0C0C0]");
   return (
     <View
       style={{
@@ -37,14 +43,17 @@ export default function FormFooter({
             Anterior
           </Text>
         </TouchableOpacity>
-        {isReturnButtonEnabled ? (
-          <TouchableOpacity onPress={handleDataSubmit}>
-            <Text className="text-xl text-blue-500">Concluir</Text>
+        {isReturnButtonEnabled && isLastPage && handleDataSubmit ? (
+          <TouchableOpacity
+            onPress={() => handleDataSubmit()}
+            disabled={!isNextButtonEnabled}
+          >
+            <Text className={nextButtonStyles}>Concluir</Text>
           </TouchableOpacity>
         ) : (
           <Link href={nextHref as Href} asChild>
-            <TouchableOpacity>
-              <Text className="text-xl text-blue-500">Próximo</Text>
+            <TouchableOpacity disabled={!isNextButtonEnabled}>
+              <Text className={nextButtonStyles}>Próximo</Text>
             </TouchableOpacity>
           </Link>
         )}

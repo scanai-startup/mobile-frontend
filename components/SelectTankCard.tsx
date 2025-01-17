@@ -1,40 +1,42 @@
-import React, { useState } from "react";
+import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 interface CardProps {
   title: string;
-  isAvailable: boolean | string;
   density?: number;
   temperature?: number;
   pressure?: number | null;
+  isSelected: boolean;
+  setIsSelected: () => void;
 }
 
-export default function TankCard({
+export default function SelectTankCard({
   title,
-  isAvailable,
   density = 0,
   temperature = 0,
   pressure = 0,
+  isSelected = false,
+  setIsSelected,
 }: CardProps) {
-  const [isSelected, setIsSelected] = useState(false);
   return (
     <View style={{ marginBottom: 16, width: "100%" }}>
       <View className="bg-white rounded-lg shadow flex-col border border-neutral-250">
         <View className="flex-row p-4 justify-between items-center">
           <Text className="text-2xl font-bold">{title}</Text>
           <TouchableOpacity
-            onPress={() => setIsSelected(!isSelected)}
+            onPress={() => setIsSelected()}
             className={
               "border rounded-md px-2 py-1 border-blue-500" +
               (isSelected ? " bg-blue-500" : "")
             }
+            disabled={isSelected}
           >
             <Text className={isSelected ? "text-white" : "text-blue-500"}>
               {isSelected ? "Selecionado" : "Selecionar"}
             </Text>
           </TouchableOpacity>
         </View>
-        {isAvailable === "Edge" && temperature ? (
+        {temperature ? (
           <>
             <View className="w-full h-[1px] bg-neutral-250"></View>
             <View className="p-4">

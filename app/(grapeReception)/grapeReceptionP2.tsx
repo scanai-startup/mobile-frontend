@@ -47,7 +47,7 @@ export default function GrapeRepectionP2() {
             value={shipmentData.tipodevinho}
             onChangeText={(value) => handleInputChange("tipodevinho", value)}
           />
-          <InputBox title="Cuba n°" placeholder="ex: VB - Vinho branco" />
+          {/* <InputBox title="Cuba n°" placeholder="ex: VB - Vinho branco" /> */}
           <View className="mt-6">
             <Text className="text-3xl font-bold">Condições do caminhão</Text>
             <View className="flex flex-col gap-4">
