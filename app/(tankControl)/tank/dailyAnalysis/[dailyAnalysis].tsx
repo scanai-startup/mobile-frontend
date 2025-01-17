@@ -4,19 +4,12 @@ import DateInput from "@/components/DateInput";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useToast } from "@/hooks/useToast";
+import { validateField } from "@/hooks/validateField";
 import { useTokenStore } from "@/store/userData";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import React, { useState } from "react";
 import { Text, TextInput, View } from "react-native";
-
-interface Analysis {
-  id: string;
-  date: string;
-  stage: string;
-  density: string;
-  temperature: string;
-}
 
 // const data: Analysis[] = [
 //   {
@@ -40,10 +33,13 @@ export default function DailyAnalysis() {
 
   async function handleSubmit() {
     const token = await SecureStore.getItemAsync("user-token");
-    console.log(token);
     let endpoint = "";
     let data = {};
     console.log(content);
+
+    if (!validateField(temperature, "Preencha a temperatura para prosseguir")) return;
+    if (!validateField(density, "Preencha a densidade para prosseguir")) return;
+        
     switch (content) {
       case "Mostro":
         endpoint = "/analisediariamostro/register";
@@ -113,9 +109,10 @@ export default function DailyAnalysis() {
             <View className="flex-row items-center gap-4">
               <TextInput
                 className="flex-1 bg-[#DEDEDE] py-3 px-3 rounded-lg h-14 placeholder-gray-400"
-                keyboardType="numeric"
+                keyboardType="number-pad"
                 placeholder="1030"
                 onChangeText={(value) => setDensity(value)}
+                maxLength={10}
               />
             </View>
           </View>
@@ -124,9 +121,10 @@ export default function DailyAnalysis() {
             <View className="flex-row items-center gap-4 bg-[#DEDEDE] px-3 rounded-lg h-14">
               <TextInput
                 className="flex-1 placeholder-gray-400"
-                keyboardType="numeric"
+                keyboardType="number-pad"
                 placeholder="24"
                 onChangeText={(value) => setTemperature(value)}
+                maxLength={10}
               />
               <Text>°C</Text>
             </View>
