@@ -1,6 +1,10 @@
 import apiInstance from "@/api/apiInstance";
+import CenteredModal from "@/components/CenteredModal";
+import { DefaultButton } from "@/components/DefaultButton";
+import FormFooter from "@/components/FormFooter";
+import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
-import TankCard from "@/components/TankCard";
+import SelectTankCard from "@/components/SelectTankCard";
 import ITankData from "@/types/ITankData";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "expo-router";
@@ -9,8 +13,19 @@ import { Search } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
 import { FlatList, Text, TextInput, View } from "react-native";
 
+interface ISelectedTank {
+  deposit: string;
+  fkMostro: number;
+  volume: number;
+}
+
 export default function SelectMostroView() {
   const [data, setData] = useState<ITankData[]>([]);
+  const [selectedTank, setSelectedTank] = useState<ISelectedTank | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
+  const [volume, setVolume] = useState("");
+
   useFocusEffect(
     // calls the api everytime the screen gets displayed
     useCallback(() => {
@@ -45,9 +60,52 @@ export default function SelectMostroView() {
       console.error("Erro ao buscar depósitos:", error);
     }
   };
+  const handleSelectTank = (tank: ISelectedTank) => {
+    setSelectedTank(tank);
+    setIsDialogOpen(true);
+  };
+  function onDialogClose() {
+    setVolume("");
+    setIsDialogOpen(false);
+    setSelectedTank(null);
+    setIsNextButtonEnabled(false);
+  }
+  function handleContinueButton() {
+    selectedTank &&
+      setSelectedTank({ ...selectedTank, volume: Number(volume) });
+    setVolume("");
+    setIsNextButtonEnabled(true);
+    setIsDialogOpen(false);
+  }
   return (
     <>
       <SafeAreaView>
+        <CenteredModal
+          isDialogOpen={isDialogOpen}
+          handleDialogClose={() => onDialogClose()}
+        >
+          <View className="px-6 py-10 bg-white rounded-xl">
+            <Text className="text-2xl text-black font-bold">
+              Tanque selecionado: {selectedTank?.deposit}
+            </Text>
+            <Text className="text-xl mt-2 mb-4">
+              Selecione o volume do mostro que será utilizado para o vinho.
+            </Text>
+            <InputBox
+              placeholder="200"
+              title="Volume"
+              auxText="L"
+              onChangeText={(v) => setVolume(v)}
+              keyboardType="numeric"
+            />
+            <DefaultButton
+              title="Continuar"
+              className="mt-4"
+              onPress={() => handleContinueButton()}
+              disabled={volume ? false : true}
+            />
+          </View>
+        </CenteredModal>
         <View className="px-7 flex-1 mt-6">
           <View>
             <Text className="text-2xl text-black font-bold">
@@ -71,19 +129,52 @@ export default function SelectMostroView() {
             keyExtractor={(item) => item.deposito}
             renderItem={({ item }) => {
               return item.temperatura ? (
-                <TankCard
+                <SelectTankCard
                   title={item.deposito}
-                  isAvailable={"Edge"}
                   density={item.densidade}
                   temperature={item.temperatura}
                   pressure={item.pressao ? item.pressao : null}
+                  setIsSelected={() =>
+                    handleSelectTank({
+                      deposit: item.deposito,
+                      fkMostro: item.idConteudo,
+                      volume: 0,
+                    })
+                  }
+                  isSelected={selectedTank?.deposit === item.deposito && true}
                 />
               ) : (
-                <TankCard title={item.deposito} isAvailable={"Edge"} />
+                <SelectTankCard
+                  title={item.deposito}
+                  setIsSelected={() =>
+                    handleSelectTank({
+                      deposit: item.deposito,
+                      fkMostro: item.idConteudo,
+                      volume: 0,
+                    })
+                  }
+                  isSelected={selectedTank?.deposit === item.deposito && true}
+                />
               );
             }}
           />
         </View>
+        <FormFooter
+          nextHref={
+            selectedTank
+              ? {
+                  pathname: "/(newWine)/selectPeDeCuba",
+                  params: {
+                    fkMostro: selectedTank.fkMostro,
+                    mostroVol: selectedTank.volume,
+                  },
+                }
+              : "/"
+          }
+          isReturnButtonEnabled={false}
+          isNextButtonEnabled={isNextButtonEnabled}
+          isLastPage={false}
+        />
       </SafeAreaView>
     </>
   );

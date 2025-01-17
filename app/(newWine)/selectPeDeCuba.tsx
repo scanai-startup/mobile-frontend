@@ -1,13 +1,16 @@
 import SafeAreaView from "@/components/SafeAreaView";
-import TankCard from "@/components/TankCard";
+import SelectTankCard from "@/components/SelectTankCard";
 import ITankData from "@/types/ITankData";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useLocalSearchParams } from "expo-router/build/hooks";
 import { Search } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import { FlatList, Text, TextInput, View } from "react-native";
 
 export default function SelectPeDeCuba() {
   const [tanksData, setTanksData] = useState<ITankData[]>([]);
+  const [selectedTank, setSelectedTank] = useState(0);
+  const { fkMostro, mostroVol } = useLocalSearchParams();
   async function getTanksDataFromLocal() {
     try {
       const data = await AsyncStorage.getItem("tanksData");
@@ -18,6 +21,7 @@ export default function SelectPeDeCuba() {
   }
   useEffect(() => {
     getTanksDataFromLocal();
+    console.log(fkMostro);
   }, []);
 
   return (
@@ -47,15 +51,20 @@ export default function SelectPeDeCuba() {
             keyExtractor={(item) => item.deposito}
             renderItem={({ item }) => {
               return item.temperatura ? (
-                <TankCard
+                <SelectTankCard
                   title={item.deposito}
-                  isAvailable={"Edge"}
                   density={item.densidade}
                   temperature={item.temperatura}
                   pressure={item.pressao ? item.pressao : null}
+                  setIsSelected={() => setSelectedTank(item.idDeposito)}
+                  isSelected={selectedTank === item.idDeposito && true}
                 />
               ) : (
-                <TankCard title={item.deposito} isAvailable={"Edge"} />
+                <SelectTankCard
+                  title={item.deposito}
+                  setIsSelected={() => setSelectedTank(item.idDeposito)}
+                  isSelected={selectedTank === item.idDeposito && true}
+                />
               );
             }}
           />

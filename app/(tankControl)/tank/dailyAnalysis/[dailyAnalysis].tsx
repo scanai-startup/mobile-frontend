@@ -3,8 +3,8 @@ import AppHeader from "@/components/AppHeader";
 import DateInput from "@/components/DateInput";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
-import { useTokenStore } from "@/store/userData";
 import { useToast } from "@/hooks/useToast";
+import { useTokenStore } from "@/store/userData";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import React, { useState } from "react";
@@ -121,7 +121,7 @@ export default function DailyAnalysis() {
           </View>
           <View className="mb-4">
             <Text className="text-lg mb-2">Temperatura</Text>
-            <View className="flex-row items-center gap-4 bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
+            <View className="flex-row items-center gap-4 bg-[#DEDEDE] px-3 rounded-lg h-14">
               <TextInput
                 className="flex-1 placeholder-gray-400"
                 keyboardType="numeric"
