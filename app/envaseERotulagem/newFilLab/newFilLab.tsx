@@ -148,13 +148,13 @@ export default function newFilLab() {
           <View className="flex-row justify-between gap-4">
             <View className="flex-1">
               <Text className="text-xl">Produto</Text>
-              <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
+              <View className="flex flex-row items-center bg-[#DEDEDE] px-3 rounded-lg h-14">
                 <TextInput className="text-xl ml-2 flex-1" placeholder="1.5" />
               </View>
             </View>
             <View className="flex-1">
               <Text className="text-xl">Lote</Text>
-              <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
+              <View className="flex flex-row items-center bg-[#DEDEDE] px-3 rounded-lg h-14">
                 <TextInput className="text-xl ml-2 flex-1" placeholder="123" />
               </View>
             </View>
@@ -162,13 +162,13 @@ export default function newFilLab() {
           <View className="flex-row justify-between gap-4">
             <View className="flex-1">
               <Text className="text-xl">Depósito</Text>
-              <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
+              <View className="flex flex-row items-center bg-[#DEDEDE] px-3 rounded-lg h-14">
                 <TextInput className="text-xl ml-2 flex-1" placeholder="1.5" />
               </View>
             </View>
             <View className="flex-1">
               <Text className="text-xl">Volume</Text>
-              <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
+              <View className="flex flex-row items-center bg-[#DEDEDE] px-3 rounded-lg h-14">
                 <TextInput className="text-xl ml-2 flex-1" placeholder="3000" />
               </View>
             </View>
@@ -213,7 +213,7 @@ export default function newFilLab() {
             </View>
           </View>
         </ScrollView>
-        <FormFooter nextHref="/envaseERotulagem" />
+        <FormFooter nextHref="/envaseERotulagem" isLastPage={false} />
       </SafeAreaView>
     </>
   );
