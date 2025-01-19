@@ -15,8 +15,8 @@ export function useAutoLogin() {
         if (process.env.EXPO_PUBLIC_ENV === "development") {
           try {
             const response = await apiInstance.post("/auth/login", {
-              matricula: "admin",
-              senha: "123",
+              matricula: "ADMIN",
+              senha: "ADMIN",
             });
   
             const token = response.data.token;

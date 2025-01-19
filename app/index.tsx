@@ -5,7 +5,7 @@ import SafeAreaView from "@/components/SafeAreaView";
 import {  useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
-import { useAutoLogin } from "@/hooks/useLogin";
+import { useAutoLogin } from "@/hooks/useAutoLogin";
 import { useAuth } from "@/hooks/useAuth";
 
 export default function Login() {
