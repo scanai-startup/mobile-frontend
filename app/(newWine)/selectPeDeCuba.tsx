@@ -4,6 +4,8 @@ import FormFooter from "@/components/FormFooter";
 import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
 import SelectTankCard from "@/components/SelectTankCard";
+import { useLocalTanksData } from "@/hooks/useLocalTanksData";
+import { useTankSelection } from "@/hooks/useTankSelection";
 import ITankData from "@/types/ITankData";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "expo-router";
@@ -12,51 +14,19 @@ import { Search } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
 import { FlatList, Text, TextInput, View } from "react-native";
 
-interface ISelectedTank {
-  deposit: string;
-  fkPeDeCuba: number;
-  volume: number;
-}
-
 export default function SelectPeDeCuba() {
-  const [tanksData, setTanksData] = useState<ITankData[]>([]);
-  const [selectedTank, setSelectedTank] = useState<ISelectedTank | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [volume, setVolume] = useState("");
-  const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
   const { fkMostro, mostroVol } = useLocalSearchParams();
-  async function getTanksDataFromLocal() {
-    try {
-      const data = await AsyncStorage.getItem("tanksData");
-      data && setTanksData(JSON.parse(data));
-    } catch (err) {
-      console.error("Erro ao recuperar dados do armazenamento local: ", err);
-    }
-  }
-  useFocusEffect(
-    useCallback(() => {
-      getTanksDataFromLocal();
-      return;
-    }, [])
-  );
-
-  function handleSelectTank(tank: ISelectedTank) {
-    setSelectedTank(tank);
-    setIsDialogOpen(true);
-  }
-  function onDialogClose() {
-    setIsDialogOpen(false);
-    setVolume("");
-    setSelectedTank(null);
-    setIsNextButtonEnabled(false);
-  }
-  function handleContinueButton() {
-    selectedTank &&
-      setSelectedTank({ ...selectedTank, volume: Number(volume) });
-    setVolume("");
-    setIsNextButtonEnabled(true);
-    setIsDialogOpen(false);
-  }
+  const { tanksData } = useLocalTanksData();
+  const {
+    selectedTank,
+    isDialogOpen,
+    volume,
+    isNextButtonEnabled,
+    setVolume,
+    handleSelectTank,
+    onDialogClose,
+    handleContinueButton,
+  } = useTankSelection();
 
   return (
     <>
@@ -126,19 +96,7 @@ export default function SelectPeDeCuba() {
                   }
                   isSelected={selectedTank?.deposit === item.deposito && true}
                 />
-              ) : (
-                <SelectTankCard
-                  title={item.deposito}
-                  setIsSelected={() =>
-                    handleSelectTank({
-                      deposit: item.deposito,
-                      fkPeDeCuba: item.idConteudo,
-                      volume: 0,
-                    })
-                  }
-                  isSelected={selectedTank?.deposit === item.deposito && true}
-                />
-              );
+              ) : null
             }}
           />
         </View>
