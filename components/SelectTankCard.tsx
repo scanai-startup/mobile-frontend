@@ -3,6 +3,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 interface CardProps {
   title: string;
+  tankType: string;
   density?: number;
   temperature?: number;
   pressure?: number | null;
@@ -14,6 +15,7 @@ interface CardProps {
 
 export default function SelectTankCard({
   title,
+  tankType,
   density = 0,
   temperature = 0,
   pressure = 0,
@@ -26,7 +28,9 @@ export default function SelectTankCard({
     <View style={{ marginBottom: 16, width: "100%" }}>
       <View className="bg-white rounded-lg shadow flex-col border border-neutral-250">
         <View className="flex-row p-4 justify-between items-center">
-          <Text className="text-2xl font-bold">{title}</Text>
+          <Text className="text-2xl font-bold">
+            {tankType.substring(0, 3)} {title}
+          </Text>
           <TouchableOpacity
             onPress={() => setIsSelected()}
             className={

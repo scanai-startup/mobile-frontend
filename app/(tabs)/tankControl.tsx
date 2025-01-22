@@ -160,7 +160,7 @@ export default function TankControl() {
     useCallback(() => {
       getDepositos();
       return;
-    }, [])
+    }, []),
   );
 
   const getDepositos = async () => {
@@ -172,7 +172,7 @@ export default function TankControl() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       setData(response.data);
       console.log(response.data);
