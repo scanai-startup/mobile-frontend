@@ -2,6 +2,7 @@ import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
 import CenteredModal from "@/components/CenteredModal";
 import { DefaultButton } from "@/components/DefaultButton";
+import { DensTempGraph } from "@/components/DensTempGraph";
 import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useShipmentStore } from "@/store/remessasContext";
@@ -18,7 +19,7 @@ import {
   X,
 } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
-import { FlatList, StyleSheet, Text, View } from "react-native";
+import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function Tank() {
   const { tank, depositId, content, contentId } = useLocalSearchParams();
@@ -30,8 +31,9 @@ export default function Tank() {
     useCallback(() => {
       clearShipments();
       return;
-    }, [])
+    }, []),
   );
+
   let activityListItems = [
     {
       name: "Análises diárias",
@@ -88,12 +90,41 @@ export default function Tank() {
       ],
     },
   ];
+
   function filterActivityItems() {
     if (content !== "Vinho" && content !== "Pé de Cuba") {
       return activityListItems.filter((i) => i.name !== "Controle de produtos");
     }
     return activityListItems;
   }
+
+  const shipmentDetailsLink = () => {
+    console.log("Navigate to shipment details");
+  };
+
+  const analysisData = [
+    {
+      label: "Densidade",
+      value: 996,
+      unit: "g/cm³",
+    },
+    {
+      label: "Temperatura",
+      value: "20",
+      unit: "ºC",
+      icon: ChevronDown,
+      iconColor: "red",
+    },
+    {
+      label: "Pressão",
+      value: "5.7",
+      unit: "bar",
+      icon: ChevronDown,
+      iconColor: "green",
+      iconStyle: { transform: [{ rotate: "180deg" }] },
+    },
+  ];
+
   return (
     <SafeAreaView>
       <AppHeader
@@ -102,43 +133,41 @@ export default function Tank() {
         mainText={`${tank}`}
         returnHref={router.back}
       />
-      <View>
+      <ScrollView>
         <View className="flex flex-row justify-between px-7 items-center mb-4">
           <Text className="text-zinc-950 font-bold text-2xl">Ações</Text>
-            <View className="flex flex-row justify-between items-center gap-4 border p-2 bg-white" 
-              onTouchStart={()=> setIsDialogOpen(true)}
-            >
-              <Text className="text-blue-500">Editar Tanque</Text>
-              <Pencil
-                size="25px"
+          <View
+            className="flex flex-row justify-between items-center gap-4 border p-2 bg-white"
+            onTouchStart={() => setIsDialogOpen(true)}
+          >
+            <Text className="text-blue-500">Editar Tanque</Text>
+            <Pencil size="25px" color="black" />
+          </View>
+          <CenteredModal
+            isDialogOpen={isDialogOpen}
+            handleDialogClose={() => setIsDialogOpen(false)}
+          >
+            <View className="px-6 py-10 bg-white rounded-xl relative">
+              <X
+                style={{ position: "absolute", top: 16, right: 16 }}
+                size={35}
                 color="black"
+                onPress={() => setIsDialogOpen(false)}
               />
-            </View>
-            <CenteredModal
-              isDialogOpen={isDialogOpen}
-              handleDialogClose={() => setIsDialogOpen(false)}
-            >
-              <View className="px-6 py-10 bg-white rounded-xl relative">
-                <X
-                  style={{ position: 'absolute', top: 16, right: 16  }}
-                  size={35}
-                  color="black"
-                  onPress={() => setIsDialogOpen(false)}
-                />
-                <Text className="text-xl mt-8 mb-4">
-                  Alterações que podem ser feitas no tanque
-                </Text>
-                <View className="gap-8">
-                  <InputBox
-                    title="Editar Volume"
-                    placeholder="500 (Aqui virá o volume atual)"
-                  >
-                    <Text className="text-xl">L</Text>
-                  </InputBox>
-                  <DefaultButton title="Concluir" onPress={()=> null} />
-                </View>
+              <Text className="text-xl mt-8 mb-4">
+                Alterações que podem ser feitas no tanque
+              </Text>
+              <View className="gap-8">
+                <InputBox
+                  title="Editar Volume"
+                  placeholder="500 (Aqui virá o volume atual)"
+                >
+                  <Text className="text-xl">L</Text>
+                </InputBox>
+                <DefaultButton title="Concluir" onPress={() => null} />
               </View>
-            </CenteredModal>
+            </View>
+          </CenteredModal>
         </View>
         <FlatList
           data={filterActivityItems()}
@@ -161,101 +190,79 @@ export default function Tank() {
             gap: 10,
           }}
         />
-      </View>
-      <View className="px-7 gap-4">
-        <View>
-          <Text className="text-2xl">Remessas associadas</Text>
-          <Card />
+        <View className="px-7 gap-4">
+          <View>
+            <Card shipment="101 - 2º Talão" detailsLink={shipmentDetailsLink} />
+            <AnalysisSummaryCard date="09/08/24" data={analysisData} />
+          </View>
+          <View>
+            <Text className="text-lg font-bold text-gray-700 justify-self-start">
+              Dados recentes
+            </Text>
+            <View className="flex-1 bg-gray-100 justify-center items-center">
+              <DensTempGraph />
+            </View>
+          </View>
         </View>
-        <CardNotEmpty />
-      </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
-
-const Card = () => {
-  return (
-    <View style={styles.card}>
-      <Text style={styles.subtitle}>Última remessa associada</Text>
-      <View style={styles.row}>
-        <Text style={styles.shipment}>101 - 2º Talão</Text>
-        <Text style={styles.details}>Detalhes</Text>
-      </View>
-    </View>
-  );
-};
-
-const CardNotEmpty = () => {
+const Card = ({
+  shipment,
+  detailsLink,
+}: {
+  shipment: string;
+  detailsLink: () => void;
+}) => {
   return (
     <View>
-      <Text className="text-2xl font-medium">Resumo da última análise</Text>
-      <View className="bg-white" style={styles.card}>
-        <Text className="text-xl text-black font-medium">09/08/24</Text>
-        <View className="flex-row justify-between">
-          <Text className="text-gray-500">Densidade</Text>
-          <View style={styles.bottomAligned}>
-            <Text className="text-xl">996</Text>
-            <Text className="text-gray-500">g/cm3</Text>
-          </View>
-        </View>
-        <View className="flex-row justify-between">
-          <Text className="text-gray-500">Temperatura</Text>
-          <View style={styles.bottomAligned}>
-            <ChevronDown size="25px" color="red" />
-            <Text className="text-xl">20</Text>
-            <Text className="text-gray-500">ºC</Text>
-          </View>
-        </View>
-        <View className="flex-row justify-between">
-          <Text className="text-gray-500">Pressão</Text>
-          <View style={styles.bottomAligned}>
-            <ChevronDown
-              size="25px"
-              color="green"
-              style={{
-                transform: [{ rotate: "180deg" }],
-              }}
-            />
-            <Text className="text-xl">5.7</Text>
-            <Text className="text-gray-500">bar</Text>
-          </View>
+      <Text className="text-black font-bold text-xl mb-1 mt-2">
+        Remessa (s)
+      </Text>
+      <View className="bg-white p-4 rounded-lg shadow-md">
+        <Text className="text-gray-500 text-sm mb-1">Remessa associada</Text>
+        <View className="flex-row justify-between items-center">
+          <Text className="text-lg font-medium">{shipment}</Text>
+          <Text
+            className="text-base font-semibold text-blue-500"
+            onPress={detailsLink}
+          >
+            Ver Detalhes
+          </Text>
         </View>
       </View>
     </View>
   );
 };
 
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: "#fff",
-    padding: 16,
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
-    elevation: 3,
-    marginTop: 8,
-  },
-  subtitle: {
-    color: "gray",
-    fontSize: 12,
-    marginBottom: 2,
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  shipment: {
-    fontSize: 16,
-  },
-  details: {
-    fontSize: 16,
-    fontWeight: "semibold",
-    color: "blue",
-  },
-  bottomAligned: {
-    flexDirection: "row",
-    alignItems: "flex-end",
-    gap: 4, // Use this if gap is not supported, otherwise you can remove it
-  },
-});
+const AnalysisSummaryCard = ({ date, data }: { date: string; data: any }) => {
+  return (
+    <View>
+      <Text className="text-lg font-medium text-black mb-1 mt-1">
+        Resumo da Última Análise
+      </Text>
+      <View className="bg-white p-4 rounded-lg shadow-md">
+        <Text className="text-base font-medium text-gray-600">{date}</Text>
+        {data.map((item: any, index: number) => (
+          <View key={index} className="flex-row justify-between items-center">
+            <Text className="text-gray-700">{item.label}</Text>
+            <View className="flex-row items-center gap-1">
+              {item.icon && (
+                <item.icon
+                  size="20px"
+                  color={item.iconColor}
+                  style={item.iconStyle || {}}
+                />
+              )}
+              <Text className="text-lg font-medium text-black">
+                {item.value}
+              </Text>
+              <Text className="text-sm text-gray-600">{item.unit}</Text>
+            </View>
+          </View>
+        ))}
+      </View>
+    </View>
+  );
+};

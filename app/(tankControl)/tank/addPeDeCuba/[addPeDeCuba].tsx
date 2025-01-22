@@ -49,15 +49,16 @@ export default function AddPeDeCuba() {
         unidadeDeMedida: p.unit,
       };
     });
+
     const data = {
-      fkdeposito: depositId,
-      fkfuncionario: userId,
-      datainicio: trasfegaDate.toISOString(),
+      depositoId: depositId,
       volume: volume,
       produtos: productsData,
+      funcionarioId: userId,
     };
+
     apiInstance
-      .post("/pedecuba/register", data, {
+      .post("/vinculodepositopedecuba", data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -97,8 +98,8 @@ export default function AddPeDeCuba() {
               amount:
                 operation === "add" ? product.amount + 10 : product.amount - 10,
             }
-          : p
-      )
+          : p,
+      ),
     );
   }
 
@@ -129,12 +130,12 @@ export default function AddPeDeCuba() {
           <View className="flex-row justify-between gap-8">
             <View className="flex-1">
               <Text className="text-xl">Litros</Text>
-              <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
+              <View className="flex flex-row items-center bg-[#DEDEDE] rounded-lg h-14">
                 <TextInput
                   className="text-xl ml-2 flex-1"
                   placeholder="1.200"
                   onChangeText={(v) => setVolume(Number(v))}
-                  keyboardType="numeric"
+                  keyboardType="number-pad"
                 />
               </View>
             </View>
