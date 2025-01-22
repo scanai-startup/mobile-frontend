@@ -1,9 +1,12 @@
 export default interface ITankData {
+  capacidadeDeposito: number;
   conteudo: string;
-  idConteudo: number;
   densidade: number;
-  temperatura: number;
+  idConteudo: number;
+  idDeposito: string;
+  numeroDeposito: string;
   pressao: number;
-  idDeposito: number;
-  deposito: string;
+  temperatura: number;
+  tipoDeposito: string;
+  volumeConteudo: number;
 }

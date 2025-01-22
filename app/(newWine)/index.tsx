@@ -5,6 +5,7 @@ import FormFooter from "@/components/FormFooter";
 import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
 import SelectTankCard from "@/components/SelectTankCard";
+import { useToast } from "@/hooks/useToast";
 import ITankData from "@/types/ITankData";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "expo-router";
@@ -17,6 +18,7 @@ interface ISelectedTank {
   deposit: string;
   fkMostro: number;
   volume: number;
+  currentVolume: number;
 }
 
 export default function SelectMostroView() {
@@ -25,13 +27,14 @@ export default function SelectMostroView() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
   const [volume, setVolume] = useState("");
+  const toast = useToast();
 
   useFocusEffect(
     // calls the api everytime the screen gets displayed
     useCallback(() => {
       getDepositos();
       return;
-    }, [])
+    }, []),
   );
 
   const syncTanksToLocalStorage = async (data: any) => {
@@ -52,7 +55,7 @@ export default function SelectMostroView() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       setData(response.data.filter((t: ITankData) => t.conteudo === "Mostro"));
       syncTanksToLocalStorage(response.data);
@@ -91,9 +94,12 @@ export default function SelectMostroView() {
             <Text className="text-xl mt-2 mb-4">
               Selecione o volume do mostro que será utilizado para o vinho.
             </Text>
+            <Text className="text-xl mt-2 mb-2 font-semibold text-red-500">
+              Volume no tanque: {selectedTank?.currentVolume} L
+            </Text>
             <InputBox
               placeholder="200"
-              title="Volume"
+              title="Volume a ser retirado"
               auxText="L"
               onChangeText={(v) => setVolume(v)}
               keyboardType="numeric"
@@ -102,7 +108,11 @@ export default function SelectMostroView() {
               title="Continuar"
               className="mt-4"
               onPress={() => handleContinueButton()}
-              disabled={volume ? false : true}
+              disabled={
+                volume
+                  ? Number(volume) > selectedTank!.currentVolume && true
+                  : true
+              }
             />
           </View>
         </CenteredModal>
@@ -126,34 +136,44 @@ export default function SelectMostroView() {
           </View>
           <FlatList
             data={data}
-            keyExtractor={(item) => item.deposito}
+            keyExtractor={(item) => item.idDeposito.toString()}
             renderItem={({ item }) => {
               return item.temperatura ? (
                 <SelectTankCard
-                  title={item.deposito}
+                  title={item.numeroDeposito}
                   density={item.densidade}
                   temperature={item.temperatura}
                   pressure={item.pressao ? item.pressao : null}
                   setIsSelected={() =>
                     handleSelectTank({
-                      deposit: item.deposito,
+                      deposit: item.numeroDeposito,
                       fkMostro: item.idConteudo,
+                      currentVolume: item.volumeConteudo,
                       volume: 0,
                     })
                   }
-                  isSelected={selectedTank?.deposit === item.deposito && true}
+                  isSelected={
+                    selectedTank?.deposit === item.numeroDeposito && true
+                  }
+                  volume={item.volumeConteudo}
+                  capacity={item.capacidadeDeposito}
                 />
               ) : (
                 <SelectTankCard
-                  title={item.deposito}
+                  title={item.numeroDeposito}
                   setIsSelected={() =>
                     handleSelectTank({
-                      deposit: item.deposito,
+                      deposit: item.numeroDeposito,
                       fkMostro: item.idConteudo,
+                      currentVolume: item.volumeConteudo,
                       volume: 0,
                     })
                   }
-                  isSelected={selectedTank?.deposit === item.deposito && true}
+                  isSelected={
+                    selectedTank?.deposit === item.numeroDeposito && true
+                  }
+                  volume={item.volumeConteudo}
+                  capacity={item.capacidadeDeposito}
                 />
               );
             }}
