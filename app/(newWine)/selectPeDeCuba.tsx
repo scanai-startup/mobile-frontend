@@ -28,6 +28,9 @@ export default function SelectPeDeCuba() {
     handleContinueButton,
   } = useTankSelection();
 
+  let filteredData = tanksData.filter((t) => t.conteudo === "Pé de Cuba");
+  console.log("data: ", filteredData);
+
   return (
     <>
       <SafeAreaView>
@@ -47,7 +50,7 @@ export default function SelectPeDeCuba() {
               title="Volume"
               auxText="L"
               onChangeText={(v) => setVolume(v)}
-              keyboardType="numeric"
+              keyboardType="number-pad"
             />
             <DefaultButton
               title="Continuar"
@@ -76,30 +79,42 @@ export default function SelectPeDeCuba() {
             </View>
           </View>
           <FlatList
-            // data={tanksData.filter((t) => t.conteudo === "Pé de Cuba")} //! uncomment when fixing the deposito+peDeCuba sync
-            data={tanksData}
+            data={filteredData}
             keyExtractor={(item) => item.idDeposito.toString()}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) => {
-              return item.temperatura ? (
+              let identificacaoDeposito = `${item.tipoDeposito} ${item.numeroDeposito}`;
+              return (
                 <SelectTankCard
-                  title={item.deposito}
+                  title={identificacaoDeposito}
                   density={item.densidade}
                   temperature={item.temperatura}
                   pressure={item.pressao ? item.pressao : null}
                   setIsSelected={() =>
                     handleSelectTank({
-                      deposit: item.deposito,
+                      deposit: identificacaoDeposito,
                       fkPeDeCuba: item.idConteudo,
                       volume: 0,
                     })
                   }
-                  isSelected={selectedTank?.deposit === item.deposito && true}
+                  isSelected={
+                    selectedTank?.deposit === identificacaoDeposito && true
+                  }
                 />
-              ) : null
+              );
             }}
+            ListEmptyComponent={() => (
+              <View className="flex-1 justify-center items-center">
+                <Text className="text-xl text-gray-500">
+                  Nenhum Pé de Cuba disponível.
+                </Text>
+              </View>
+            )}
           />
         </View>
+        {/* #TODO!: Atualmente so da pra passar um mostro,
+                    o software tem que ser capaz de passar uma lista
+        */}
         <FormFooter
           nextHref={
             selectedTank

@@ -1,6 +1,8 @@
+import apiInstance from "@/api/apiInstance";
 import FormFooter from "@/components/FormFooter";
 import SafeAreaView from "@/components/SafeAreaView";
 import SelectTankCard from "@/components/SelectTankCard";
+import { useTokenStore } from "@/store/userData";
 import ITankData from "@/types/ITankData";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
@@ -13,6 +15,7 @@ export default function SelectTargetTank() {
   const [selectedTank, setSelectedTank] = useState(0);
   const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
   const { fkMostro, fkPeDeCuba, vol } = useLocalSearchParams();
+  const { userId } = useTokenStore();
 
   async function getTanksDataFromLocal() {
     try {
@@ -22,12 +25,50 @@ export default function SelectTargetTank() {
       console.error("Erro ao recuperar dados do armazenamento local: ", err);
     }
   }
+
+  //TODO!: POR UM INPUT PARA SELECIONAR A DATA, NAO SEI SABE O DIA
+  //QUE O DADO ESTA SENDO REGISTRADO
+  // <DateInput
+  //             questionTitle="Data"
+  //             selectedDate={date}
+  //             setSelectedDate={(date) => setDate(date)}
+  // />
+
+  async function vincularDepositoVinho() {
+    try {
+      const payload = {
+        depositoId: selectedTank,
+        dataFimFermentacao: new Date().toISOString(),
+        pedecubaId: Number(fkPeDeCuba),
+        //TODO: ADICIONAR ROTULO
+        rotuloId: 1,
+        mostroIds: [Number(fkMostro)],
+        funcionarioId: userId,
+      };
+
+      await apiInstance.post("/vinculodepositovinho", payload);
+      console.log("Depósito vinculado com sucesso!");
+    } catch (error) {
+      console.log({
+        depositoId: selectedTank,
+        dataFimFermentacao: new Date().toISOString(),
+        pedecubaId: Number(fkPeDeCuba),
+        //TODO: ADICIONAR ROTULO
+        rotuloId: 1,
+        mostroIds: [Number(fkMostro)],
+        funcionarioId: userId,
+      });
+      console.error("Erro ao vincular depósito:", error);
+    }
+  }
+
   useFocusEffect(
     useCallback(() => {
       getTanksDataFromLocal();
       return;
-    }, [])
+    }, []),
   );
+
   return (
     <>
       <SafeAreaView>
@@ -54,9 +95,10 @@ export default function SelectTargetTank() {
             keyExtractor={(item) => item.idDeposito.toString()}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) => {
+              let identificacaoDeposito = `${item.tipoDeposito} ${item.numeroDeposito}`;
               return (
                 <SelectTankCard
-                  title={item.deposito}
+                  title={identificacaoDeposito}
                   setIsSelected={() => {
                     setSelectedTank(item.idDeposito);
                     setIsNextButtonEnabled(true);
@@ -65,6 +107,13 @@ export default function SelectTargetTank() {
                 />
               );
             }}
+            ListEmptyComponent={() => (
+              <View className="flex-1 justify-center items-center">
+                <Text className="text-xl text-gray-500">
+                  Nenhum tanque disponível.
+                </Text>
+              </View>
+            )}
           />
         </View>
         <FormFooter
@@ -72,18 +121,11 @@ export default function SelectTargetTank() {
           isReturnButtonEnabled={true}
           isNextButtonEnabled={isNextButtonEnabled}
           isLastPage={true}
-          handleDataSubmit={() => {
-            console.log(
-              "fkMostro: " +
-                fkMostro +
-                " fkPeDeCuba: " +
-                fkPeDeCuba +
-                " volume: " +
-                vol +
-                " id deposito alvo: " +
-                selectedTank
-            );
-            router.dismissTo("/(tabs)");
+          handleDataSubmit={async () => {
+            if (selectedTank) {
+              await vincularDepositoVinho();
+              router.dismissTo("/(tabs)");
+            }
           }}
         />
       </SafeAreaView>

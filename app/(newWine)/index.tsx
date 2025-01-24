@@ -31,7 +31,7 @@ export default function SelectMostroView() {
     useCallback(() => {
       getDepositos();
       return;
-    }, [])
+    }, []),
   );
 
   const syncTanksToLocalStorage = async (data: any) => {
@@ -52,7 +52,7 @@ export default function SelectMostroView() {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-        }
+        },
       );
       setData(response.data.filter((t: ITankData) => t.conteudo === "Mostro"));
       syncTanksToLocalStorage(response.data);
@@ -96,7 +96,7 @@ export default function SelectMostroView() {
               title="Volume"
               auxText="L"
               onChangeText={(v) => setVolume(v)}
-              keyboardType="numeric"
+              keyboardType="number-pad"
             />
             <DefaultButton
               title="Continuar"
@@ -126,37 +126,49 @@ export default function SelectMostroView() {
           </View>
           <FlatList
             data={data}
-            keyExtractor={(item) => item.deposito}
+            keyExtractor={(item) => item.tipoDeposito}
             renderItem={({ item }) => {
-              return item.temperatura ? (
+              let identificacaoDeposito = `${item.tipoDeposito} ${item.numeroDeposito}`;
+              return item.conteudo == "Mostro" ? (
                 <SelectTankCard
-                  title={item.deposito}
+                  title={identificacaoDeposito}
                   density={item.densidade}
                   temperature={item.temperatura}
                   pressure={item.pressao ? item.pressao : null}
                   setIsSelected={() =>
                     handleSelectTank({
-                      deposit: item.deposito,
+                      deposit: identificacaoDeposito,
                       fkMostro: item.idConteudo,
                       volume: 0,
                     })
                   }
-                  isSelected={selectedTank?.deposit === item.deposito && true}
+                  isSelected={
+                    selectedTank?.deposit === identificacaoDeposito && true
+                  }
                 />
               ) : (
                 <SelectTankCard
-                  title={item.deposito}
+                  title={identificacaoDeposito}
                   setIsSelected={() =>
                     handleSelectTank({
-                      deposit: item.deposito,
+                      deposit: identificacaoDeposito,
                       fkMostro: item.idConteudo,
                       volume: 0,
                     })
                   }
-                  isSelected={selectedTank?.deposit === item.deposito && true}
+                  isSelected={
+                    selectedTank?.deposit === identificacaoDeposito && true
+                  }
                 />
               );
             }}
+            ListEmptyComponent={() => (
+              <View className="flex-1 justify-center items-center">
+                <Text className="text-xl text-gray-500">
+                  Nenhum tanque disponível.
+                </Text>
+              </View>
+            )}
           />
         </View>
         <FormFooter

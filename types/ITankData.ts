@@ -5,5 +5,6 @@ export default interface ITankData {
   temperatura: number;
   pressao: number;
   idDeposito: number;
-  deposito: string;
+  tipoDeposito: string;
+  numeroDeposito: string;
 }
