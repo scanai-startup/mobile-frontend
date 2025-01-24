@@ -15,8 +15,10 @@ import { FlatList, Text, TextInput, View } from "react-native";
 
 interface ISelectedTank {
   deposit: string;
+  tankType: string;
   fkMostro: number;
   volume: number;
+  currentVolume: number;
 }
 
 export default function SelectMostroView() {
@@ -86,14 +88,18 @@ export default function SelectMostroView() {
         >
           <View className="px-6 py-10 bg-white rounded-xl">
             <Text className="text-2xl text-black font-bold">
-              Tanque selecionado: {selectedTank?.deposit}
+              Tanque selecionado: {selectedTank?.tankType.substring(0, 3)}{" "}
+              {selectedTank?.deposit}
             </Text>
             <Text className="text-xl mt-2 mb-4">
               Selecione o volume do mostro que será utilizado para o vinho.
             </Text>
+            <Text className="text-xl mt-2 mb-2 font-semibold text-red-500">
+              Volume no tanque: {selectedTank?.currentVolume} L
+            </Text>
             <InputBox
               placeholder="200"
-              title="Volume"
+              title="Volume a ser retirado"
               auxText="L"
               onChangeText={(v) => setVolume(v)}
               keyboardType="number-pad"
@@ -102,7 +108,11 @@ export default function SelectMostroView() {
               title="Continuar"
               className="mt-4"
               onPress={() => handleContinueButton()}
-              disabled={volume ? false : true}
+              disabled={
+                volume
+                  ? Number(volume) > selectedTank!.currentVolume && true
+                  : true
+              }
             />
           </View>
         </CenteredModal>
@@ -126,39 +136,49 @@ export default function SelectMostroView() {
           </View>
           <FlatList
             data={data}
-            keyExtractor={(item) => item.tipoDeposito}
+            keyExtractor={(item) => item.idDeposito.toString()}
             renderItem={({ item }) => {
               let identificacaoDeposito = `${item.tipoDeposito} ${item.numeroDeposito}`;
               return item.conteudo == "Mostro" ? (
                 <SelectTankCard
-                  title={identificacaoDeposito}
+                  title={item.numeroDeposito}
+                  tankType={item.tipoDeposito}
                   density={item.densidade}
                   temperature={item.temperatura}
                   pressure={item.pressao ? item.pressao : null}
                   setIsSelected={() =>
                     handleSelectTank({
-                      deposit: identificacaoDeposito,
+                      deposit: item.numeroDeposito,
+                      tankType: item.tipoDeposito,
                       fkMostro: item.idConteudo,
+                      currentVolume: item.volumeConteudo,
                       volume: 0,
                     })
                   }
                   isSelected={
-                    selectedTank?.deposit === identificacaoDeposito && true
+                    selectedTank?.deposit === item.numeroDeposito && true
                   }
+                  volume={item.volumeConteudo}
+                  capacity={item.capacidadeDeposito}
                 />
               ) : (
                 <SelectTankCard
-                  title={identificacaoDeposito}
+                  title={item.numeroDeposito}
+                  tankType={item.tipoDeposito}
                   setIsSelected={() =>
                     handleSelectTank({
-                      deposit: identificacaoDeposito,
+                      deposit: item.numeroDeposito,
+                      tankType: item.tipoDeposito,
                       fkMostro: item.idConteudo,
+                      currentVolume: item.volumeConteudo,
                       volume: 0,
                     })
                   }
                   isSelected={
-                    selectedTank?.deposit === identificacaoDeposito && true
+                    selectedTank?.deposit === item.numeroDeposito && true
                   }
+                  volume={item.volumeConteudo}
+                  capacity={item.capacidadeDeposito}
                 />
               );
             }}

@@ -3,26 +3,34 @@ import { Text, TouchableOpacity, View } from "react-native";
 
 interface CardProps {
   title: string;
+  tankType: string;
   density?: number;
   temperature?: number;
   pressure?: number | null;
   isSelected: boolean;
   setIsSelected: () => void;
+  volume: number;
+  capacity: number;
 }
 
 export default function SelectTankCard({
   title,
+  tankType,
   density = 0,
   temperature = 0,
   pressure = 0,
   isSelected = false,
   setIsSelected,
+  volume,
+  capacity,
 }: CardProps) {
   return (
     <View style={{ marginBottom: 16, width: "100%" }}>
       <View className="bg-white rounded-lg shadow flex-col border border-neutral-250">
         <View className="flex-row p-4 justify-between items-center">
-          <Text className="text-2xl font-bold">{title}</Text>
+          <Text className="text-2xl font-bold">
+            {tankType.substring(0, 3)} {title}
+          </Text>
           <TouchableOpacity
             onPress={() => setIsSelected()}
             className={
@@ -36,10 +44,24 @@ export default function SelectTankCard({
             </Text>
           </TouchableOpacity>
         </View>
-        {temperature ? (
-          <>
-            <View className="w-full h-[1px] bg-neutral-250"></View>
-            <View className="p-4">
+        <View className="w-full h-[1px] bg-neutral-250"></View>
+        <View className="p-4">
+          <View className="flex-row justify-between items-center">
+            <Text className="text-xl font-light">Volume (em uso):</Text>
+            <View className="flex-row justify-center items-end">
+              <Text className="text-2xl font-semibold">{volume}</Text>
+              <Text className="text-base font-normal text-neutral-400"> L</Text>
+            </View>
+          </View>
+          <View className="flex-row justify-between items-center">
+            <Text className="text-xl font-light">Capacidade:</Text>
+            <View className="flex-row justify-center items-end">
+              <Text className="text-2xl font-semibold">{capacity}</Text>
+              <Text className="text-base font-normal text-neutral-400"> L</Text>
+            </View>
+          </View>
+          {temperature ? (
+            <>
               <View className="flex-row justify-between items-center">
                 <Text className="text-xl font-light">Densidade:</Text>
                 <View className="flex-row justify-center items-end">
@@ -69,9 +91,9 @@ export default function SelectTankCard({
                   </View>
                 </View>
               )}
-            </View>
-          </>
-        ) : null}
+            </>
+          ) : null}
+        </View>
       </View>
     </View>
   );
