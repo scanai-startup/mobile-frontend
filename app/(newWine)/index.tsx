@@ -141,8 +141,7 @@ export default function SelectMostroView() {
               let identificacaoDeposito = `${item.tipoDeposito} ${item.numeroDeposito}`;
               return item.conteudo == "Mostro" ? (
                 <SelectTankCard
-                  title={item.numeroDeposito}
-                  tankType={item.tipoDeposito}
+                  title={identificacaoDeposito}
                   density={item.densidade}
                   temperature={item.temperatura}
                   pressure={item.pressao ? item.pressao : null}
@@ -163,8 +162,7 @@ export default function SelectMostroView() {
                 />
               ) : (
                 <SelectTankCard
-                  title={item.numeroDeposito}
-                  tankType={item.tipoDeposito}
+                  title={identificacaoDeposito}
                   setIsSelected={() =>
                     handleSelectTank({
                       deposit: item.numeroDeposito,

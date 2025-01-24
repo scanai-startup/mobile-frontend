@@ -4,6 +4,7 @@ export interface ISelectedTank {
   deposit: string;
   fkPeDeCuba: number;
   volume: number;
+  currentVolume: number;
 }
 
 export function useTankSelection() {

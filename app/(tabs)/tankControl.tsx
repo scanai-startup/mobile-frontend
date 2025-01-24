@@ -49,6 +49,7 @@ export default function TankControl() {
         },
       );
       setData(response.data);
+      console.log(response.data);
     } catch (error) {
       console.error("Erro ao buscar depósitos:", error);
     }

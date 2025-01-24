@@ -6,12 +6,9 @@ import SafeAreaView from "@/components/SafeAreaView";
 import SelectTankCard from "@/components/SelectTankCard";
 import { useLocalTanksData } from "@/hooks/useLocalTanksData";
 import { useTankSelection } from "@/hooks/useTankSelection";
-import ITankData from "@/types/ITankData";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "expo-router";
 import { useLocalSearchParams } from "expo-router/build/hooks";
 import { Search } from "lucide-react-native";
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { FlatList, Text, TextInput, View } from "react-native";
 
 export default function SelectPeDeCuba() {
@@ -29,7 +26,7 @@ export default function SelectPeDeCuba() {
   } = useTankSelection();
 
   let filteredData = tanksData.filter((t) => t.conteudo === "Pé de Cuba");
-  console.log("data: ", filteredData);
+  // console.log("data: ", filteredData);
 
   return (
     <>
@@ -45,6 +42,9 @@ export default function SelectPeDeCuba() {
             <Text className="text-xl mt-2 mb-4">
               Selecione o volume do mostro que será utilizado para o vinho.
             </Text>
+            <Text className="text-xl mt-2 mb-2 font-semibold text-red-500">
+              Volume no tanque: {selectedTank?.currentVolume} L
+            </Text>
             <InputBox
               placeholder="200"
               title="Volume"
@@ -56,7 +56,11 @@ export default function SelectPeDeCuba() {
               title="Continuar"
               className="mt-4"
               onPress={() => handleContinueButton()}
-              disabled={volume ? false : true}
+              disabled={
+                volume
+                  ? Number(volume) > selectedTank!.currentVolume && true
+                  : true
+              }
             />
           </View>
         </CenteredModal>
@@ -95,8 +99,11 @@ export default function SelectPeDeCuba() {
                       deposit: identificacaoDeposito,
                       fkPeDeCuba: item.idConteudo,
                       volume: 0,
+                      currentVolume: item.volumeConteudo,
                     })
                   }
+                  volume={item.volumeConteudo}
+                  capacity={item.capacidadeDeposito}
                   isSelected={
                     selectedTank?.deposit === identificacaoDeposito && true
                   }
