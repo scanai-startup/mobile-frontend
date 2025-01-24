@@ -3,12 +3,7 @@ import AppHeader from "@/components/AppHeader";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useShipmentStore } from "@/store/remessasContext";
 import { useFocusEffect, useLocalSearchParams } from "expo-router";
-import {
-  AlertCircle,
-  ArrowRightLeft,
-  Grape,
-  GrapeIcon,
-} from "lucide-react-native";
+import { AlertCircle, ArrowRightLeft, Grape, Truck } from "lucide-react-native";
 import React, { useCallback } from "react";
 import { FlatList, Text, View } from "react-native";
 
@@ -17,8 +12,8 @@ export default function EmptyTank() {
 
   const activityListItems = [
     {
-      name: "Adicionar Vinho Base",
-      icon: <GrapeIcon size={28} color="#000000" />,
+      name: "Adicionar Remessa",
+      icon: <Truck size={28} color="#000000" />,
       route: "/(tankControl)/tank/addBaseWine/[addBaseWine]",
       param: [{ tank: tank as string, depositId: Number(depositId) }],
     },
@@ -35,13 +30,14 @@ export default function EmptyTank() {
       param: [{ tank: tank as string, depositId: Number(depositId) }],
     },
   ];
+
   const { clearShipments } = useShipmentStore();
 
   useFocusEffect(
     useCallback(() => {
       clearShipments();
       return;
-    }, [])
+    }, []),
   );
 
   return (

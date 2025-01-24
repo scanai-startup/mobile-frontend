@@ -46,8 +46,9 @@ export function Card({
       </Text>
     );
 
-  const renderDetails = () =>
-    content == "Mostro" ? (
+  const renderDetails = () => {
+    if (temperature == null) return;
+    return content == "Mostro" ? (
       <>
         <View className="w-full h-[1px] bg-neutral-250" />
         <View className="p-4">
@@ -61,16 +62,19 @@ export function Card({
         <Text>Info pé de cuba</Text>
       </>
     ) : null;
+  };
 
-  const renderDetailRow = (label: string, value: number, unit: string) => (
-    <View className="flex-row justify-between items-center">
-      <Text className="text-xl font-light">{label}</Text>
-      <View className="flex-row justify-center items-end">
-        <Text className="text-2xl font-semibold">{value}</Text>
-        <Text className="text-base font-normal text-neutral-400">{unit}</Text>
+  const renderDetailRow = (label: string, value: number, unit: string) => {
+    return (
+      <View className="flex-row justify-between items-center">
+        <Text className="text-xl font-light">{label}</Text>
+        <View className="flex-row justify-center items-end">
+          <Text className="text-2xl font-semibold">{value}</Text>
+          <Text className="text-base font-normal text-neutral-400">{unit}</Text>
+        </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <Link href={href as Href} asChild>
