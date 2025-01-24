@@ -10,6 +10,7 @@ interface CardProps {
   setIsSelected: () => void;
   volume: number;
   capacity: number;
+  hasProblem?: "noCapacity" | false;
 }
 
 export default function SelectTankCard({
@@ -21,24 +22,30 @@ export default function SelectTankCard({
   setIsSelected,
   volume,
   capacity,
+  hasProblem = false,
 }: CardProps) {
   return (
     <View style={{ marginBottom: 16, width: "100%" }}>
       <View className="bg-white rounded-lg shadow flex-col border border-neutral-250">
         <View className="flex-row p-4 justify-between items-center">
           <Text className="text-2xl font-bold">{title}</Text>
-          <TouchableOpacity
-            onPress={() => setIsSelected()}
-            className={
-              "border rounded-md px-2 py-1 border-blue-500" +
-              (isSelected ? " bg-blue-500" : "")
-            }
-            // disabled={isSelected}
-          >
-            <Text className={isSelected ? "text-white" : "text-blue-500"}>
-              {isSelected ? "Selecionado" : "Selecionar"}
-            </Text>
-          </TouchableOpacity>
+          {hasProblem ? (
+            <View className="bg-red-400 p-2 rounded-lg">
+              <Text className="color-white font-bold">Sem capacidade</Text>
+            </View>
+          ) : (
+            <TouchableOpacity
+              onPress={() => setIsSelected()}
+              className={
+                "border rounded-md px-2 py-1 border-blue-500" +
+                (isSelected ? " bg-blue-500" : "")
+              }
+            >
+              <Text className={isSelected ? "text-white" : "text-blue-500"}>
+                {isSelected ? "Selecionado" : "Selecionar"}
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
         <View className="w-full h-[1px] bg-neutral-250"></View>
         <View className="p-4">

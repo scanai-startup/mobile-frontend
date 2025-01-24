@@ -196,6 +196,9 @@ export default function SelectTargetTank() {
                       ? true
                       : false
                   }
+                  hasProblem={
+                    item.capacidadeDeposito < Number(vol) && "noCapacity"
+                  }
                 />
               );
             }}
