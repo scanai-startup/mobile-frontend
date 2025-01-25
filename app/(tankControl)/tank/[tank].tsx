@@ -39,13 +39,17 @@ export default function Tank() {
       name: "Análises diárias",
       icon: <Cylinder size="28px" color="#000000" />,
       route: "/(tankControl)/tank/dailyAnalysis/[dailyAnalysis]",
-      //type: "tank",
       param: [
         {
+          //codigo gerado pelo DeepSeek (IA), não me pergunte o que ele faz
+          //mas resolve o erro de tipagem insuportavel que acontecia na lista
+          //de ActivityCard
           tank: tank as string,
           depositId: Number(depositId),
-          content: content,
-          contentId: contentId,
+          content: Array.isArray(content) ? content[0] : content,
+          contentId: Array.isArray(contentId)
+            ? Number(contentId[0])
+            : Number(contentId),
         },
       ],
     },
@@ -53,39 +57,36 @@ export default function Tank() {
       name: "Análises de deposito",
       icon: <Microscope size="28px" color="#000000" />,
       route: "/(tankControl)/tank/depositAnalysis/listAnalysis/[listAnalysis]",
-      //type: "tank",
       param: [{ tank: tank as string, depositId: Number(depositId) }],
     },
     {
       name: "Envase e rotulagem",
       icon: <Milk size="28px" color="#000000" />,
       route: "/envaseERotulagem/envase",
-      //type: "tank",
       param: [{ tank: tank as string, depositId: Number(depositId) }],
     },
     {
       name: "Adicionar Vinho Base",
       icon: <Grape size="28px" color="#000000" />,
       route: "/(tankControl)/tank/addBaseWine/[addBaseWine]",
-      //type: "tank",
       param: [{ tank: tank as string, depositId: Number(depositId) }],
     },
     {
       name: "Realizar Trasfega",
       icon: <ArrowRightLeft size="28px" color="#000000" />,
       route: "/(tankControl)/tank/realizarTrasfega/[trasfega]",
-      //type: "",
       param: [{ tank: tank as string, depositId: Number(depositId) }],
     },
     {
       name: "Controle de produtos",
       icon: <TestTubeDiagonal size="28px" color="#000000" />,
       route: "/(tankControl)/tank/addProduct/[addProduct]",
-      //type: "tank",
       param: [
         {
           tank: tank as string,
-          contentId: contentId,
+          contentId: Array.isArray(contentId)
+            ? Number(contentId[0])
+            : Number(contentId),
         },
       ],
     },
@@ -208,6 +209,7 @@ export default function Tank() {
     </SafeAreaView>
   );
 }
+
 const Card = ({
   shipment,
   detailsLink,
@@ -215,6 +217,8 @@ const Card = ({
   shipment: string;
   detailsLink: () => void;
 }) => {
+  if (true) return <></>;
+
   return (
     <View>
       <Text className="text-black font-bold text-xl mb-1 mt-2">
@@ -237,6 +241,8 @@ const Card = ({
 };
 
 const AnalysisSummaryCard = ({ date, data }: { date: string; data: any }) => {
+  if (true) return <></>;
+
   return (
     <View>
       <Text className="text-lg font-medium text-black mb-1 mt-1">
