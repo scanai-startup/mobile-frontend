@@ -3,6 +3,7 @@ import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
 import { Card } from "@/components/TankControlCard";
+import ITankData from "@/types/ITankData";
 import { useFocusEffect, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { Search } from "lucide-react-native";
@@ -19,7 +20,7 @@ import {
 export default function TankControl() {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const router = useRouter();
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<ITankData[]>([]);
   const [search, setSearch] = useState("");
 
   const filteredData = data.filter((e) => {
@@ -103,11 +104,11 @@ export default function TankControl() {
             keyExtractor={(item) => item.idDeposito}
             renderItem={({ item }) => {
               let identificacaoDeposito = `${item.tipoDeposito} ${item.numeroDeposito}`;
-              return item.conteudo == "Mostro" ? (
+              return item.conteudo === "Mostro" || item.conteudo === "Vinho" ? (
                 <>
                   {/* Tanque com Mostro/Vinho */}
                   <Card
-                    depositId={item.idDeposito}
+                    depositId={Number(item.idDeposito)}
                     title={identificacaoDeposito}
                     isAvailable={false}
                     content={item.conteudo}
@@ -115,26 +116,31 @@ export default function TankControl() {
                     density={item.densidade}
                     temperature={item.temperatura}
                     pressure={item.pressao ? item.pressao : null}
+                    capacity={item.capacidadeDeposito}
+                    volume={item.volumeConteudo}
                   />
                 </>
               ) : item.conteudo == "Pé de Cuba" ? (
                 <>
                   {/* Tanque com pé de cuba */}
                   <Card
-                    depositId={item.idDeposito}
+                    depositId={Number(item.idDeposito)}
                     title={identificacaoDeposito}
                     isAvailable={false}
                     content={item.conteudo}
                     contentId={item.idConteudo}
+                    capacity={item.capacidadeDeposito}
+                    volume={item.volumeConteudo}
                   />
                 </>
               ) : (
                 <>
                   {/* Conteúdo Vazio */}
                   <Card
-                    depositId={item.idDeposito}
+                    depositId={Number(item.idDeposito)}
                     title={identificacaoDeposito}
                     isAvailable={true}
+                    capacity={item.capacidadeDeposito}
                   />
                 </>
               );

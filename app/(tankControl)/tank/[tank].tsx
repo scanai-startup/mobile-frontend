@@ -14,12 +14,12 @@ import {
   Grape,
   Microscope,
   Milk,
-  TestTubeDiagonal,
   Pencil,
+  TestTubeDiagonal,
   X,
 } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
-import { FlatList, ScrollView, StyleSheet, Text, View } from "react-native";
+import { FlatList, ScrollView, Text, View } from "react-native";
 
 export default function Tank() {
   const { tank, depositId, content, contentId } = useLocalSearchParams();
