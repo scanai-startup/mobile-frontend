@@ -1,16 +1,18 @@
-import { Link, Href } from "expo-router";
+import { Href, Link } from "expo-router";
 import React from "react";
-import { View, TouchableOpacity, Text } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 
 interface CardProps {
   depositId: number;
   title: string;
   isAvailable: boolean;
-  density?: 0;
+  density?: number;
   temperature?: number;
-  pressure?: 0;
+  pressure?: number | null;
   content?: string;
   contentId?: number;
+  capacity: number;
+  volume?: number;
 }
 
 export function Card({
@@ -22,6 +24,8 @@ export function Card({
   depositId,
   content = "",
   contentId = 0,
+  capacity,
+  volume = 0,
 }: CardProps) {
   const href = getHref(title, depositId, isAvailable, content, contentId);
   const renderStatus = () => {
@@ -46,22 +50,27 @@ export function Card({
       </Text>
     );
 
+  const renderAnalysisDetails = () => {
+    return (
+      <>
+        {renderDetailRow("Densidade:", density, " kg/m³")}
+        {renderDetailRow("Temperatura:", temperature, " °C")}
+        {pressure && renderDetailRow("Pressão:", pressure, " Pa")}
+      </>
+    );
+  };
+
   const renderDetails = () => {
-    if (temperature == null) return;
-    return content == "Mostro" ? (
+    return (
       <>
         <View className="w-full h-[1px] bg-neutral-250" />
         <View className="p-4">
-          {renderDetailRow("Densidade:", density, "kg/m³")}
-          {renderDetailRow("Temperatura:", temperature, "°C")}
-          {pressure && renderDetailRow("Pressão:", pressure, "Pa")}
+          {renderDetailRow("Volume (em uso):", volume, " L")}
+          {renderDetailRow("Capacidade:", capacity, " L")}
+          {temperature ? renderAnalysisDetails() : null}
         </View>
       </>
-    ) : content == "Pé de Cuba" ? (
-      <>
-        <Text>Info pé de cuba</Text>
-      </>
-    ) : null;
+    );
   };
 
   const renderDetailRow = (label: string, value: number, unit: string) => {
@@ -88,6 +97,7 @@ export function Card({
             )}
             {renderStatus()}
           </View>
+
           {renderDetails()}
         </View>
       </TouchableOpacity>

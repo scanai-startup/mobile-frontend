@@ -1,19 +1,33 @@
 import apiInstance from "@/api/apiInstance";
+import CenteredModal from "@/components/CenteredModal";
+import { DefaultButton } from "@/components/DefaultButton";
 import FormFooter from "@/components/FormFooter";
 import SafeAreaView from "@/components/SafeAreaView";
 import SelectTankCard from "@/components/SelectTankCard";
+import { useToast } from "@/hooks/useToast";
 import { useTokenStore } from "@/store/userData";
+import { ILabel } from "@/types/ILabel";
 import ITankData from "@/types/ITankData";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import { Search } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
 import { FlatList, Text, TextInput, View } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
 
 export default function SelectTargetTank() {
   const [tanksData, setTanksData] = useState<ITankData[]>([]);
-  const [selectedTank, setSelectedTank] = useState(0);
+  const [selectedTank, setSelectedTank] = useState<{
+    id: number;
+    deposit: string;
+    type: string;
+  } | null>(null);
   const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [labels, setLabels] = useState<ILabel[]>([]);
+  const [selectedLabel, setSelectedLabel] = useState(0);
+  const toast = useToast();
   const { fkMostro, fkPeDeCuba, vol } = useLocalSearchParams();
   const { userId } = useTokenStore();
 
@@ -23,6 +37,17 @@ export default function SelectTargetTank() {
       data && setTanksData(JSON.parse(data));
     } catch (err) {
       console.error("Erro ao recuperar dados do armazenamento local: ", err);
+    }
+  }
+  async function getAllLabels() {
+    try {
+      const token = await SecureStore.getItemAsync("user-token");
+      const res = await apiInstance.get("/rotulo/getAll", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setLabels(res.data);
+    } catch (err) {
+      console.error("Erro ao buscar rótulos no banco: ", err);
     }
   }
 
@@ -35,29 +60,27 @@ export default function SelectTargetTank() {
   // />
 
   async function vincularDepositoVinho() {
+    const token = await SecureStore.getItemAsync("user-token");
     try {
       const payload = {
-        depositoId: selectedTank,
+        depositoId: selectedTank!.id,
         dataFimFermentacao: new Date().toISOString(),
         pedecubaId: Number(fkPeDeCuba),
-        //TODO: ADICIONAR ROTULO
-        rotuloId: 1,
+        rotuloId: selectedLabel,
         mostroIds: [Number(fkMostro)],
         funcionarioId: userId,
       };
-
-      await apiInstance.post("/vinculodepositovinho", payload);
-      console.log("Depósito vinculado com sucesso!");
-    } catch (error) {
-      console.log({
-        depositoId: selectedTank,
-        dataFimFermentacao: new Date().toISOString(),
-        pedecubaId: Number(fkPeDeCuba),
-        //TODO: ADICIONAR ROTULO
-        rotuloId: 1,
-        mostroIds: [Number(fkMostro)],
-        funcionarioId: userId,
+      console.log(payload);
+      await apiInstance.post("/vinculodepositovinho", payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+      toast({
+        heading: "Sucesso",
+        message: "Novo vinho cadastrado com sucesso!",
+      });
+    } catch (error) {
       console.error("Erro ao vincular depósito:", error);
     }
   }
@@ -65,13 +88,62 @@ export default function SelectTargetTank() {
   useFocusEffect(
     useCallback(() => {
       getTanksDataFromLocal();
+      getAllLabels();
       return;
     }, []),
   );
 
+  function handleDialogClose() {
+    setIsDialogOpen(false);
+    setSelectedTank(null);
+    setIsNextButtonEnabled(false);
+    setSelectedLabel(0);
+  }
+
   return (
     <>
       <SafeAreaView>
+        <CenteredModal
+          isDialogOpen={isDialogOpen}
+          handleDialogClose={() => handleDialogClose()}
+        >
+          <View className="px-6 py-10 bg-white rounded-xl">
+            <Text className="text-2xl text-black font-bold">
+              Tanque selecionado
+            </Text>
+            <Text className="text-xl mt-2 mb-4">
+              Selecione o rótulo do vinho.
+            </Text>
+            <Dropdown
+              style={{
+                height: 50,
+                borderColor: "gray",
+                borderWidth: 0.5,
+                borderRadius: 8,
+                paddingHorizontal: 8,
+              }}
+              data={labels}
+              labelField="nome"
+              valueField="id"
+              onChange={(i) => setSelectedLabel(i.id)}
+              placeholder="Selecione um rótulo"
+              searchField="nome"
+              containerStyle={{
+                borderBottomLeftRadius: 10,
+                borderBottomRightRadius: 10,
+              }}
+              selectedTextStyle={{ fontWeight: "800" }}
+              activeColor="#f0f0f0"
+              value={selectedLabel === 0 ? 0 : selectedLabel}
+            />
+            <DefaultButton
+              title="Continuar"
+              className="mt-4"
+              onPress={() => setIsDialogOpen(false)}
+              disabled={selectedLabel === 0 ? true : false}
+            />
+          </View>
+        </CenteredModal>
         <View className="px-7 flex-1 mt-6">
           <View>
             <Text className="text-2xl text-black font-bold">
@@ -100,10 +172,34 @@ export default function SelectTargetTank() {
                 <SelectTankCard
                   title={identificacaoDeposito}
                   setIsSelected={() => {
-                    setSelectedTank(item.idDeposito);
+                    if (isDialogOpen && selectedLabel) {
+                      setIsDialogOpen(true);
+                      return;
+                    }
+                    setSelectedTank((prev) => {
+                      if (prev) {
+                        prev.id !== Number(item.idDeposito) &&
+                          setSelectedLabel(0);
+                      }
+                      return {
+                        id: Number(item.idDeposito),
+                        deposit: item.numeroDeposito,
+                        type: item.tipoDeposito,
+                      };
+                    });
                     setIsNextButtonEnabled(true);
+                    setIsDialogOpen(true);
                   }}
-                  isSelected={selectedTank === item.idDeposito && true}
+                  capacity={item.capacidadeDeposito}
+                  volume={item.volumeConteudo}
+                  isSelected={
+                    selectedTank && selectedTank.id === Number(item.idDeposito)
+                      ? true
+                      : false
+                  }
+                  hasProblem={
+                    item.capacidadeDeposito < Number(vol) && "noCapacity"
+                  }
                 />
               );
             }}

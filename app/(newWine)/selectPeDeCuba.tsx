@@ -6,12 +6,9 @@ import SafeAreaView from "@/components/SafeAreaView";
 import SelectTankCard from "@/components/SelectTankCard";
 import { useLocalTanksData } from "@/hooks/useLocalTanksData";
 import { useTankSelection } from "@/hooks/useTankSelection";
-import ITankData from "@/types/ITankData";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "expo-router";
 import { useLocalSearchParams } from "expo-router/build/hooks";
 import { Search } from "lucide-react-native";
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { FlatList, Text, TextInput, View } from "react-native";
 
 export default function SelectPeDeCuba() {
@@ -26,10 +23,10 @@ export default function SelectPeDeCuba() {
     handleSelectTank,
     onDialogClose,
     handleContinueButton,
+    setIsDialogOpen,
   } = useTankSelection();
 
   let filteredData = tanksData.filter((t) => t.conteudo === "Pé de Cuba");
-  console.log("data: ", filteredData);
 
   return (
     <>
@@ -40,10 +37,14 @@ export default function SelectPeDeCuba() {
         >
           <View className="px-6 py-10 bg-white rounded-xl">
             <Text className="text-2xl text-black font-bold">
-              Tanque selecionado: {selectedTank?.deposit}
+              Tanque selecionado: {selectedTank?.tankType}{" "}
+              {selectedTank?.deposit}
             </Text>
             <Text className="text-xl mt-2 mb-4">
               Selecione o volume do mostro que será utilizado para o vinho.
+            </Text>
+            <Text className="text-xl mt-2 mb-2 font-semibold text-red-500">
+              Volume no tanque: {selectedTank?.currentVolume} L
             </Text>
             <InputBox
               placeholder="200"
@@ -51,12 +52,17 @@ export default function SelectPeDeCuba() {
               auxText="L"
               onChangeText={(v) => setVolume(v)}
               keyboardType="number-pad"
+              value={volume}
             />
             <DefaultButton
               title="Continuar"
               className="mt-4"
               onPress={() => handleContinueButton()}
-              disabled={volume ? false : true}
+              disabled={
+                volume
+                  ? Number(volume) > selectedTank!.currentVolume && true
+                  : true
+              }
             />
           </View>
         </CenteredModal>
@@ -90,13 +96,22 @@ export default function SelectPeDeCuba() {
                   density={item.densidade}
                   temperature={item.temperatura}
                   pressure={item.pressao ? item.pressao : null}
-                  setIsSelected={() =>
+                  setIsSelected={() => {
+                    if (selectedTank?.id === Number(item.idDeposito)) {
+                      setIsDialogOpen(true);
+                      return;
+                    }
                     handleSelectTank({
+                      id: Number(item.idDeposito),
                       deposit: identificacaoDeposito,
+                      tankType: item.tipoDeposito,
                       fkPeDeCuba: item.idConteudo,
                       volume: 0,
-                    })
-                  }
+                      currentVolume: item.volumeConteudo,
+                    });
+                  }}
+                  volume={item.volumeConteudo}
+                  capacity={item.capacidadeDeposito}
                   isSelected={
                     selectedTank?.deposit === identificacaoDeposito && true
                   }

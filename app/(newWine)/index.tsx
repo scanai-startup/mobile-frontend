@@ -5,6 +5,7 @@ import FormFooter from "@/components/FormFooter";
 import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
 import SelectTankCard from "@/components/SelectTankCard";
+import { useTankSelection } from "@/hooks/useTankSelection";
 import ITankData from "@/types/ITankData";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "expo-router";
@@ -13,18 +14,19 @@ import { Search } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
 import { FlatList, Text, TextInput, View } from "react-native";
 
-interface ISelectedTank {
-  deposit: string;
-  fkMostro: number;
-  volume: number;
-}
-
 export default function SelectMostroView() {
   const [data, setData] = useState<ITankData[]>([]);
-  const [selectedTank, setSelectedTank] = useState<ISelectedTank | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
-  const [volume, setVolume] = useState("");
+  const {
+    handleSelectTank,
+    onDialogClose,
+    handleContinueButton,
+    selectedTank,
+    isDialogOpen,
+    isNextButtonEnabled,
+    volume,
+    setVolume,
+    setIsDialogOpen,
+  } = useTankSelection();
 
   useFocusEffect(
     // calls the api everytime the screen gets displayed
@@ -33,15 +35,6 @@ export default function SelectMostroView() {
       return;
     }, []),
   );
-
-  const syncTanksToLocalStorage = async (data: any) => {
-    try {
-      const json = JSON.stringify(data);
-      await AsyncStorage.setItem("tanksData", json);
-    } catch (err) {
-      console.log("Erro ao converter para json: ", err);
-    }
-  };
 
   const getDepositos = async () => {
     try {
@@ -60,23 +53,16 @@ export default function SelectMostroView() {
       console.error("Erro ao buscar depósitos:", error);
     }
   };
-  const handleSelectTank = (tank: ISelectedTank) => {
-    setSelectedTank(tank);
-    setIsDialogOpen(true);
+
+  const syncTanksToLocalStorage = async (data: any) => {
+    try {
+      const json = JSON.stringify(data);
+      await AsyncStorage.setItem("tanksData", json);
+    } catch (err) {
+      console.log("Erro ao converter para json: ", err);
+    }
   };
-  function onDialogClose() {
-    setVolume("");
-    setIsDialogOpen(false);
-    setSelectedTank(null);
-    setIsNextButtonEnabled(false);
-  }
-  function handleContinueButton() {
-    selectedTank &&
-      setSelectedTank({ ...selectedTank, volume: Number(volume) });
-    setVolume("");
-    setIsNextButtonEnabled(true);
-    setIsDialogOpen(false);
-  }
+
   return (
     <>
       <SafeAreaView>
@@ -86,23 +72,32 @@ export default function SelectMostroView() {
         >
           <View className="px-6 py-10 bg-white rounded-xl">
             <Text className="text-2xl text-black font-bold">
-              Tanque selecionado: {selectedTank?.deposit}
+              Tanque selecionado: {selectedTank?.tankType}{" "}
+              {selectedTank?.deposit}
             </Text>
             <Text className="text-xl mt-2 mb-4">
               Selecione o volume do mostro que será utilizado para o vinho.
             </Text>
+            <Text className="text-xl mt-2 mb-2 font-semibold text-red-500">
+              Volume no tanque: {selectedTank?.currentVolume} L
+            </Text>
             <InputBox
               placeholder="200"
-              title="Volume"
+              title="Volume a ser retirado"
               auxText="L"
               onChangeText={(v) => setVolume(v)}
               keyboardType="number-pad"
+              value={volume}
             />
             <DefaultButton
               title="Continuar"
               className="mt-4"
               onPress={() => handleContinueButton()}
-              disabled={volume ? false : true}
+              disabled={
+                volume
+                  ? Number(volume) > selectedTank!.currentVolume && true
+                  : true
+              }
             />
           </View>
         </CenteredModal>
@@ -126,10 +121,10 @@ export default function SelectMostroView() {
           </View>
           <FlatList
             data={data}
-            keyExtractor={(item) => item.tipoDeposito}
+            keyExtractor={(item) => item.idDeposito.toString()}
             renderItem={({ item }) => {
               let identificacaoDeposito = `${item.tipoDeposito} ${item.numeroDeposito}`;
-              return item.conteudo == "Mostro" ? (
+              return item.temperatura ? (
                 <SelectTankCard
                   title={identificacaoDeposito}
                   density={item.densidade}
@@ -137,28 +132,42 @@ export default function SelectMostroView() {
                   pressure={item.pressao ? item.pressao : null}
                   setIsSelected={() =>
                     handleSelectTank({
-                      deposit: identificacaoDeposito,
+                      id: Number(item.idDeposito),
+                      deposit: item.numeroDeposito,
+                      tankType: item.tipoDeposito,
                       fkMostro: item.idConteudo,
+                      currentVolume: item.volumeConteudo,
                       volume: 0,
                     })
                   }
                   isSelected={
-                    selectedTank?.deposit === identificacaoDeposito && true
+                    selectedTank?.deposit === item.numeroDeposito && true
                   }
+                  volume={item.volumeConteudo}
+                  capacity={item.capacidadeDeposito}
                 />
               ) : (
                 <SelectTankCard
                   title={identificacaoDeposito}
-                  setIsSelected={() =>
+                  setIsSelected={() => {
+                    if (selectedTank?.id === Number(item.idDeposito)) {
+                      setIsDialogOpen(true);
+                      return;
+                    }
                     handleSelectTank({
-                      deposit: identificacaoDeposito,
+                      id: Number(item.idDeposito),
+                      deposit: item.numeroDeposito,
+                      tankType: item.tipoDeposito,
                       fkMostro: item.idConteudo,
+                      currentVolume: item.volumeConteudo,
                       volume: 0,
-                    })
-                  }
+                    });
+                  }}
                   isSelected={
-                    selectedTank?.deposit === identificacaoDeposito && true
+                    selectedTank?.deposit === item.numeroDeposito && true
                   }
+                  volume={item.volumeConteudo}
+                  capacity={item.capacidadeDeposito}
                 />
               );
             }}

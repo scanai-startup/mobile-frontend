@@ -1,9 +1,13 @@
 import { useState } from "react";
 
 export interface ISelectedTank {
+  id: number;
   deposit: string;
-  fkPeDeCuba: number;
+  tankType: string;
+  fkPeDeCuba?: number;
+  fkMostro?: number;
   volume: number;
+  currentVolume: number;
 }
 
 export function useTankSelection() {
@@ -13,6 +17,7 @@ export function useTankSelection() {
   const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
 
   const handleSelectTank = (tank: ISelectedTank) => {
+    setVolume("");
     setSelectedTank(tank);
     setIsDialogOpen(true);
   };
@@ -28,7 +33,6 @@ export function useTankSelection() {
     if (selectedTank) {
       setSelectedTank({ ...selectedTank, volume: Number(volume) });
     }
-    setVolume("");
     setIsNextButtonEnabled(true);
     setIsDialogOpen(false);
   };
