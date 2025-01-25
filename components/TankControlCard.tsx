@@ -27,7 +27,14 @@ export function Card({
   capacity,
   volume = 0,
 }: CardProps) {
-  const href = getHref(title, depositId, isAvailable, content, contentId);
+  const href = getHref(
+    title,
+    depositId,
+    isAvailable,
+    content,
+    contentId,
+    (capacity = capacity),
+  );
   const renderStatus = () => {
     const statusStyles =
       isAvailable == true
@@ -111,11 +118,12 @@ function getHref(
   isAvailable: boolean,
   content: string,
   contentId: number,
+  capacity: number,
 ) {
   return isAvailable
     ? {
         pathname: "/(tankControl)/[emptyTank]",
-        params: { tank: title, depositId },
+        params: { tank: title, depositId, capacity },
       }
     : {
         pathname: "/tank/[tank]",
