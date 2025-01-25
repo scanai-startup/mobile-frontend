@@ -23,10 +23,10 @@ export default function SelectPeDeCuba() {
     handleSelectTank,
     onDialogClose,
     handleContinueButton,
+    setIsDialogOpen,
   } = useTankSelection();
 
   let filteredData = tanksData.filter((t) => t.conteudo === "Pé de Cuba");
-  // console.log("data: ", filteredData);
 
   return (
     <>
@@ -51,6 +51,7 @@ export default function SelectPeDeCuba() {
               auxText="L"
               onChangeText={(v) => setVolume(v)}
               keyboardType="number-pad"
+              value={volume}
             />
             <DefaultButton
               title="Continuar"
@@ -94,14 +95,19 @@ export default function SelectPeDeCuba() {
                   density={item.densidade}
                   temperature={item.temperatura}
                   pressure={item.pressao ? item.pressao : null}
-                  setIsSelected={() =>
+                  setIsSelected={() => {
+                    if (selectedTank?.id === Number(item.idDeposito)) {
+                      setIsDialogOpen(true);
+                      return;
+                    }
                     handleSelectTank({
+                      id: Number(item.idDeposito),
                       deposit: identificacaoDeposito,
                       fkPeDeCuba: item.idConteudo,
                       volume: 0,
                       currentVolume: item.volumeConteudo,
-                    })
-                  }
+                    });
+                  }}
                   volume={item.volumeConteudo}
                   capacity={item.capacidadeDeposito}
                   isSelected={

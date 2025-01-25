@@ -14,6 +14,7 @@ import React, { useCallback, useState } from "react";
 import { FlatList, Text, TextInput, View } from "react-native";
 
 interface ISelectedTank {
+  id: number;
   deposit: string;
   tankType: string;
   fkMostro: number;
@@ -63,6 +64,7 @@ export default function SelectMostroView() {
     }
   };
   const handleSelectTank = (tank: ISelectedTank) => {
+    setVolume("");
     setSelectedTank(tank);
     setIsDialogOpen(true);
   };
@@ -75,7 +77,6 @@ export default function SelectMostroView() {
   function handleContinueButton() {
     selectedTank &&
       setSelectedTank({ ...selectedTank, volume: Number(volume) });
-    setVolume("");
     setIsNextButtonEnabled(true);
     setIsDialogOpen(false);
   }
@@ -103,6 +104,7 @@ export default function SelectMostroView() {
               auxText="L"
               onChangeText={(v) => setVolume(v)}
               keyboardType="number-pad"
+              value={volume}
             />
             <DefaultButton
               title="Continuar"
@@ -139,7 +141,7 @@ export default function SelectMostroView() {
             keyExtractor={(item) => item.idDeposito.toString()}
             renderItem={({ item }) => {
               let identificacaoDeposito = `${item.tipoDeposito} ${item.numeroDeposito}`;
-              return item.conteudo == "Mostro" ? (
+              return item.temperatura ? (
                 <SelectTankCard
                   title={identificacaoDeposito}
                   density={item.densidade}
@@ -147,6 +149,7 @@ export default function SelectMostroView() {
                   pressure={item.pressao ? item.pressao : null}
                   setIsSelected={() =>
                     handleSelectTank({
+                      id: Number(item.idDeposito),
                       deposit: item.numeroDeposito,
                       tankType: item.tipoDeposito,
                       fkMostro: item.idConteudo,
@@ -163,15 +166,20 @@ export default function SelectMostroView() {
               ) : (
                 <SelectTankCard
                   title={identificacaoDeposito}
-                  setIsSelected={() =>
+                  setIsSelected={() => {
+                    if (selectedTank?.id === Number(item.idDeposito)) {
+                      setIsDialogOpen(true);
+                      return;
+                    }
                     handleSelectTank({
+                      id: Number(item.idDeposito),
                       deposit: item.numeroDeposito,
                       tankType: item.tipoDeposito,
                       fkMostro: item.idConteudo,
                       currentVolume: item.volumeConteudo,
                       volume: 0,
-                    })
-                  }
+                    });
+                  }}
                   isSelected={
                     selectedTank?.deposit === item.numeroDeposito && true
                   }
