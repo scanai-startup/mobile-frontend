@@ -37,7 +37,8 @@ export default function SelectPeDeCuba() {
         >
           <View className="px-6 py-10 bg-white rounded-xl">
             <Text className="text-2xl text-black font-bold">
-              Tanque selecionado: {selectedTank?.deposit}
+              Tanque selecionado: {selectedTank?.tankType}{" "}
+              {selectedTank?.deposit}
             </Text>
             <Text className="text-xl mt-2 mb-4">
               Selecione o volume do mostro que será utilizado para o vinho.
@@ -103,6 +104,7 @@ export default function SelectPeDeCuba() {
                     handleSelectTank({
                       id: Number(item.idDeposito),
                       deposit: identificacaoDeposito,
+                      tankType: item.tipoDeposito,
                       fkPeDeCuba: item.idConteudo,
                       volume: 0,
                       currentVolume: item.volumeConteudo,

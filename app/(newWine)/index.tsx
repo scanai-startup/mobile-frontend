@@ -5,6 +5,7 @@ import FormFooter from "@/components/FormFooter";
 import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
 import SelectTankCard from "@/components/SelectTankCard";
+import { useTankSelection } from "@/hooks/useTankSelection";
 import ITankData from "@/types/ITankData";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect } from "expo-router";
@@ -13,21 +14,19 @@ import { Search } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
 import { FlatList, Text, TextInput, View } from "react-native";
 
-interface ISelectedTank {
-  id: number;
-  deposit: string;
-  tankType: string;
-  fkMostro: number;
-  volume: number;
-  currentVolume: number;
-}
-
 export default function SelectMostroView() {
   const [data, setData] = useState<ITankData[]>([]);
-  const [selectedTank, setSelectedTank] = useState<ISelectedTank | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
-  const [volume, setVolume] = useState("");
+  const {
+    handleSelectTank,
+    onDialogClose,
+    handleContinueButton,
+    selectedTank,
+    isDialogOpen,
+    isNextButtonEnabled,
+    volume,
+    setVolume,
+    setIsDialogOpen,
+  } = useTankSelection();
 
   useFocusEffect(
     // calls the api everytime the screen gets displayed
@@ -36,15 +35,6 @@ export default function SelectMostroView() {
       return;
     }, []),
   );
-
-  const syncTanksToLocalStorage = async (data: any) => {
-    try {
-      const json = JSON.stringify(data);
-      await AsyncStorage.setItem("tanksData", json);
-    } catch (err) {
-      console.log("Erro ao converter para json: ", err);
-    }
-  };
 
   const getDepositos = async () => {
     try {
@@ -63,23 +53,16 @@ export default function SelectMostroView() {
       console.error("Erro ao buscar depósitos:", error);
     }
   };
-  const handleSelectTank = (tank: ISelectedTank) => {
-    setVolume("");
-    setSelectedTank(tank);
-    setIsDialogOpen(true);
+
+  const syncTanksToLocalStorage = async (data: any) => {
+    try {
+      const json = JSON.stringify(data);
+      await AsyncStorage.setItem("tanksData", json);
+    } catch (err) {
+      console.log("Erro ao converter para json: ", err);
+    }
   };
-  function onDialogClose() {
-    setVolume("");
-    setIsDialogOpen(false);
-    setSelectedTank(null);
-    setIsNextButtonEnabled(false);
-  }
-  function handleContinueButton() {
-    selectedTank &&
-      setSelectedTank({ ...selectedTank, volume: Number(volume) });
-    setIsNextButtonEnabled(true);
-    setIsDialogOpen(false);
-  }
+
   return (
     <>
       <SafeAreaView>
@@ -89,7 +72,7 @@ export default function SelectMostroView() {
         >
           <View className="px-6 py-10 bg-white rounded-xl">
             <Text className="text-2xl text-black font-bold">
-              Tanque selecionado: {selectedTank?.tankType.substring(0, 3)}{" "}
+              Tanque selecionado: {selectedTank?.tankType}{" "}
               {selectedTank?.deposit}
             </Text>
             <Text className="text-xl mt-2 mb-4">

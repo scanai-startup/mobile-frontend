@@ -70,6 +70,7 @@ export default function SelectTargetTank() {
         mostroIds: [Number(fkMostro)],
         funcionarioId: userId,
       };
+      console.log(payload);
       await apiInstance.post("/vinculodepositovinho", payload, {
         headers: {
           Authorization: `Bearer ${token}`,

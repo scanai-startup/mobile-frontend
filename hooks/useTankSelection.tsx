@@ -3,7 +3,9 @@ import { useState } from "react";
 export interface ISelectedTank {
   id: number;
   deposit: string;
-  fkPeDeCuba: number;
+  tankType: string;
+  fkPeDeCuba?: number;
+  fkMostro?: number;
   volume: number;
   currentVolume: number;
 }
