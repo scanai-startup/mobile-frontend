@@ -8,14 +8,20 @@ import React, { useCallback } from "react";
 import { FlatList, Text, View } from "react-native";
 
 export default function EmptyTank() {
-  const { tank, depositId } = useLocalSearchParams();
+  const { tank, depositId, capacity } = useLocalSearchParams();
 
   const activityListItems = [
     {
       name: "Adicionar Remessa",
       icon: <Truck size={28} color="#000000" />,
       route: "/(tankControl)/tank/addBaseWine/[addBaseWine]",
-      param: [{ tank: tank as string, depositId: Number(depositId) }],
+      param: [
+        {
+          tank: tank as string,
+          depositId: Number(depositId),
+          capacity: Number(capacity),
+        },
+      ],
     },
     {
       name: "Realizar Trasfega",
@@ -55,15 +61,17 @@ export default function EmptyTank() {
         <FlatList
           data={activityListItems}
           keyExtractor={(item) => item.name}
-          renderItem={({ item }) => (
-            <ActivityCard
-              title={item.name}
-              icon={item.icon}
-              route={item.route}
-              //type={item.type}
-              param={item.param}
-            />
-          )}
+          renderItem={({ item }) => {
+            return (
+              <ActivityCard
+                title={item.name}
+                icon={item.icon}
+                route={item.route}
+                //type={item.type}
+                param={item.param}
+              />
+            );
+          }}
           horizontal
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{

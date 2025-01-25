@@ -16,11 +16,11 @@ import {
 import * as SecureStore from "expo-secure-store";
 import React, { useCallback, useState } from "react";
 import { FlatList, Text, View, TouchableOpacity } from "react-native";
-import { ChevronDown, ChevronUp } from "lucide-react-native"; // Ensure you have this library installed
+import { ChevronDown, ChevronUp } from "lucide-react-native";
 
 export default function BaseWine() {
   const router = useRouter();
-  const { tank, depositId } = useLocalSearchParams();
+  const { tank, depositId, capacity } = useLocalSearchParams();
   const [data, setData] = useState();
   const selectedShipments = useShipmentStore(
     (state) => state.selectedShipments,
@@ -53,6 +53,11 @@ export default function BaseWine() {
   };
 
   const handleSubmit = async () => {
+    if (totalVolume > Number(capacity)) {
+      alert("ERRO: O volume total excede a capacidade do tanque.");
+      return;
+    }
+
     const token = await SecureStore.getItemAsync("user-token");
 
     const data = {
@@ -62,29 +67,27 @@ export default function BaseWine() {
       volume: totalVolume,
     };
 
-    apiInstance
-      .post("/vinculodepositoremessas", data, {
+    try {
+      const res = await apiInstance.post("/vinculodepositoremessas", data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-      })
-      .then((res) => {
-        const data = res.data;
-        clearShipments();
-        router.navigate({
-          pathname: "/tank/[tank]",
-          params: {
-            tank: tank as string,
-            depositId: data.depositoId,
-            content: "Mostro",
-            contentId: data.mostroId,
-          },
-        });
-        console.log("SUCESS: ", res.data);
-      })
-      .catch((err) => {
-        console.log("ERRO: ", err.request);
       });
+      const responseData = res.data;
+      clearShipments();
+      router.navigate({
+        pathname: "/tank/[tank]",
+        params: {
+          tank: tank as string,
+          depositId: responseData.depositoId,
+          content: "Mostro",
+          contentId: responseData.mostroId,
+        },
+      });
+      console.log("SUCESS: ", responseData);
+    } catch (err) {
+      console.log("ERRO: ", err);
+    }
   };
 
   const href: Href = {
@@ -163,13 +166,11 @@ export default function BaseWine() {
         />
 
         <View className="mt-4">
-          <Link href={href} asChild>
-            <DefaultButton
-              disabled={selectedShipments.length == 0}
-              title="Concluir"
-              onPress={handleSubmit}
-            />
-          </Link>
+          <DefaultButton
+            disabled={selectedShipments.length == 0}
+            title="Concluir"
+            onPress={handleSubmit}
+          />
         </View>
       </View>
     </SafeAreaView>
