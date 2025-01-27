@@ -83,7 +83,7 @@ export default function AddOrEditProductModal({
           <View className="justify-between gap-4">
             <View>
               <Text className="text-xl">Nome do produto</Text>
-              <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
+              <View className="flex flex-row items-center bg-[#DEDEDE] rounded-lg h-14">
                 <TextInput
                   className="text-xl ml-2 flex-1"
                   placeholder="Dep.100"
@@ -94,13 +94,13 @@ export default function AddOrEditProductModal({
             </View>
             <View>
               <Text className="text-xl">Quantidade</Text>
-              <View className="flex flex-row items-center bg-[#DEDEDE] py-3 px-3 rounded-lg h-14">
+              <View className="flex flex-row items-center bg-[#DEDEDE] rounded-lg h-14">
                 <TextInput
                   className="text-xl ml-2 flex-1"
                   placeholder="1.200"
                   value={productQuantity}
                   onChangeText={(v) => setProductQuantity(v)}
-                  keyboardType="numeric"
+                  keyboardType="number-pad"
                 />
                 <TouchableOpacity
                   onPress={() => {
@@ -109,7 +109,7 @@ export default function AddOrEditProductModal({
                       : setProductUnity("KG");
                   }}
                 >
-                  <Text className="text-lg">
+                  <Text className="text-lg mr-1">
                     {productUnity === "KG" ? "kg" : "L"}
                   </Text>
                 </TouchableOpacity>

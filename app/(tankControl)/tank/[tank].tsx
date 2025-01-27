@@ -136,7 +136,7 @@ export default function Tank() {
         showReturnButton
         variant="secondary"
         mainText={`${tank}`}
-        returnHref={router.back}
+        returnHref={"/(tabs)/tankControl"}
       />
       <ScrollView>
         {/* Lista de Ações */}

@@ -1,5 +1,6 @@
 import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
+import { Button } from "@/components/Button";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
@@ -9,11 +10,24 @@ import { Link, useFocusEffect } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { CirclePlus } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
-import { FlatList, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 export default function Shipment() {
   const [shipments, setShipments] = useState<IShipmentCard[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  //TODO: ERRO HANDLING
+  const [error, setError] = useState<string | null>(null);
+
   async function getAllShipments() {
+    setIsLoading(true);
+    setError(null);
     const token = await SecureStore.getItemAsync("user-token");
     apiInstance
       .get("/uva/getAll", {
@@ -25,66 +39,22 @@ export default function Shipment() {
         setShipments(r.data);
       })
       .catch((e) => {
-        console.log(e);
+        console.error(e);
+        setError("Não foi possível carregar as remessas. Tente novamente.");
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }
+
   useFocusEffect(
     // calls the api everytime the screen gets displayed
     useCallback(() => {
       getAllShipments();
       return;
-    }, [])
+    }, []),
   );
-  // const data: ShipmentCardType[] = [
-  //   {
-  //     number: 101,
-  //     ticket: 1,
-  //     id: 12345678,
-  //     date: "21/10/2022",
-  //     casta: "Airen",
-  //     type: "Vinho branco",
-  //   },
-  //   {
-  //     number: 102,
-  //     ticket: 2,
-  //     id: 87654321,
-  //     date: "22/10/2022",
-  //     casta: "Merlot",
-  //     type: "Vinho tinto",
-  //   },
-  //   {
-  //     number: 103,
-  //     ticket: 3,
-  //     id: 98765432,
-  //     date: "23/10/2022",
-  //     casta: "Chardonnay",
-  //     type: "Vinho branco",
-  //   },
-  //   {
-  //     number: 104,
-  //     ticket: 4,
-  //     id: 56789012,
-  //     date: "24/10/2022",
-  //     casta: "Cabernet Sauvignon",
-  //     type: "Vinho tinto",
-  //   },
-  //   {
-  //     number: 105,
-  //     ticket: 5,
-  //     id: 34567890,
-  //     date: "25/10/2022",
-  //     casta: "Pinot Noir",
-  //     type: "Vinho tinto",
-  //   },
-  //   {
-  //     number: 106,
-  //     ticket: 6,
-  //     id: 90123456,
-  //     date: "26/10/2022",
-  //     casta: "Sauvignon Blanc",
-  //     type: "Vinho branco",
-  //   },
-  // ];
+
   return (
     <>
       <CustomStatusBar barStyle="dark-content" />
@@ -117,17 +87,32 @@ export default function Shipment() {
               paddingBottom: 160,
               gap: 10,
             }}
-            ListEmptyComponent={
-              <View className="flex-1 justify-center items-center">
-                <Text className="text-gray-500 text-center mb-4">
-                  Não há remessas cadastradas ainda
-                </Text>
-                <Text className="text-4xl">🚗</Text>
-              </View>
-            }
-          ></FlatList>
+            ListEmptyComponent={() => {
+              return isLoading ? <IsLoadingShipment /> : <EmptyShipment />;
+            }}
+          />
         </View>
       </SafeAreaView>
     </>
+  );
+}
+
+function EmptyShipment() {
+  return (
+    <View className="flex-1 justify-center items-center">
+      <Text className="text-gray-500 text-center mb-4">
+        Não há remessas cadastradas ainda
+      </Text>
+      <Text className="text-4xl">🚗</Text>
+    </View>
+  );
+}
+
+function IsLoadingShipment() {
+  return (
+    <View className="flex-1 justify-center items-center">
+      <ActivityIndicator />
+      <Text className="text-xl">Carregando... Por favor aguarde</Text>
+    </View>
   );
 }
