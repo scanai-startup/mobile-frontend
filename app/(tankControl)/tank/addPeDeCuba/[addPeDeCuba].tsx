@@ -51,8 +51,8 @@ export default function AddPeDeCuba() {
     });
 
     const data = {
-      depositoId: depositId,
       volume: volume,
+      depositoId: Number(depositId),
       produtos: productsData,
       funcionarioId: userId,
     };

@@ -16,16 +16,20 @@ import {
   Milk,
   Pencil,
   TestTubeDiagonal,
+  Truck,
   X,
 } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
 import { FlatList, ScrollView, Text, View } from "react-native";
 
 export default function Tank() {
-  const { tank, depositId, content, contentId } = useLocalSearchParams();
+  const { tank, depositId, content, contentId, capacity, volume } =
+    useLocalSearchParams();
   const router = useRouter();
   const { clearShipments } = useShipmentStore();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  console.log("TEST: ", capacity, volume);
 
   useFocusEffect(
     useCallback(() => {
@@ -60,21 +64,15 @@ export default function Tank() {
       param: [{ tank: tank as string, depositId: Number(depositId) }],
     },
     {
-      name: "Envase e rotulagem",
-      icon: <Milk size="28px" color="#000000" />,
-      route: "/envaseERotulagem/envase",
-      param: [{ tank: tank as string, depositId: Number(depositId) }],
-    },
-    {
-      name: "Adicionar Vinho Base",
-      icon: <Grape size="28px" color="#000000" />,
-      route: "/(tankControl)/tank/addBaseWine/[addBaseWine]",
-      param: [{ tank: tank as string, depositId: Number(depositId) }],
-    },
-    {
       name: "Realizar Trasfega",
       icon: <ArrowRightLeft size="28px" color="#000000" />,
       route: "/(tankControl)/tank/realizarTrasfega/[trasfega]",
+      param: [{ tank: tank as string, depositId: Number(depositId) }],
+    },
+    {
+      name: "Envase e rotulagem",
+      icon: <Milk size="28px" color="#000000" />,
+      route: "/envaseERotulagem/envase",
       param: [{ tank: tank as string, depositId: Number(depositId) }],
     },
     {
@@ -89,6 +87,12 @@ export default function Tank() {
             : Number(contentId),
         },
       ],
+    },
+    {
+      name: "Nova Remessa",
+      icon: <Truck size="28px" color="#000000" />,
+      route: "/(tankControl)/tank/addBaseWine/[addBaseWine]",
+      param: [{ tank: tank as string, depositId: Number(depositId) }],
     },
   ];
 
@@ -132,43 +136,12 @@ export default function Tank() {
         showReturnButton
         variant="secondary"
         mainText={`${tank}`}
-        returnHref={router.back}
+        returnHref={"/(tabs)/tankControl"}
       />
       <ScrollView>
-        <View className="flex flex-row justify-between px-7 items-center mb-4">
+        {/* Lista de Ações */}
+        <View className="px-7 mb-4">
           <Text className="text-zinc-950 font-bold text-2xl">Ações</Text>
-          <View
-            className="flex flex-row justify-between items-center gap-4 border p-2 bg-white"
-            onTouchStart={() => setIsDialogOpen(true)}
-          >
-            <Text className="text-blue-500">Editar Tanque</Text>
-            <Pencil size="25px" color="black" />
-          </View>
-          <CenteredModal
-            isDialogOpen={isDialogOpen}
-            handleDialogClose={() => setIsDialogOpen(false)}
-          >
-            <View className="px-6 py-10 bg-white rounded-xl relative">
-              <X
-                style={{ position: "absolute", top: 16, right: 16 }}
-                size={35}
-                color="black"
-                onPress={() => setIsDialogOpen(false)}
-              />
-              <Text className="text-xl mt-8 mb-4">
-                Alterações que podem ser feitas no tanque
-              </Text>
-              <View className="gap-8">
-                <InputBox
-                  title="Editar Volume"
-                  placeholder="500 (Aqui virá o volume atual)"
-                >
-                  <Text className="text-xl">L</Text>
-                </InputBox>
-                <DefaultButton title="Concluir" onPress={() => null} />
-              </View>
-            </View>
-          </CenteredModal>
         </View>
         <FlatList
           data={filterActivityItems()}
@@ -179,7 +152,6 @@ export default function Tank() {
                 title={item.name}
                 icon={item.icon}
                 route={item.route}
-                //type={item.type}
                 param={item.param}
               />
             );
@@ -191,19 +163,32 @@ export default function Tank() {
             gap: 10,
           }}
         />
-        <View className="px-7 gap-4">
-          <View>
-            <Card shipment="101 - 2º Talão" detailsLink={shipmentDetailsLink} />
-            <AnalysisSummaryCard date="09/08/24" data={analysisData} />
-          </View>
-          <View>
-            <Text className="text-lg font-bold text-gray-700 justify-self-start">
+
+        {/* Dados Recentes */}
+        <View className="px-7 gap-4 mt-4">
+          <View className="flex flex-row justify-between items-center">
+            <Text className="text-xl font-bold text-gray-700">
               Dados recentes
             </Text>
-            <View className="flex-1 bg-gray-100 justify-center items-center">
-              <DensTempGraph />
+            <Text className="text-emerald-500 text-xl">Status: Ok !</Text>
+          </View>
+          <View className="flex flex-row justify-between">
+            <View className="flex-1 ">
+              <Text className="text-xl font-semibold">Volume Atual</Text>
+              <Text className="text-2xl font-semibold text-blue-500">
+                {volume} L
+              </Text>
+            </View>
+            <View className="flex-1">
+              <Text className="text-xl font-semibold">Capacidade Total</Text>
+              <Text className="text-2xl font-semibold text-blue-500">
+                {capacity} L
+              </Text>
             </View>
           </View>
+          {/* <View className="flex-1 bg-gray-100 justify-center items-center rounded-lg p-4">
+            <DensTempGraph />
+          </View> */}
         </View>
       </ScrollView>
     </SafeAreaView>

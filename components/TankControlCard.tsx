@@ -34,6 +34,7 @@ export function Card({
     content,
     contentId,
     (capacity = capacity),
+    (volume = volume),
   );
   const renderStatus = () => {
     const statusStyles =
@@ -119,6 +120,7 @@ function getHref(
   content: string,
   contentId: number,
   capacity: number,
+  volume: number,
 ) {
   return isAvailable
     ? {
@@ -127,6 +129,13 @@ function getHref(
       }
     : {
         pathname: "/tank/[tank]",
-        params: { tank: title, depositId, content, contentId },
+        params: {
+          tank: title,
+          depositId,
+          content,
+          contentId,
+          capacity,
+          volume,
+        },
       };
 }

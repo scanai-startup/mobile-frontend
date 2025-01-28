@@ -1,7 +1,8 @@
 import { useShipmentStore } from "@/store/remessasContext";
 import IShipmentCard from "@/types/IShipmentCard";
+import { Trash2 } from "lucide-react-native"; // Ícone atualizado
 import React, { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 
 interface ShipmentCardP {
   shipment: IShipmentCard;
@@ -14,8 +15,31 @@ export default function ShipmentCard({
 }: ShipmentCardP) {
   const toggleShipment = useShipmentStore((state) => state.toggleShipment);
   const isSelected = useShipmentStore((state) =>
-    state.isShipmentSelected(shipment.id)
+    state.isShipmentSelected(shipment.id),
   );
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDelete = () => {
+    setIsDeleting(true);
+    Alert.alert(
+      "Confirmar Exclusão",
+      "Tem certeza que deseja excluir esta remessa?",
+      [
+        {
+          text: "Cancelar",
+          onPress: () => setIsDeleting(false),
+          style: "cancel",
+        },
+        {
+          text: "Excluir",
+          onPress: () => {
+            console.log(`Remessa ${shipment.id} excluída.`);
+            setIsDeleting(false);
+          },
+        },
+      ],
+    );
+  };
 
   return (
     <View className="bg-white rounded-md border border-neutral-250">
@@ -29,9 +53,14 @@ export default function ShipmentCard({
           </Text>
         </View>
         {variant === "primary" ? (
-          <TouchableOpacity>
-            <Text className="text-blue-500">Detalhes</Text>
-          </TouchableOpacity>
+          <View className="flex-row gap-4 items-center">
+            <TouchableOpacity>
+              <Text className="text-blue-500">Detalhes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleDelete} disabled={isDeleting}>
+              <Trash2 color={isDeleting ? "gray" : "red"} />
+            </TouchableOpacity>
+          </View>
         ) : (
           <TouchableOpacity
             onPress={() => toggleShipment(shipment.id)}
