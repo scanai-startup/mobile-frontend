@@ -20,7 +20,9 @@ export function useTankSelection() {
   const [isDialogConfirmButtonEnabled, setIsDialogConfirmButtonEnabled] =
     useState(true);
 
-  useEffect(() => {
+  useEffect(() => handleDialogConfirmButtonBehavior(), [volume, lostVolume]);
+
+  const handleDialogConfirmButtonBehavior = () => {
     if (
       volume &&
       Number(volume) <= selectedTank!.currentVolume &&
@@ -30,7 +32,7 @@ export function useTankSelection() {
       return;
     }
     setIsDialogConfirmButtonEnabled(true);
-  }, [volume, lostVolume]);
+  };
 
   const handleSelectTank = (tank: ISelectedTank) => {
     setVolume("");
