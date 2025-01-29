@@ -11,7 +11,7 @@ interface DefaultButtonP extends TouchableOpacityProps {
 export const DefaultButton = forwardRef(
   (
     { icon, title, className, ...TouchableOpacityProps }: DefaultButtonP,
-    ref?: LegacyRef<View> | undefined
+    ref?: LegacyRef<View> | undefined,
   ) => (
     <Pressable ref={ref}>
       <TouchableOpacity
@@ -26,5 +26,5 @@ export const DefaultButton = forwardRef(
         <Text className="text-white font-semibold">{title}</Text>
       </TouchableOpacity>
     </Pressable>
-  )
+  ),
 );

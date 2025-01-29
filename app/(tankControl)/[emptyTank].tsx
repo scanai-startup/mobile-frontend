@@ -2,13 +2,14 @@ import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useShipmentStore } from "@/store/remessasContext";
-import { useFocusEffect, useLocalSearchParams } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { AlertCircle, ArrowRightLeft, Grape, Truck } from "lucide-react-native";
 import React, { useCallback } from "react";
 import { FlatList, Text, View } from "react-native";
 
 export default function EmptyTank() {
   const { tank, depositId, capacity } = useLocalSearchParams();
+  const router = useRouter();
 
   const activityListItems = [
     {
@@ -52,7 +53,7 @@ export default function EmptyTank() {
         showReturnButton
         variant="secondary"
         mainText={`${tank}`}
-        returnHref="/(tabs)/tankControl"
+        returnHref={() => router.dismissTo("/(tabs)/tankControl")}
       />
       <View>
         <Text className="text-zinc-950 font-bold text-2xl ml-7 mb-4">

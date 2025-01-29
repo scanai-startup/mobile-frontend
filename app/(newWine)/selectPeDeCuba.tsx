@@ -12,7 +12,7 @@ import React from "react";
 import { FlatList, Text, TextInput, View } from "react-native";
 
 export default function SelectPeDeCuba() {
-  const { fkMostro, mostroVol } = useLocalSearchParams();
+  const { fkMostro, mostroVol, mostroVolPerdido } = useLocalSearchParams();
   const { tanksData } = useLocalTanksData();
   const {
     selectedTank,
@@ -20,7 +20,10 @@ export default function SelectPeDeCuba() {
     volume,
     isNextButtonEnabled,
     setVolume,
+    lostVolume,
+    setLostVolume,
     handleSelectTank,
+    isDialogConfirmButtonEnabled,
     onDialogClose,
     handleContinueButton,
     setIsDialogOpen,
@@ -37,8 +40,7 @@ export default function SelectPeDeCuba() {
         >
           <View className="px-6 py-10 bg-white rounded-xl">
             <Text className="text-2xl text-black font-bold">
-              Tanque selecionado: {selectedTank?.tankType}{" "}
-              {selectedTank?.deposit}
+              Tanque selecionado: {selectedTank?.deposit}
             </Text>
             <Text className="text-xl mt-2 mb-4">
               Selecione o volume do mostro que será utilizado para o vinho.
@@ -46,23 +48,29 @@ export default function SelectPeDeCuba() {
             <Text className="text-xl mt-2 mb-2 font-semibold text-red-500">
               Volume no tanque: {selectedTank?.currentVolume} L
             </Text>
-            <InputBox
-              placeholder="200"
-              title="Volume"
-              auxText="L"
-              onChangeText={(v) => setVolume(v)}
-              keyboardType="number-pad"
-              value={volume}
-            />
+            <View className="gap-2">
+              <InputBox
+                placeholder="200"
+                title="Volume"
+                auxText="L"
+                onChangeText={(v) => setVolume(v)}
+                keyboardType="number-pad"
+                value={volume}
+              />
+              <InputBox
+                placeholder="10"
+                title="Volume perdido"
+                auxText="L"
+                onChangeText={(v) => setLostVolume(v)}
+                keyboardType="number-pad"
+                value={lostVolume}
+              />
+            </View>
             <DefaultButton
               title="Continuar"
               className="mt-4"
               onPress={() => handleContinueButton()}
-              disabled={
-                volume
-                  ? Number(volume) > selectedTank!.currentVolume && true
-                  : true
-              }
+              disabled={isDialogConfirmButtonEnabled}
             />
           </View>
         </CenteredModal>
@@ -108,6 +116,7 @@ export default function SelectPeDeCuba() {
                       fkPeDeCuba: item.idConteudo,
                       volume: 0,
                       currentVolume: item.volumeConteudo,
+                      lostVolume: 0,
                     });
                   }}
                   volume={item.volumeConteudo}
@@ -138,7 +147,10 @@ export default function SelectPeDeCuba() {
                   params: {
                     fkMostro: fkMostro,
                     fkPeDeCuba: selectedTank.fkPeDeCuba,
-                    vol: Number(mostroVol) + selectedTank.volume,
+                    mostroVol: mostroVol,
+                    mostroVolPerdido: mostroVolPerdido,
+                    peDeCubaVol: selectedTank.volume,
+                    peDeCubaVolPerdido: lostVolume,
                   },
                 }
               : "/"

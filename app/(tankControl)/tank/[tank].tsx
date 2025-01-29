@@ -1,9 +1,5 @@
 import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
-import CenteredModal from "@/components/CenteredModal";
-import { DefaultButton } from "@/components/DefaultButton";
-import { DensTempGraph } from "@/components/DensTempGraph";
-import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useShipmentStore } from "@/store/remessasContext";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
@@ -11,13 +7,10 @@ import {
   ArrowRightLeft,
   ChevronDown,
   Cylinder,
-  Grape,
   Microscope,
   Milk,
-  Pencil,
   TestTubeDiagonal,
   Truck,
-  X,
 } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
 import { FlatList, ScrollView, Text, View } from "react-native";
@@ -136,7 +129,7 @@ export default function Tank() {
         showReturnButton
         variant="secondary"
         mainText={`${tank}`}
-        returnHref={"/(tabs)/tankControl"}
+        returnHref={() => router.dismissTo("/(tabs)/tankControl")}
       />
       <ScrollView>
         {/* Lista de Ações */}

@@ -21,11 +21,11 @@ export default function GrapeRepectionP2() {
         >
           <InputBox
             title="Sanidade"
-            placeholder="Sanidade"
+            placeholder="5"
             onChangeText={(value) =>
               handleInputChange("sanidade", parseFloat(value))
             }
-            keyboardType="numeric"
+            keyboardType="number-pad"
           />
 
           <View className="flex-row justify-between gap-4">
@@ -35,6 +35,7 @@ export default function GrapeRepectionP2() {
                 placeholder="1.5"
                 value={shipmentData.so2}
                 onChangeText={(value) => handleInputChange("so2", value)}
+                keyboardType="number-pad"
               />
             </View>
             <View className="flex-1">

@@ -28,7 +28,14 @@ export default function SelectTargetTank() {
   const [labels, setLabels] = useState<ILabel[]>([]);
   const [selectedLabel, setSelectedLabel] = useState(0);
   const toast = useToast();
-  const { fkMostro, fkPeDeCuba, vol } = useLocalSearchParams();
+  const {
+    fkMostro,
+    fkPeDeCuba,
+    mostroVol,
+    mostroVolPerdido,
+    peDeCubaVol,
+    peDeCubaVolPerdido,
+  } = useLocalSearchParams();
   const { userId } = useTokenStore();
 
   async function getTanksDataFromLocal() {
@@ -66,8 +73,11 @@ export default function SelectTargetTank() {
         depositoId: selectedTank!.id,
         dataFimFermentacao: new Date().toISOString(),
         pedecubaId: Number(fkPeDeCuba),
+        pedecubaVolumePerda: Number(peDeCubaVolPerdido),
         rotuloId: selectedLabel,
-        mostroIds: [Number(fkMostro)],
+        mostroId: Number(fkMostro),
+        volumeMostro: Number(mostroVol),
+        volumeMostroPerda: Number(mostroVolPerdido),
         funcionarioId: userId,
       };
       console.log(payload);
@@ -198,7 +208,8 @@ export default function SelectTargetTank() {
                       : false
                   }
                   hasProblem={
-                    item.capacidadeDeposito < Number(vol) && "noCapacity"
+                    item.capacidadeDeposito <
+                      Number(mostroVol) + Number(peDeCubaVol) && "noCapacity"
                   }
                 />
               );
