@@ -3,6 +3,7 @@ import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import FormFooter from "@/components/FormFooter";
 import SafeAreaView from "@/components/SafeAreaView";
+import { useToast } from "@/hooks/useToast";
 import { useShipmentStore } from "@/store/NewShipmentContext";
 
 import { Stack, usePathname, useRouter } from "expo-router";
@@ -12,6 +13,7 @@ import React, { useEffect, useState } from "react";
 export default function GrapeReceptionLayout() {
   const router = useRouter();
   const { shipmentData } = useShipmentStore();
+  const toast = useToast();
 
   async function handleDataSubmit() {
     const token = await SecureStore.getItemAsync("user-token");
@@ -61,7 +63,13 @@ export default function GrapeReceptionLayout() {
           nextHref={nextHref}
           isReturnButtonEnabled={currRoute === "/" ? false : true}
           isLastPage={nextHref === "/(tabs)/" && true}
-          handleDataSubmit={() => handleDataSubmit()}
+          handleDataSubmit={() => {
+            handleDataSubmit();
+            toast({
+              heading: "Sucesso!",
+              message: "Nova remessa cadastrada com sucesso.",
+            });
+          }}
         />
       </SafeAreaView>
     </>
