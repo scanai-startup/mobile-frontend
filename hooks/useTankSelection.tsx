@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export interface ISelectedTank {
   id: number;
@@ -7,6 +7,7 @@ export interface ISelectedTank {
   fkPeDeCuba?: number;
   fkMostro?: number;
   volume: number;
+  lostVolume: number;
   currentVolume: number;
 }
 
@@ -14,10 +15,26 @@ export function useTankSelection() {
   const [selectedTank, setSelectedTank] = useState<ISelectedTank | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [volume, setVolume] = useState("");
+  const [lostVolume, setLostVolume] = useState("");
   const [isNextButtonEnabled, setIsNextButtonEnabled] = useState(false);
+  const [isDialogConfirmButtonEnabled, setIsDialogConfirmButtonEnabled] =
+    useState(true);
+
+  useEffect(() => {
+    if (
+      volume &&
+      Number(volume) <= selectedTank!.currentVolume &&
+      Number(lostVolume) < Number(volume)
+    ) {
+      setIsDialogConfirmButtonEnabled(false);
+      return;
+    }
+    setIsDialogConfirmButtonEnabled(true);
+  }, [volume, lostVolume]);
 
   const handleSelectTank = (tank: ISelectedTank) => {
     setVolume("");
+    setLostVolume("");
     setSelectedTank(tank);
     setIsDialogOpen(true);
   };
@@ -25,13 +42,18 @@ export function useTankSelection() {
   const onDialogClose = () => {
     setIsDialogOpen(false);
     setVolume("");
+    setLostVolume("");
     setSelectedTank(null);
     setIsNextButtonEnabled(false);
   };
 
   const handleContinueButton = () => {
     if (selectedTank) {
-      setSelectedTank({ ...selectedTank, volume: Number(volume) });
+      setSelectedTank({
+        ...selectedTank,
+        volume: Number(volume),
+        lostVolume: Number(lostVolume),
+      });
     }
     setIsNextButtonEnabled(true);
     setIsDialogOpen(false);
@@ -44,7 +66,11 @@ export function useTankSelection() {
     setIsDialogOpen,
     volume,
     setVolume,
+    lostVolume,
+    setLostVolume,
     isNextButtonEnabled,
+    isDialogConfirmButtonEnabled,
+    setIsDialogConfirmButtonEnabled,
     setIsNextButtonEnabled,
     handleSelectTank,
     onDialogClose,

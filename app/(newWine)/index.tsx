@@ -26,6 +26,9 @@ export default function SelectMostroView() {
     volume,
     setVolume,
     setIsDialogOpen,
+    lostVolume,
+    setLostVolume,
+    isDialogConfirmButtonEnabled,
   } = useTankSelection();
 
   useFocusEffect(
@@ -81,23 +84,29 @@ export default function SelectMostroView() {
             <Text className="text-xl mt-2 mb-2 font-semibold text-red-500">
               Volume no tanque: {selectedTank?.currentVolume} L
             </Text>
-            <InputBox
-              placeholder="200"
-              title="Volume a ser retirado"
-              auxText="L"
-              onChangeText={(v) => setVolume(v)}
-              keyboardType="number-pad"
-              value={volume}
-            />
+            <View className="gap-2">
+              <InputBox
+                placeholder="200"
+                title="Volume a ser retirado"
+                auxText="L"
+                onChangeText={(v) => setVolume(v)}
+                keyboardType="number-pad"
+                value={volume}
+              />
+              <InputBox
+                placeholder="20"
+                title="Volume perdido"
+                auxText="L"
+                onChangeText={(v) => setLostVolume(v)}
+                keyboardType="number-pad"
+                value={lostVolume}
+              />
+            </View>
             <DefaultButton
               title="Continuar"
               className="mt-4"
               onPress={() => handleContinueButton()}
-              disabled={
-                volume
-                  ? Number(volume) > selectedTank!.currentVolume && true
-                  : true
-              }
+              disabled={isDialogConfirmButtonEnabled}
             />
           </View>
         </CenteredModal>
@@ -138,6 +147,7 @@ export default function SelectMostroView() {
                       fkMostro: item.idConteudo,
                       currentVolume: item.volumeConteudo,
                       volume: 0,
+                      lostVolume: 0,
                     })
                   }
                   isSelected={
@@ -161,6 +171,7 @@ export default function SelectMostroView() {
                       fkMostro: item.idConteudo,
                       currentVolume: item.volumeConteudo,
                       volume: 0,
+                      lostVolume: 0,
                     });
                   }}
                   isSelected={
@@ -188,6 +199,7 @@ export default function SelectMostroView() {
                   params: {
                     fkMostro: selectedTank.fkMostro,
                     mostroVol: selectedTank.volume,
+                    mostroVolPerdido: selectedTank.lostVolume,
                   },
                 }
               : "/"
