@@ -33,7 +33,7 @@ export default function Home() {
     {
       name: "Controle de estoque",
       icon: <LucideBox size="28px" color="#000000" />,
-      route: "",
+      route: "/(tabs)/stock",
     },
   ];
   return (
