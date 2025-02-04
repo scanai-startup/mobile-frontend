@@ -1,6 +1,6 @@
 import TabBar from "@/components/TabBar";
 import { Tabs } from "expo-router";
-import { Cylinder, House, Truck } from "lucide-react-native";
+import { Cylinder, House, Truck, Warehouse } from "lucide-react-native";
 import React from "react";
 
 export default function TabLayout() {
@@ -41,6 +41,15 @@ export default function TabLayout() {
             title: "Tanques",
             tabBarIcon: ({ size, color }) => (
               <Cylinder size={size} color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="stock"
+          options={{
+            title: "Estoque",
+            tabBarIcon: ({ size, color }) => (
+              <Warehouse size={size} color={color} />
             ),
           }}
         />
