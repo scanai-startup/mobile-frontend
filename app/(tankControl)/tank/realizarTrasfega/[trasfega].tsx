@@ -8,10 +8,7 @@ import * as SecureStore from "expo-secure-store";
 import Toast from "react-native-toast-message";
 import { useTokenStore } from "@/store/userData";
 import { InputBox } from "@/components/Input";
-import { CheckIcon } from "lucide-react-native";
-
-//TODO: PARA TANQUES QUE NAO POSSUEM VOLUME
-// MUDAR NOME VOLUME MAXIMO SAIDA, N TA LEGAL.
+import { CheckIcon, Eye, EyeOff } from "lucide-react-native";
 
 interface Deposito {
   idDeposito: number;
@@ -30,13 +27,17 @@ export default function RealizarTrasfega() {
   const [submitting, setSubmitting] = useState(false);
   const [volumeTrasfega, setVolumeTrasfega] = useState("");
   const [volumeChegada, setVolumeChegada] = useState("");
-  const [expanded, setExpanded] = useState(true);
-  const { tank, volume, contentId } = useLocalSearchParams();
+  const [expanded, setExpanded] = useState(false);
+  const { tank, volume, contentId, capacity } = useLocalSearchParams();
   const { userId } = useTokenStore();
+
+  const [showOriginInfo, setShowOriginInfo] = useState(true);
 
   useEffect(() => {
     getDepositos();
   }, []);
+
+  const toggleOriginInfo = () => setShowOriginInfo(!showOriginInfo);
 
   const getDepositos = async () => {
     try {
@@ -96,6 +97,14 @@ export default function RealizarTrasfega() {
         return;
       }
 
+      //verificação se o voluma a trasfegar for 0
+      if (Number(volumeTrasfega) === 0) {
+        Toast.show({
+          type: "error",
+          text1: "Quantidade a transferir deve ser maior que zero",
+        });
+      }
+
       //Caso não seja preenchido nenhum dos tanques
       if (!volumeTrasfega || !volumeChegada) {
         Toast.show({ type: "error", text1: "Preencha todos os campos" });
@@ -115,19 +124,19 @@ export default function RealizarTrasfega() {
       if (Number(volumeTrasfega) < Number(volumeChegada)) {
         Toast.show({
           type: "error",
-          text1: "Enviou mais mostro do que chegou. (Situação impossível)",
+          text1: "Quantidade recebida maior que a transferida!",
+          text2: "Verifique os valores informados",
         });
-        return;
       }
 
-      console.log({
-        fkmostro: contentId,
-        fkdeposito: selectedTank?.idDeposito,
-        datainicio: new Date().toISOString().split("T")[0],
-        fkfuncionario: userId,
-        volumetrasfega: Number(volumeTrasfega),
-        volumechegada: Number(volumeChegada),
-      });
+      // console.log({
+      //   fkmostro: contentId,
+      //   fkdeposito: selectedTank?.idDeposito,
+      //   datainicio: new Date().toISOString().split("T")[0],
+      //   fkfuncionario: userId,
+      //   volumetrasfega: Number(volumeTrasfega),
+      //   volumechegada: Number(volumeChegada),
+      // });
 
       await apiInstance.post(
         "/depositomostro/register",
@@ -173,9 +182,52 @@ export default function RealizarTrasfega() {
           Trasfega de Tanques
         </Text>
         <Text className="text-xl mt-2 mb-4">
-          Selecione o tanque de origem para realizar a trasfega.
+          Selecione o tanque de destino para receber o conteúdo
         </Text>
+
+        <View className="bg-blue-50 p-3 rounded-lg">
+          <TouchableOpacity
+            onPress={toggleOriginInfo}
+            className="flex-row justify-between items-center"
+          >
+            <View className="flex-row items-center gap-2">
+              <Text className="text-lg font-semibold text-blue-800">
+                Origem: {tank}
+              </Text>
+            </View>
+            <View className="flex-row items-center gap-2">
+              <Text className="text-sm text-blue-600">
+                {showOriginInfo ? "Visível" : "Oculto"}
+              </Text>
+              {showOriginInfo ? (
+                <Eye size={20} color="#1e3a8a" />
+              ) : (
+                <EyeOff size={20} color="#1e3a8a" />
+              )}
+            </View>
+          </TouchableOpacity>
+
+          {showOriginInfo && (
+            <>
+              <View className="flex-row justify-between mt-2">
+                <Text className="text-sm text-blue-700">Volume: {volume}L</Text>
+                <Text className="text-sm text-blue-700">
+                  Capacidade: {capacity}L
+                </Text>
+              </View>
+              <View className="h-1 bg-blue-200 rounded-full mt-1">
+                <View
+                  className="h-full bg-blue-500 rounded-full"
+                  style={{
+                    width: `${(Number(volume) / Number(capacity)) * 100}%`,
+                  }}
+                />
+              </View>
+            </>
+          )}
+        </View>
       </View>
+
       <FlatList
         data={data}
         renderItem={({ item }: { item: Deposito }) => {
@@ -214,29 +266,44 @@ export default function RealizarTrasfega() {
             onPress={() => setExpanded(!expanded)}
             className="flex-row justify-between items-center"
           >
-            <Text className="text-lg font-bold">
-              Tanque {selectedTank.tipoDeposito} {selectedTank.numeroDeposito}
-            </Text>
+            <View>
+              <Text className="text-lg font-bold text-black">
+                Tanque Destino: {selectedTank.tipoDeposito}{" "}
+                {selectedTank.numeroDeposito}
+              </Text>
+              <Text className="text-sm text-gray-600">
+                Espaço disponível:{" "}
+                {selectedTank.capacidadeDeposito - selectedTank.volumeConteudo}L
+              </Text>
+            </View>
             <Text className="text-2xl">{expanded ? "▼" : "▲"}</Text>
           </TouchableOpacity>
 
           {expanded && (
-            <View className="gap-1">
-              <View className="flex-row gap-2">
-                <Text className="text-blue-700">Volume (saída): {volume}L</Text>
-                <Text className="text-red-500">
-                  Volume (chegada):{" "}
-                  {selectedTank.volumeConteudo
-                    ? selectedTank.volumeConteudo
-                    : "0"}
-                  L
-                </Text>
+            <View className="gap-3 mt-2">
+              <View className="bg-green-50 p-3 rounded-lg">
+                <View className="flex-row justify-between mb-1">
+                  <Text className="text-sm font-medium text-green-800">
+                    Capacidade Total
+                  </Text>
+                  <Text className="text-sm font-medium text-black-800">
+                    {selectedTank.capacidadeDeposito}L
+                  </Text>
+                </View>
+                <View className="h-1 bg-green-200 rounded-full">
+                  <View
+                    className="h-full bg-green-500 rounded-full"
+                    style={{
+                      width: `${(selectedTank.volumeConteudo / selectedTank.capacidadeDeposito) * 100}%`,
+                    }}
+                  />
+                </View>
               </View>
 
               <View className="flex-row gap-3">
                 <View className="flex-1">
                   <InputBox
-                    title="Volume a trasfegar"
+                    title="Quantidade a Transferir"
                     keyboardType="number-pad"
                     onChangeText={(v) =>
                       v === "" || setVolumeTrasfega(v.replace(/[^0-9]/g, ""))
@@ -247,7 +314,7 @@ export default function RealizarTrasfega() {
 
                 <View className="flex-1">
                   <InputBox
-                    title="Volume de chegada"
+                    title="Quantidade Recebida"
                     keyboardType="number-pad"
                     onChangeText={(v) =>
                       v === "" || setVolumeChegada(v.replace(/[^0-9]/g, ""))
@@ -256,14 +323,13 @@ export default function RealizarTrasfega() {
                   />
                 </View>
               </View>
-
               <TouchableOpacity
-                className="bg-green-600 p-4 rounded-lg items-center"
+                className="bg-blue-600 p-4 rounded-lg items-center disabled:opacity-60"
                 onPress={handleTransfer}
                 disabled={submitting || !volumeTrasfega || !volumeChegada}
               >
-                <Text className="text-white font-bold">
-                  {submitting ? "Processando..." : "Confirmar Trasfega"}
+                <Text className="text-white font-bold text-lg">
+                  {submitting ? "Processando..." : "Confirmar Transferência"}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -307,21 +373,6 @@ export function Card({
     if (onSelect) onSelect(depositId);
   };
 
-  const renderStatus = () => {
-    const statusStyles =
-      isAvailable == true
-        ? { bg: "bg-green-200", text: "text-green-800", label: "Disponível" }
-        : { bg: "bg-red-200", text: "text-red-800", label: "Ocupado" };
-
-    return (
-      <View className={`${statusStyles.bg} px-2 py-1 rounded-full`}>
-        <Text className={`text-md ${statusStyles.text}`}>
-          {statusStyles.label}
-        </Text>
-      </View>
-    );
-  };
-
   const renderError = () =>
     title === "ERROR" && (
       <Text className="text-base max-w-[200px]">
@@ -344,7 +395,9 @@ export function Card({
       <>
         <View className="w-full h-[1px] bg-neutral-250" />
         <View className="p-4">
-          {renderDetailRow("Volume (em uso):", volume, " L")}
+          {Number(volume)
+            ? renderDetailRow("Volume (em uso):", volume, " L")
+            : null}
           {renderDetailRow("Capacidade:", capacity, " L")}
           {temperature ? renderAnalysisDetails() : null}
         </View>
@@ -371,12 +424,13 @@ export function Card({
     >
       <View className="bg-white rounded-lg shadow flex-col border border-neutral-250">
         <View className="flex-row p-4 justify-between items-center">
-          {title !== "ERROR" ? (
-            <Text className="text-2xl font-bold">{title}</Text>
-          ) : (
-            renderError()
-          )}
-          {renderStatus()}
+          <View className="flex-row gap-4">
+            {title !== "ERROR" ? (
+              <Text className="text-2xl font-bold">{title}</Text>
+            ) : (
+              renderError()
+            )}
+          </View>
           {isSelected && (
             <TouchableOpacity onPress={handlePress}>
               <View className="bg-blue-500 rounded-full p-1">
