@@ -52,7 +52,18 @@ export default function StockItemsList() {
   const [materials, setMaterials] = useState(boilerplate);
   const [isNewMaterialDialogOpen, setIsNewMaterialDialogOpen] = useState(false);
   const [isNewBatchDialogOpen, setIsNewBatchDialogOpen] = useState(false);
-  const [selectedMaterial, setSelectedMaterial] = useState({});
+  const [selectedMaterial, setSelectedMaterial] = useState<{
+    id: number;
+    name: string;
+  }>({
+    id: 0,
+    name: "",
+  });
+  const [searchedName, setSearchedName] = useState("");
+  const filteredData = materials.filter((m) => {
+    return m.title.toLowerCase().includes(searchedName.toLowerCase());
+  });
+
   async function getAllMaterials() {
     try {
       const token = await SecureStorage.getItemAsync("user-token");
@@ -109,7 +120,7 @@ export default function StockItemsList() {
               <Search size="25px" color="#9A9A9A" />
               <TextInput
                 onChangeText={(value) => {
-                  // filter handling
+                  setSearchedName(value);
                 }}
                 className="text-base ml-2"
                 placeholder="Digite o que deseja buscar..."
@@ -125,7 +136,7 @@ export default function StockItemsList() {
             </TouchableOpacity>
           </View>
           <FlatList
-            data={materials}
+            data={filteredData}
             keyExtractor={(i) => i.title}
             renderItem={({ item }) => {
               return (
