@@ -60,7 +60,17 @@ export default function Tank() {
       name: "Realizar Trasfega",
       icon: <ArrowRightLeft size="28px" color="#000000" />,
       route: "/(tankControl)/tank/realizarTrasfega/[trasfega]",
-      param: [{ tank: tank as string, depositId: Number(depositId) }],
+      param: [
+        {
+          tank: tank as string,
+          depositId: Number(depositId),
+          capacity,
+          volume,
+          contentId: Array.isArray(contentId)
+            ? Number(contentId[0])
+            : Number(contentId),
+        },
+      ],
     },
     {
       name: "Envase e rotulagem",
