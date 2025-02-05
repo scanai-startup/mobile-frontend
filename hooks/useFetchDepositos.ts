@@ -1,11 +1,21 @@
-import { useEffect, useState } from "react";
 import apiInstance from "@/api/apiInstance";
-import * as SecureStore from "expo-secure-store";
 import { Deposito } from "@/types/IDeposito";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
+import { useEffect, useState } from "react";
 
-export function useDepositos() {
+export function useFetchDepositos() {
   const [data, setData] = useState<Deposito[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const syncTanksToLocalStorage = async (data: Deposito[]) => {
+    try {
+      const json = JSON.stringify(data);
+      await AsyncStorage.setItem("tanksData", json);
+    } catch (err) {
+      console.log("Erro ao converter para json: ", err);
+    }
+  };
 
   useEffect(() => {
     async function getDepositos() {
@@ -18,13 +28,13 @@ export function useDepositos() {
           },
         );
         setData(response.data);
+        syncTanksToLocalStorage(response.data);
       } catch (error) {
         console.error("Erro ao buscar depósitos:", error);
       } finally {
         setLoading(false);
       }
     }
-
     getDepositos();
   }, []);
 

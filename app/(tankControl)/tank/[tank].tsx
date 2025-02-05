@@ -22,8 +22,6 @@ export default function Tank() {
   const { clearShipments } = useShipmentStore();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-  console.log("TEST: ", capacity, volume);
-
   useFocusEffect(
     useCallback(() => {
       clearShipments();
@@ -69,6 +67,7 @@ export default function Tank() {
           contentId: Array.isArray(contentId)
             ? Number(contentId[0])
             : Number(contentId),
+          content: content,
         },
       ],
     },
@@ -102,6 +101,9 @@ export default function Tank() {
   function filterActivityItems() {
     if (content !== "Vinho" && content !== "Pé de Cuba") {
       return activityListItems.filter((i) => i.name !== "Controle de produtos");
+    }
+    if (content !== "Vinho") {
+      return activityListItems.filter((i) => i.name !== "Envase e Rotulagem");
     }
     return activityListItems;
   }

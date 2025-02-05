@@ -4,11 +4,10 @@ import { DefaultButton } from "@/components/DefaultButton";
 import FormFooter from "@/components/FormFooter";
 import SafeAreaView from "@/components/SafeAreaView";
 import SelectTankCard from "@/components/SelectTankCard";
+import { useGetLocalTanksData } from "@/hooks/useGetLocalTanksData";
 import { useToast } from "@/hooks/useToast";
 import { useTokenStore } from "@/store/userData";
 import { ILabel } from "@/types/ILabel";
-import ITankData from "@/types/ITankData";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { Search } from "lucide-react-native";
@@ -17,7 +16,6 @@ import { FlatList, Text, TextInput, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 export default function SelectTargetTank() {
-  const [tanksData, setTanksData] = useState<ITankData[]>([]);
   const [selectedTank, setSelectedTank] = useState<{
     id: number;
     deposit: string;
@@ -37,15 +35,8 @@ export default function SelectTargetTank() {
     peDeCubaVolPerdido,
   } = useLocalSearchParams();
   const { userId } = useTokenStore();
+  const { data } = useGetLocalTanksData();
 
-  async function getTanksDataFromLocal() {
-    try {
-      const data = await AsyncStorage.getItem("tanksData");
-      data && setTanksData(JSON.parse(data));
-    } catch (err) {
-      console.error("Erro ao recuperar dados do armazenamento local: ", err);
-    }
-  }
   async function getAllLabels() {
     try {
       const token = await SecureStore.getItemAsync("user-token");
@@ -97,7 +88,6 @@ export default function SelectTargetTank() {
 
   useFocusEffect(
     useCallback(() => {
-      getTanksDataFromLocal();
       getAllLabels();
       return;
     }, []),
@@ -173,7 +163,7 @@ export default function SelectTargetTank() {
             </View>
           </View>
           <FlatList
-            data={tanksData.filter((t) => t.conteudo === null)}
+            data={data.filter((t) => t.conteudo === null)}
             keyExtractor={(item) => item.idDeposito.toString()}
             showsVerticalScrollIndicator={false}
             renderItem={({ item }) => {

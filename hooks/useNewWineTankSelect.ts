@@ -11,7 +11,7 @@ export interface ISelectedTank {
   currentVolume: number;
 }
 
-export function useTankSelection() {
+export function useNewWineTankSelect() {
   const [selectedTank, setSelectedTank] = useState<ISelectedTank | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [volume, setVolume] = useState("");
