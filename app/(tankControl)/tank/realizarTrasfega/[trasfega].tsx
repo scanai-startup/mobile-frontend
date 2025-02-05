@@ -2,141 +2,55 @@ import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useLocalSearchParams, useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import { useMemo, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import * as SecureStore from "expo-secure-store";
 import Toast from "react-native-toast-message";
 import { useTokenStore } from "@/store/userData";
-import { InputBox } from "@/components/Input";
-import { CheckIcon, Eye, EyeOff } from "lucide-react-native";
-
-interface Deposito {
-  idDeposito: number;
-  tipoDeposito: string;
-  numeroDeposito: string;
-  volumeConteudo: number;
-  capacidadeDeposito: number;
-  conteudo: string;
-  idConteudo: number;
-}
+import { Eye, EyeOff } from "lucide-react-native";
+import { TransferControls } from "./_components/TransferControls";
+import { CardTrasfega } from "./_components/CardTrasfega";
+import { Deposito } from "@/types/IDeposito";
+import { validateTransfer } from "@/utils/validateTransfer";
+import { useDepositos } from "@/hooks/useDepositos";
+import { useTankSelection } from "@/hooks/useTankSelection";
+import React from "react";
 
 export default function RealizarTrasfega() {
-  const [selectedTank, setSelectedTank] = useState<any | null>(null);
-  const [data, setData] = useState<Deposito[]>([]);
-  const router = useRouter();
-  const [submitting, setSubmitting] = useState(false);
   const [volumeTrasfega, setVolumeTrasfega] = useState("");
   const [volumeChegada, setVolumeChegada] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const [expanded, setExpanded] = useState(false);
-  const { tank, volume, contentId, capacity } = useLocalSearchParams();
-  const { userId } = useTokenStore();
-
   const [showOriginInfo, setShowOriginInfo] = useState(true);
 
-  useEffect(() => {
-    getDepositos();
-  }, []);
+  const { tank, volume, contentId, capacity } = useLocalSearchParams();
+  const { userId } = useTokenStore();
+  const router = useRouter();
+
+  const { data, loading } = useDepositos();
+  const { selectedTank, handleSelectTank } = useTankSelection(data);
 
   const toggleOriginInfo = () => setShowOriginInfo(!showOriginInfo);
-
-  const getDepositos = async () => {
-    try {
-      const token = await SecureStore.getItemAsync("user-token");
-      const response = await apiInstance.get(
-        "/deposito/getAllDepositosWithInformations",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      setData(response.data);
-    } catch (error) {
-      console.error("Erro ao buscar depósitos:", error);
-    }
-  };
-
-  const handleSelectTank = (id: number) => {
-    if (selectedTank?.idDeposito === id) {
-      setSelectedTank(null);
-    } else {
-      const tank = data.find((t: Deposito) => t.idDeposito === id);
-      if (tank) {
-        setSelectedTank({
-          idDeposito: tank.idDeposito,
-          tipoDeposito: tank.tipoDeposito,
-          numeroDeposito: tank.numeroDeposito,
-          volumeConteudo: tank.volumeConteudo,
-          capacidadeDeposito: tank.capacidadeDeposito,
-          idConteudo: tank.idConteudo,
-        });
-        setVolumeTrasfega("");
-        setVolumeChegada("");
-      }
-    }
-  };
 
   const handleTransfer = async () => {
     try {
       setSubmitting(true);
       const token = await SecureStore.getItemAsync("user-token");
 
-      console.log("TANQUE SELECIONADO: ", selectedTank);
+      const validationError = validateTransfer(
+        Number(volumeTrasfega),
+        Number(volumeChegada),
+        selectedTank,
+      );
 
-      //Caso eu envie mais mostro do que o tanque cabe efetivamente
-      if (
-        Number(volumeTrasfega) >
-        Number(selectedTank.capacidadeDeposito) -
-          Number(selectedTank.volumeConteudo)
-      ) {
+      if (validationError) {
         Toast.show({
           type: "error",
-          text1: "O tanque atualmente não cabe essa capacidade",
+          text1: validationError,
         });
+        setSubmitting(false);
         return;
       }
-
-      //verificação se o voluma a trasfegar for 0
-      if (Number(volumeTrasfega) === 0) {
-        Toast.show({
-          type: "error",
-          text1: "Quantidade a transferir deve ser maior que zero",
-        });
-      }
-
-      //Caso não seja preenchido nenhum dos tanques
-      if (!volumeTrasfega || !volumeChegada) {
-        Toast.show({ type: "error", text1: "Preencha todos os campos" });
-        return;
-      }
-
-      //Caso queira mandar mais conteudo do que a capacidade do tanque
-      if (Number(volumeTrasfega) > selectedTank.capacidadeDeposito) {
-        Toast.show({
-          type: "error",
-          text1: "Volume enviado é maior do que a capacidade do Tanque.",
-        });
-        return;
-      }
-
-      //Caso esteja saindo mais conteúdo do que chegando
-      if (Number(volumeTrasfega) < Number(volumeChegada)) {
-        Toast.show({
-          type: "error",
-          text1: "Quantidade recebida maior que a transferida!",
-          text2: "Verifique os valores informados",
-        });
-      }
-
-      // console.log({
-      //   fkmostro: contentId,
-      //   fkdeposito: selectedTank?.idDeposito,
-      //   datainicio: new Date().toISOString().split("T")[0],
-      //   fkfuncionario: userId,
-      //   volumetrasfega: Number(volumeTrasfega),
-      //   volumechegada: Number(volumeChegada),
-      // });
 
       await apiInstance.post(
         "/depositomostro/register",
@@ -164,6 +78,17 @@ export default function RealizarTrasfega() {
       setSubmitting(false);
     }
   };
+
+  const filteredData = useMemo(
+    () =>
+      data.filter(
+        (item) =>
+          item?.tipoDeposito &&
+          item.conteudo !== "Pé de Cuba" &&
+          `${item.tipoDeposito} ${item.numeroDeposito}` !== tank,
+      ),
+    [data, tank],
+  );
 
   return (
     <SafeAreaView>
@@ -229,21 +154,12 @@ export default function RealizarTrasfega() {
       </View>
 
       <FlatList
-        data={data}
+        data={filteredData}
         renderItem={({ item }: { item: Deposito }) => {
-          let identificacaoDeposito = `${item.tipoDeposito} ${item.numeroDeposito}`;
-
-          if (!item || !item.tipoDeposito) return null;
-
-          //Caso seja ele mesmo
-          if (tank == identificacaoDeposito) return null;
-
-          if (item.conteudo == "Pé de Cuba") return null;
-
           return (
-            <Card
+            <CardTrasfega
               depositId={item.idDeposito}
-              title={identificacaoDeposito}
+              title={`${item.tipoDeposito} ${item.numeroDeposito}`}
               isAvailable={item.volumeConteudo < item.capacidadeDeposito}
               content={item.conteudo}
               capacity={item.capacidadeDeposito}
@@ -280,168 +196,18 @@ export default function RealizarTrasfega() {
           </TouchableOpacity>
 
           {expanded && (
-            <View className="gap-3 mt-2">
-              <View className="bg-green-50 p-3 rounded-lg">
-                <View className="flex-row justify-between mb-1">
-                  <Text className="text-sm font-medium text-green-800">
-                    Capacidade Total
-                  </Text>
-                  <Text className="text-sm font-medium text-black-800">
-                    {selectedTank.capacidadeDeposito}L
-                  </Text>
-                </View>
-                <View className="h-1 bg-green-200 rounded-full">
-                  <View
-                    className="h-full bg-green-500 rounded-full"
-                    style={{
-                      width: `${(selectedTank.volumeConteudo / selectedTank.capacidadeDeposito) * 100}%`,
-                    }}
-                  />
-                </View>
-              </View>
-
-              <View className="flex-row gap-3">
-                <View className="flex-1">
-                  <InputBox
-                    title="Quantidade a Transferir"
-                    keyboardType="number-pad"
-                    onChangeText={(v) =>
-                      v === "" || setVolumeTrasfega(v.replace(/[^0-9]/g, ""))
-                    }
-                    maxLength={5}
-                  />
-                </View>
-
-                <View className="flex-1">
-                  <InputBox
-                    title="Quantidade Recebida"
-                    keyboardType="number-pad"
-                    onChangeText={(v) =>
-                      v === "" || setVolumeChegada(v.replace(/[^0-9]/g, ""))
-                    }
-                    maxLength={5}
-                  />
-                </View>
-              </View>
-              <TouchableOpacity
-                className="bg-blue-600 p-4 rounded-lg items-center disabled:opacity-60"
-                onPress={handleTransfer}
-                disabled={submitting || !volumeTrasfega || !volumeChegada}
-              >
-                <Text className="text-white font-bold text-lg">
-                  {submitting ? "Processando..." : "Confirmar Transferência"}
-                </Text>
-              </TouchableOpacity>
-            </View>
+            <TransferControls
+              submitting={submitting}
+              setVolumeChegada={setVolumeChegada}
+              setVolumeTrasfega={setVolumeTrasfega}
+              volumeChegada={volumeChegada}
+              volumeTrasfega={volumeTrasfega}
+              onTransfer={handleTransfer}
+              selectedTank={selectedTank}
+            />
           )}
         </View>
       )}
     </SafeAreaView>
-  );
-}
-
-interface CardProps {
-  depositId: number;
-  title: string;
-  isAvailable: boolean;
-  density?: number;
-  temperature?: number;
-  pressure?: number | null;
-  content?: string;
-  contentId?: number;
-  capacity: number;
-  volume?: number;
-  onSelect?: (depositId: number) => void;
-  isSelected?: boolean;
-}
-
-export function Card({
-  title = "ERROR",
-  isAvailable,
-  density = 0,
-  temperature = 0,
-  pressure = 0,
-  depositId,
-  content = "",
-  contentId = 0,
-  capacity,
-  volume = 0,
-  onSelect,
-  isSelected = false,
-}: CardProps) {
-  const handlePress = () => {
-    if (onSelect) onSelect(depositId);
-  };
-
-  const renderError = () =>
-    title === "ERROR" && (
-      <Text className="text-base max-w-[200px]">
-        Por favor contate imediatamente o suporte
-      </Text>
-    );
-
-  const renderAnalysisDetails = () => {
-    return (
-      <>
-        {renderDetailRow("Densidade:", density, " kg/m³")}
-        {renderDetailRow("Temperatura:", temperature, " °C")}
-        {pressure && renderDetailRow("Pressão:", pressure, " Pa")}
-      </>
-    );
-  };
-
-  const renderDetails = () => {
-    return (
-      <>
-        <View className="w-full h-[1px] bg-neutral-250" />
-        <View className="p-4">
-          {Number(volume)
-            ? renderDetailRow("Volume (em uso):", volume, " L")
-            : null}
-          {renderDetailRow("Capacidade:", capacity, " L")}
-          {temperature ? renderAnalysisDetails() : null}
-        </View>
-      </>
-    );
-  };
-
-  const renderDetailRow = (label: string, value: number, unit: string) => {
-    return (
-      <View className="flex-row justify-between items-center">
-        <Text className="text-xl font-light">{label}</Text>
-        <View className="flex-row justify-center items-end">
-          <Text className="text-2xl font-semibold">{value}</Text>
-          <Text className="text-base font-normal text-neutral-400">{unit}</Text>
-        </View>
-      </View>
-    );
-  };
-
-  return (
-    <TouchableOpacity
-      onPress={handlePress}
-      style={{ marginBottom: 16, width: "100%" }}
-    >
-      <View className="bg-white rounded-lg shadow flex-col border border-neutral-250">
-        <View className="flex-row p-4 justify-between items-center">
-          <View className="flex-row gap-4">
-            {title !== "ERROR" ? (
-              <Text className="text-2xl font-bold">{title}</Text>
-            ) : (
-              renderError()
-            )}
-          </View>
-          {isSelected && (
-            <TouchableOpacity onPress={handlePress}>
-              <View className="bg-blue-500 rounded-full p-1">
-                <CheckIcon size={24} color="white" />
-              </View>
-            </TouchableOpacity>
-          )}
-        </View>
-
-        {renderDetails()}
-      </View>
-    </TouchableOpacity>
   );
 }

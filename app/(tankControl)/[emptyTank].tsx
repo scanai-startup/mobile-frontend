@@ -25,12 +25,6 @@ export default function EmptyTank() {
       ],
     },
     {
-      name: "Realizar Trasfega",
-      icon: <ArrowRightLeft size={28} color="#000000" />,
-      route: "/(tankControl)/tank/realizarTrasfega/[trasfega]",
-      param: [{ tank: tank as string, depositId: Number(depositId) }],
-    },
-    {
       name: "Iniciar pé de Cuba",
       icon: <Grape size={28} color="#000000" />,
       route: "/(tankControl)/tank/addPeDeCuba/[addPeDeCuba]",
