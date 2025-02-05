@@ -1,21 +1,17 @@
-import apiInstance from "@/api/apiInstance";
 import CenteredModal from "@/components/CenteredModal";
 import { DefaultButton } from "@/components/DefaultButton";
 import FormFooter from "@/components/FormFooter";
 import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
 import SelectTankCard from "@/components/SelectTankCard";
-import { useTankSelection } from "@/hooks/useTankSelection";
-import ITankData from "@/types/ITankData";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "expo-router";
-import * as SecureStore from "expo-secure-store";
+import { useFetchDepositos } from "@/hooks/useFetchDepositos";
+import { useNewWineTankSelect } from "@/hooks/useNewWineTankSelect";
 import { Search } from "lucide-react-native";
-import React, { useCallback, useState } from "react";
+import React from "react";
 import { FlatList, Text, TextInput, View } from "react-native";
 
 export default function SelectMostroView() {
-  const [data, setData] = useState<ITankData[]>([]);
+  const { data, loading } = useFetchDepositos();
   const {
     handleSelectTank,
     onDialogClose,
@@ -29,42 +25,7 @@ export default function SelectMostroView() {
     lostVolume,
     setLostVolume,
     isDialogConfirmButtonEnabled,
-  } = useTankSelection();
-
-  useFocusEffect(
-    // calls the api everytime the screen gets displayed
-    useCallback(() => {
-      getDepositos();
-      return;
-    }, []),
-  );
-
-  const getDepositos = async () => {
-    try {
-      const token = await SecureStore.getItemAsync("user-token");
-      const response = await apiInstance.get(
-        "/deposito/getAllDepositosWithInformations",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-      setData(response.data.filter((t: ITankData) => t.conteudo === "Mostro"));
-      syncTanksToLocalStorage(response.data);
-    } catch (error) {
-      console.error("Erro ao buscar depósitos:", error);
-    }
-  };
-
-  const syncTanksToLocalStorage = async (data: any) => {
-    try {
-      const json = JSON.stringify(data);
-      await AsyncStorage.setItem("tanksData", json);
-    } catch (err) {
-      console.log("Erro ao converter para json: ", err);
-    }
-  };
+  } = useNewWineTankSelect();
 
   return (
     <>
@@ -129,7 +90,7 @@ export default function SelectMostroView() {
             </View>
           </View>
           <FlatList
-            data={data}
+            data={data.filter((t) => t.conteudo === "Mostro")}
             keyExtractor={(item) => item.idDeposito.toString()}
             renderItem={({ item }) => {
               let identificacaoDeposito = `${item.tipoDeposito} ${item.numeroDeposito}`;

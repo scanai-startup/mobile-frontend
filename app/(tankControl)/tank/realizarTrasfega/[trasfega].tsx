@@ -1,20 +1,19 @@
 import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
 import SafeAreaView from "@/components/SafeAreaView";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useMemo, useState } from "react";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
-import * as SecureStore from "expo-secure-store";
-import Toast from "react-native-toast-message";
+import { useFetchDepositos } from "@/hooks/useFetchDepositos";
+import { useTankSelection } from "@/hooks/useTankSelection";
 import { useTokenStore } from "@/store/userData";
-import { Eye, EyeOff } from "lucide-react-native";
-import { TransferControls } from "./_components/TransferControls";
-import { CardTrasfega } from "./_components/CardTrasfega";
 import { Deposito } from "@/types/IDeposito";
 import { validateTransfer } from "@/utils/validateTransfer";
-import { useDepositos } from "@/hooks/useDepositos";
-import { useTankSelection } from "@/hooks/useTankSelection";
-import React from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
+import { Eye, EyeOff } from "lucide-react-native";
+import React, { useMemo, useState } from "react";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import Toast from "react-native-toast-message";
+import { CardTrasfega } from "./_components/CardTrasfega";
+import { TransferControls } from "./_components/TransferControls";
 
 export default function RealizarTrasfega() {
   const [volumeTrasfega, setVolumeTrasfega] = useState("");
@@ -23,11 +22,11 @@ export default function RealizarTrasfega() {
   const [expanded, setExpanded] = useState(false);
   const [showOriginInfo, setShowOriginInfo] = useState(true);
 
-  const { tank, volume, contentId, capacity } = useLocalSearchParams();
+  const { tank, volume, contentId, capacity, content } = useLocalSearchParams();
   const { userId } = useTokenStore();
   const router = useRouter();
 
-  const { data, loading } = useDepositos();
+  const { data, loading } = useFetchDepositos();
   const { selectedTank, handleSelectTank } = useTankSelection(data);
 
   const toggleOriginInfo = () => setShowOriginInfo(!showOriginInfo);
@@ -53,11 +52,11 @@ export default function RealizarTrasfega() {
       }
 
       await apiInstance.post(
-        "/depositomostro/register",
+        "/deposito/realizarTrasfega",
         {
-          fkmostro: contentId,
-          fkdeposito: selectedTank?.idDeposito,
-          datainicio: new Date().toISOString().split("T")[0],
+          tipo: content,
+          idLiquidoOrigem: contentId,
+          idDepositoDestino: selectedTank?.idDeposito,
           fkfuncionario: userId,
           volumetrasfega: Number(volumeTrasfega),
           volumechegada: Number(volumeChegada),
@@ -158,7 +157,7 @@ export default function RealizarTrasfega() {
         renderItem={({ item }: { item: Deposito }) => {
           return (
             <CardTrasfega
-              depositId={item.idDeposito}
+              depositId={Number(item.idDeposito)}
               title={`${item.tipoDeposito} ${item.numeroDeposito}`}
               isAvailable={item.volumeConteudo < item.capacidadeDeposito}
               content={item.conteudo}

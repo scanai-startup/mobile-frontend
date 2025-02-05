@@ -4,8 +4,8 @@ import FormFooter from "@/components/FormFooter";
 import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
 import SelectTankCard from "@/components/SelectTankCard";
-import { useLocalTanksData } from "@/hooks/useLocalTanksData";
-import { useTankSelection } from "@/hooks/useTankSelection";
+import { useGetLocalTanksData } from "@/hooks/useGetLocalTanksData";
+import { useNewWineTankSelect } from "@/hooks/useNewWineTankSelect";
 import { useLocalSearchParams } from "expo-router/build/hooks";
 import { Search } from "lucide-react-native";
 import React from "react";
@@ -13,7 +13,7 @@ import { FlatList, Text, TextInput, View } from "react-native";
 
 export default function SelectPeDeCuba() {
   const { fkMostro, mostroVol, mostroVolPerdido } = useLocalSearchParams();
-  const { tanksData } = useLocalTanksData();
+  const { data } = useGetLocalTanksData();
   const {
     selectedTank,
     isDialogOpen,
@@ -27,9 +27,9 @@ export default function SelectPeDeCuba() {
     onDialogClose,
     handleContinueButton,
     setIsDialogOpen,
-  } = useTankSelection();
+  } = useNewWineTankSelect();
 
-  let filteredData = tanksData.filter((t) => t.conteudo === "Pé de Cuba");
+  let filteredData = data.filter((t) => t.conteudo === "Pé de Cuba");
 
   return (
     <>
