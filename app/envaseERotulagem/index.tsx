@@ -1,7 +1,7 @@
 import AppHeader from "@/components/AppHeader";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { CirclePlus } from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
@@ -90,6 +90,8 @@ const Card = ({ item }: { item: Item }) => {
 };
 
 export default function envaseERotulagem() {
+  const router = useRouter();
+
   return (
     <SafeAreaView>
       <AppHeader
@@ -99,12 +101,11 @@ export default function envaseERotulagem() {
         returnHref="/(tabs)"
       />
       <View className="flex-1 px-7">
-        <Link href="/envaseERotulagem/newFilLab" asChild>
-          <DefaultButton
-            title="ADICIONAR NOVO PROCESSO"
-            icon={<CirclePlus color="white" />}
-          />
-        </Link>
+        <DefaultButton
+          onPress={() => router.push("/envaseERotulagem/newFilLab/newFilLab")}
+          title="ADICIONAR NOVO PROCESSO"
+          icon={<CirclePlus color="white" />}
+        />
         <FlatList
           data={data}
           keyExtractor={(item) => String(item.id)}
