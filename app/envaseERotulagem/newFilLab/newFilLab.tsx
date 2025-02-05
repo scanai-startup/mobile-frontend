@@ -1,27 +1,24 @@
 import AppHeader from "@/components/AppHeader";
 import DateInput from "@/components/DateInput";
-import FormFooter from "@/components/FormFooter";
 import HourInput from "@/components/HourInput";
 import SafeAreaView from "@/components/SafeAreaView";
 import YesNoButtonField from "@/components/YesNoButtonField";
+import { stageQuestions } from "@/constants/stageQuestions";
 import { useRouter } from "expo-router";
+import { Droplet, Package, Rows3, Tag } from "lucide-react-native";
+import { useEffect, useState } from "react";
 import {
-  ChevronsUpDown,
-  Droplet,
-  Package,
-  Rows3,
-  Tag,
-} from "lucide-react-native";
-import React, { useState } from "react";
-import {
-  Modal,
-  Pressable,
+  Alert,
   ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import { StageProgressFooter } from "../_components/StageProgressFooter";
+import { CollapsibleStage } from "../_components/CollapsibleStage";
+import React from "react";
+import FichaTabs from "../_components/FichaTabs";
 
 interface StageInfo {
   title: string;
@@ -30,11 +27,10 @@ interface StageInfo {
   value: string;
 }
 
-export default function newFilLab() {
+export default function NewFillLab() {
   const stages: StageInfo[] = [
     {
       title: "Despaletização",
-
       icon: (
         <View className="justify-center p-3 bg-green-100 rounded-lg">
           <Rows3 color="#00A64E" />
@@ -78,11 +74,63 @@ export default function newFilLab() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [startHour, setStartHour] = useState(new Date());
   const [finishHour, setFinishHour] = useState(
-    new Date(startHour.getTime() + 2 * 60 * 60 * 1000)
+    new Date(startHour.getTime() + 2 * 60 * 60 * 1000),
   );
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [selectedStage, setSelectedStage] = useState<StageInfo | null>(null);
+  const [volume, setVolume] = useState("");
+
   const router = useRouter();
+  const [activeFicha, setActiveFicha] = useState<"A" | "B">("A");
+  const stagesForFicha = {
+    A: ["depalletization", "filling"],
+    B: ["labelling", "packaging"],
+  };
+  const [completedStages, setCompletedStages] = useState<string[]>([]);
+
+  const handleDataConfirmation = () => {
+    const currentStages = stagesForFicha[activeFicha];
+
+    if (volume && selectedDate && startHour && finishHour) {
+      setCompletedStages((prev) => {
+        const newCompleted = new Set([...prev]);
+        currentStages.forEach((stage) => newCompleted.add(stage));
+        return Array.from(newCompleted);
+      });
+    } else {
+      Alert.alert(
+        "Dados Incompletos",
+        "Por favor, preencha todos os campos antes de confirmar.",
+        [{ text: "OK" }],
+      );
+    }
+  };
+
+  const renderActiveFicha = () => {
+    return stagesForFicha[activeFicha].map((stageKey) => {
+      const stage = stages.find((s) => s.value === stageKey);
+      const isCompleted = completedStages.includes(stageKey);
+
+      return (
+        <CollapsibleStage
+          key={stageKey}
+          title={stage?.title || ""}
+          icon={stage?.icon}
+          completed={isCompleted}
+        >
+          {stageQuestions[stageKey as keyof typeof stageQuestions]?.map(
+            (q, i) => (
+              <YesNoButtonField
+                key={i}
+                question={q.question}
+                yesDescription={q.yesDesc}
+                noDescription={q.noDesc}
+              />
+            ),
+          )}
+        </CollapsibleStage>
+      );
+    });
+  };
+
   return (
     <>
       <SafeAreaView style={{ flex: 1 }} edges={["right", "bottom", "left"]}>
@@ -92,128 +140,58 @@ export default function newFilLab() {
           mainText="Envase e Rotulagem"
           returnHref={router.back}
         />
+        <FichaTabs active={activeFicha} onSelect={setActiveFicha} />
         <ScrollView contentContainerClassName="p-7 gap-6">
-          <TouchableOpacity
-            onPress={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex flex-row items-center justify-between bg-[#DEDEDE] py-3 px-3 rounded-lg h-14"
-          >
-            <Text className="text-xl">
-              {selectedStage ? selectedStage.title : "Etapas"}
-            </Text>
-            <ChevronsUpDown color="black" />
-          </TouchableOpacity>
-          {isDropdownOpen ? (
-            <Modal
-              transparent
-              animationType="fade"
-              className="bg-[#DEDEDE] py-3 px-3 rounded-b-lg"
-            >
-              <View
-                className="flex-1"
-                style={{
-                  backgroundColor: "rgba(0, 0, 0, 0.5)",
-                }}
-              >
-                <Pressable
-                  className="flex-1"
-                  onPress={() => setIsDropdownOpen(false)}
-                />
-                <View className="bg-white px-10 py-5 gap-4 rounded-t-3xl">
-                  {stages.map((s) => (
-                    <TouchableOpacity
-                      key={s.value}
-                      className="flex-row items-center gap-4"
-                      onPress={() => {
-                        setSelectedStage(s);
-                        setIsDropdownOpen(false);
-                      }}
-                    >
-                      {s.icon}
-                      <View className="">
-                        <Text className="text-2xl font-semibold">
-                          {s.title}
-                        </Text>
-                        <Text className="text-neutral-400">
-                          {s.description}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-                  ))}
-                </View>
-              </View>
-            </Modal>
-          ) : (
-            ""
-          )}
           <View className="flex-row justify-between gap-4">
-            <View className="flex-1">
-              <Text className="text-xl">Produto</Text>
-              <View className="flex flex-row items-center bg-[#DEDEDE] px-3 rounded-lg h-14">
-                <TextInput className="text-xl ml-2 flex-1" placeholder="1.5" />
-              </View>
-            </View>
-            <View className="flex-1">
-              <Text className="text-xl">Lote</Text>
-              <View className="flex flex-row items-center bg-[#DEDEDE] px-3 rounded-lg h-14">
-                <TextInput className="text-xl ml-2 flex-1" placeholder="123" />
-              </View>
-            </View>
-          </View>
-          <View className="flex-row justify-between gap-4">
-            <View className="flex-1">
-              <Text className="text-xl">Depósito</Text>
-              <View className="flex flex-row items-center bg-[#DEDEDE] px-3 rounded-lg h-14">
-                <TextInput className="text-xl ml-2 flex-1" placeholder="1.5" />
-              </View>
-            </View>
             <View className="flex-1">
               <Text className="text-xl">Volume</Text>
               <View className="flex flex-row items-center bg-[#DEDEDE] px-3 rounded-lg h-14">
-                <TextInput className="text-xl ml-2 flex-1" placeholder="3000" />
+                <TextInput
+                  className="text-xl ml-2 flex-1"
+                  keyboardType="number-pad"
+                  placeholder="3000"
+                  value={volume}
+                  onChangeText={setVolume}
+                />
               </View>
             </View>
           </View>
           <DateInput
             questionTitle="Data"
             selectedDate={selectedDate}
-            setSelectedDate={(date) => setSelectedDate(date)}
+            setSelectedDate={setSelectedDate}
           />
           <View className="flex-row justify-between gap-4">
             <HourInput
               questionTitle="Hora início"
-              setSelectedHour={(date) => setStartHour(date)}
+              setSelectedHour={setStartHour}
               selectedHour={startHour}
             />
             <HourInput
               questionTitle="Hora fim"
-              setSelectedHour={(date) => setFinishHour(date)}
+              setSelectedHour={setFinishHour}
               selectedHour={finishHour}
             />
           </View>
-          <View>
-            <Text className="text-2xl font-bold">
-              Condições de despaletização
-            </Text>
-            <View className="flex flex-col gap-4">
-              <YesNoButtonField
-                yesDescription="Bom estado de conservação"
-                noDescription="Estado de conservação ruim"
-                question="Está em boas condições?"
-              />
-            </View>
-          </View>
-          <View>
-            <Text className="text-2xl font-bold">Condições de rotulagem</Text>
-            <View className="flex flex-col gap-4">
-              <YesNoButtonField
-                yesDescription="Bom estado de conservação"
-                noDescription="Estado de conservação ruim"
-                question="Está em boas condições?"
-              />
-            </View>
+
+          {renderActiveFicha()}
+          <View className="mt-8 mb-4">
+            <TouchableOpacity
+              className="py-4 rounded-lg bg-blue-500"
+              onPress={handleDataConfirmation}
+            >
+              <Text className="text-white text-center font-bold text-lg">
+                Confirmar Dados preenchidos
+              </Text>
+            </TouchableOpacity>
           </View>
         </ScrollView>
-        <FormFooter nextHref="/envaseERotulagem" isLastPage={false} />
+
+        <StageProgressFooter
+          activeFicha={activeFicha}
+          completedStages={completedStages}
+          onComplete={() => console.log("Ficha concluída!")}
+        />
       </SafeAreaView>
     </>
   );
