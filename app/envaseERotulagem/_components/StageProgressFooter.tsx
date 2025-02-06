@@ -11,10 +11,7 @@ export function StageProgressFooter({
   completedStages: string[];
   onComplete: () => void;
 }) {
-  const stages =
-    activeFicha === "A"
-      ? ["depalletization", "filling"]
-      : ["labelling", "packaging"];
+  const stages = ["depalletization", "filling", "labelling", "packaging"];
 
   const allCompleted = stages.every((stage) =>
     completedStages.includes(stage.toLowerCase()),

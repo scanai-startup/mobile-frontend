@@ -190,7 +190,10 @@ export default function NewFillLab() {
         <StageProgressFooter
           activeFicha={activeFicha}
           completedStages={completedStages}
-          onComplete={() => console.log("Ficha concluída!")}
+          onComplete={() => {
+            console.log("Ficha concluída!");
+            router.dismissTo("/(tabs)/");
+          }}
         />
       </SafeAreaView>
     </>

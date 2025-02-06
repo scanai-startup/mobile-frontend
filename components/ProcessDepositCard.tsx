@@ -7,7 +7,7 @@ export function ProcessDepositCard() {
 
   return (
     <TouchableOpacity
-      onPress={() => router.push("/envaseERotulagem")}
+      onPress={() => router.push("/envaseERotulagem/newFilLab/newFilLab")}
       className="bg-white rounded-lg p-4 shadow-sm"
     >
       <View className="flex-row justify-between items-center mb-2">
