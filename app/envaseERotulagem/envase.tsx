@@ -1,9 +1,15 @@
 import AppHeader from "@/components/AppHeader";
 import { useRouter } from "expo-router";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import React from "react";
-import { Link } from "expo-router";
-import { FlatList, Text, TouchableOpacity, View } from "react-native";
+import { Search } from "lucide-react-native";
+import React, { useState } from "react";
+import {
+  FlatList,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import SafeAreaView from "@/components/SafeAreaView";
 
 interface Item {
@@ -13,6 +19,7 @@ interface Item {
   data: string;
   volume: string;
   deposito: string;
+  status: "andamento" | "concluido";
 }
 
 const data: Item[] = [
@@ -23,124 +30,139 @@ const data: Item[] = [
     data: "21/07/24",
     volume: "3000 L",
     deposito: "102",
+    status: "andamento",
   },
   {
     id: 2,
-    lote: "24116F28",
-    produto: "Cabernet Suave",
-    data: "21/07/24",
-    volume: "3000 L",
-    deposito: "102",
+    lote: "24226F33",
+    produto: "Vinho Branco",
+    data: "20/01/25",
+    volume: "2000 L",
+    deposito: "103",
+    status: "andamento",
   },
   {
     id: 3,
-    lote: "24116F28",
+    lote: "67116B28",
     produto: "Cabernet Suave",
-    data: "21/07/24",
-    volume: "3000 L",
-    deposito: "102",
+    data: "22/12/24",
+    volume: "2000 L",
+    deposito: "104",
+    status: "concluido",
   },
   {
     id: 4,
-    lote: "24116F28",
+    lote: "123456",
     produto: "Cabernet Suave",
-    data: "21/07/24",
-    volume: "3000 L",
-    deposito: "102",
-  },
-  {
-    id: 5,
-    lote: "24116F28",
-    produto: "Cabernet Suave",
-    data: "21/07/24",
-    volume: "3000 L",
-    deposito: "102",
+    data: "22/12/24",
+    volume: "2000 L",
+    deposito: "104",
+    status: "concluido",
   },
 ];
 
 export default function EnvaseERotulagem() {
   const router = useRouter();
+  const [search, setSearch] = useState("");
+
+  const filteredData = data.filter(
+    (item) =>
+      item.lote.toLowerCase().includes(search.toLowerCase()) ||
+      item.produto.toLowerCase().includes(search.toLowerCase()) ||
+      item.deposito.toLowerCase().includes(search.toLowerCase()),
+  );
+
   return (
-    <>
-      <SafeAreaView style={{ flex: 1, backgroundColor: "#F3F4F6" }}>
+    <SafeAreaView className="flex-1 bg-gray-100">
       <AppHeader
-          variant="secondary"
-          mainText="Envase e Rotulagem"
-          showReturnButton
-          returnHref={router.back}
-        />
-        <View style={{ alignItems: "center", marginVertical: 20 }}>
-        <Link href="/envaseERotulagem/newFilLab/newFilLab" asChild>
-          <TouchableOpacity
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: "#3B82F6",
-              borderRadius: 12,
-              paddingHorizontal: 24,
-              paddingVertical: 12,
-            }}
-          >
-            <AntDesign name="pluscircle" size={24} color="white" />
-            <Text
-              style={{
-                color: "white",
-                fontWeight: "600",
-                fontSize: 16,
-                marginLeft: 8,
-              }}
-            >
-              ADICIONAR NOVO PROCESSO
+        variant="secondary"
+        mainText="Envase e Rotulagem"
+        showReturnButton
+        returnHref={router.back}
+      />
+
+      {/* Lista de Processos */}
+      <FlatList
+        data={filteredData}
+        keyExtractor={(item) => String(item.id)}
+        renderItem={({ item }) => <ProcessoCard {...item} />}
+        contentContainerStyle={{ padding: 16 }}
+        ListHeaderComponent={
+          <View>
+            <Text className="text-lg font-bold text-gray-700 mb-4">
+              Processos Ativos ({filteredData.length})
             </Text>
-          </TouchableOpacity>
-        </Link>
-        </View>
-        <FlatList
-          data={data}
-          keyExtractor={(item) => String(item.id)}
-          renderItem={({ item }) => <EnvaseCard {...item} />}
-          contentContainerStyle={{ paddingBottom: 160, paddingHorizontal: 16 }}
-        />
-      </SafeAreaView>
-    </>
+
+            {/* Barra de Pesquisa */}
+            <View className="mb-4">
+              <View className="flex flex-row items-center bg-[#DEDEDE] py-2 px-3 rounded-lg">
+                <Search size="25px" color="#9A9A9A" />
+                <TextInput
+                  onChangeText={(value) => setSearch(value)}
+                  className="text-lg ml-2 flex-1 py-0 h-12"
+                  placeholder="Buscar por lote, produto ou depósito..."
+                />
+              </View>
+            </View>
+          </View>
+        }
+      />
+
+      {/* Botão Flutuante */}
+      <TouchableOpacity
+        className="absolute bottom-6 right-6 bg-blue-500 flex-row items-center px-6 py-4 rounded-full shadow-lg"
+        onPress={() => router.push("/envaseERotulagem/newFilLab/newFilLab")}
+      >
+        <AntDesign name="pluscircle" size={24} color="white" />
+        <Text className="text-white font-semibold ml-2">Novo Processo</Text>
+      </TouchableOpacity>
+    </SafeAreaView>
   );
 }
 
-export function EnvaseCard(item: Item) {
+function ProcessoCard(item: Item) {
+  const statusColors = {
+    andamento: { bg: "bg-green-100", text: "text-green-800" },
+    concluido: { bg: "bg-gray-200", text: "text-gray-600" },
+  };
+
   return (
-    <View
-      style={{
-        backgroundColor: "white",
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: "#E5E7EB",
-        padding: 16,
-        marginBottom: 12,
-      }}
-    >
-      <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 8 }}>
-        <Text style={{ fontWeight: "600", fontSize: 18 }}>LOTE {item.lote}</Text>
+    <View className="bg-white rounded-xl p-4 mb-4 shadow-sm border border-gray-100">
+      <View className="flex-row justify-between items-center mb-3">
+        <View className="flex-row items-center">
+          <Text className="text-lg font-bold text-gray-800 mr-2">
+            Lote {item.lote}
+          </Text>
+          <View
+            className={`${statusColors[item.status].bg} px-2 py-1 rounded-full`}
+          >
+            <Text
+              className={`${statusColors[item.status].text} text-xs font-medium`}
+            >
+              {item.status === "andamento" ? "Em andamento" : "Concluído"}
+            </Text>
+          </View>
+        </View>
         <TouchableOpacity>
-          <Text style={{ color: "#3B82F6" }}>Detalhes</Text>
+          <Text className="text-blue-500 font-medium">Detalhes</Text>
         </TouchableOpacity>
       </View>
-      <View style={{ height: 1, backgroundColor: "#E5E7EB", marginVertical: 8 }} />
-      <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 8 }}>
-        <Text style={{ color: "#6B7280", fontSize: 16 }}>Produto</Text>
-        <Text style={{ fontWeight: "600", fontSize: 16 }}>{item.produto}</Text>
+      <View className="h-px bg-gray-200 my-2" />
+      <View className="space-y-2">
+        <InfoRow label="Produto" value={item.produto} />
+        <InfoRow label="Data" value={item.data} />
+        <InfoRow label="Volume" value={item.volume} />
+        <InfoRow label="Depósito" value={item.deposito} />
       </View>
-      <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 8 }}>
-        <Text style={{ color: "#6B7280", fontSize: 16 }}>Data</Text>
-        <Text style={{ fontWeight: "600", fontSize: 16 }}>{item.data}</Text>
-      </View>
-      <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 8 }}>
-        <Text style={{ color: "#6B7280", fontSize: 16 }}>Volume</Text>
-        <Text style={{ fontWeight: "600", fontSize: 16 }}>{item.volume}</Text>
-      </View>
-      <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: 8 }}>
-        <Text style={{ color: "#6B7280", fontSize: 16 }}>Depósito</Text>
-        <Text style={{ fontWeight: "600", fontSize: 16 }}>{item.deposito}</Text>
-      </View>
+    </View>
+  );
+}
+
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <View className="flex-row justify-between">
+      <Text className="text-gray-500">{label}</Text>
+      <Text className="font-medium text-gray-700">{value}</Text>
     </View>
   );
 }

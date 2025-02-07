@@ -1,8 +1,10 @@
 import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
+import { ProcessDepositCard } from "@/components/ProcessDepositCard";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useTokenStore } from "@/store/userData";
+import { Link, useRouter } from "expo-router";
 import { Cylinder, LucideBox, Tag, Truck, Wine } from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
@@ -36,6 +38,7 @@ export default function Home() {
       route: "/(tabs)/stock",
     },
   ];
+
   return (
     <>
       <CustomStatusBar backgroundColor="#18181b" barStyle="light-content" />
@@ -65,9 +68,15 @@ export default function Home() {
         </View>
         <View className="px-7">
           <Text className="text-zinc-950 font-bold text-2xl mb-4">
+            Envase e rotulagem de produtos
+          </Text>
+          <ProcessDepositCard />
+        </View>
+        <View className="px-7">
+          <Text className="text-zinc-950 font-bold text-2xl mb-4">
             Relatório mais recente
           </Text>
-          <View className="bg-white rounded-lg px-3 pt-3 pb-6 gap-2">
+          <View className="bg-white rounded-lg px-3 pb-6 gap-2">
             <Text className="text-[#575757] text-md">
               Relatório final de saída
             </Text>
