@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+import { useState } from "react";
 import { Alert, ScrollView, Text, TextInput, View } from "react-native";
 import { useRouter } from "expo-router";
 import AppHeader from "@/components/AppHeader";
@@ -139,7 +140,7 @@ export default function NewFillLab() {
         showReturnButton
         variant="secondary"
         mainText="Envase e Rotulagem"
-        returnHref={router.back}
+        returnHref={"/envaseERotulagem/envase/"}
       />
       <FichaTabs active={activeFicha} onSelect={setActiveFicha} />
 
