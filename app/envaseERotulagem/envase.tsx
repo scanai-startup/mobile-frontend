@@ -111,7 +111,7 @@ export default function EnvaseERotulagem() {
       {/* Botão Flutuante */}
       <TouchableOpacity
         className="absolute bottom-6 right-6 bg-blue-500 flex-row items-center px-6 py-4 rounded-full shadow-lg"
-        onPress={() => router.push("/envaseERotulagem/newFilLab/newFilLab")}
+        onPress={() => router.push("/envaseERotulagem/newFilLab/")}
       >
         <AntDesign name="pluscircle" size={24} color="white" />
         <Text className="text-white font-semibold ml-2">Novo Processo</Text>
