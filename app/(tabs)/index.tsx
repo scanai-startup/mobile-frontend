@@ -4,7 +4,6 @@ import CustomStatusBar from "@/components/CustomStatusBar";
 import { ProcessDepositCard } from "@/components/ProcessDepositCard";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useTokenStore } from "@/store/userData";
-import { Link, useRouter } from "expo-router";
 import { Cylinder, LucideBox, Tag, Truck, Wine } from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
