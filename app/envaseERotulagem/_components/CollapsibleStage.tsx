@@ -1,37 +1,58 @@
-import { CheckCircle, ChevronDown, ChevronUp } from "lucide-react-native";
-import React, { useState } from "react";
+import React, { useCallback } from "react";
 import { TouchableOpacity, View, Text } from "react-native";
+import { CheckCircle, ChevronDown, ChevronUp } from "lucide-react-native";
+import Radio from "./RadioButton";
 
-export function CollapsibleStage({
-  title,
-  icon,
-  completed,
-  children,
-}: {
+interface CollapsibleStageProps {
+  value: string;
   title: string;
   icon: React.ReactNode;
   completed: boolean;
   children: React.ReactNode;
-}) {
-  const [isCollapsed, setIsCollapsed] = useState(true);
+  handleDataConfirmation: () => void;
+  completedStages: string[];
+}
+
+export function CollapsibleStage({
+  value,
+  title,
+  icon,
+  completed,
+  children,
+  handleDataConfirmation,
+  completedStages,
+}: CollapsibleStageProps) {
+  const [isCollapsed, setIsCollapsed] = React.useState(true);
+
+  const toggleCollapse = useCallback(() => {
+    setIsCollapsed((prev) => !prev);
+  }, []);
 
   return (
     <View className="mb-1">
-      <TouchableOpacity
-        className="flex-row items-center gap-3 mb-4"
-        onPress={() => setIsCollapsed(!isCollapsed)}
-      >
-        {icon}
-        <Text className="text-2xl font-bold flex-1">{title}</Text>
-        {completed && <CheckCircle size={20} color="#00A64E" />}
-        {isCollapsed ? (
-          <ChevronUp color="#666" />
-        ) : (
-          <ChevronDown color="#666" />
-        )}
-      </TouchableOpacity>
-
+      <View className="flex-row items-center gap-2">
+        <TouchableOpacity
+          className="flex-1 flex-row items-center gap-3 mb-4"
+          onPress={toggleCollapse}
+        >
+          {icon}
+          <Text className="text-2xl font-bold flex-1">{title}</Text>
+          {completed && <CheckCircle size={20} color="#00A64E" />}
+          {isCollapsed ? (
+            <ChevronUp color="#666" />
+          ) : (
+            <ChevronDown color="#666" />
+          )}
+        </TouchableOpacity>
+        <Radio
+          handleDataConfirmation={handleDataConfirmation}
+          completedStages={completedStages}
+          value={value}
+        />
+      </View>
       {!isCollapsed && children}
     </View>
   );
 }
+
+export default React.memo(CollapsibleStage);

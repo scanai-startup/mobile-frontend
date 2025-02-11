@@ -2,7 +2,7 @@ import { CheckCircle } from "lucide-react-native";
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 
-export function StageProgressFooter({
+export default function StageProgressFooter({
   activeFicha,
   completedStages,
   onComplete,
