@@ -4,40 +4,69 @@ import { DefaultButton } from "@/components/DefaultButton";
 import { InputBox } from "@/components/Input";
 import { useToast } from "@/hooks/useToast";
 import { IDialogProps } from "@/types/IDialogProps";
+import { Material } from "@/types/IMaterial";
 import * as SecureStorage from "expo-secure-store";
 import { X } from "lucide-react-native";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 
 interface IAddNewBatchDialogProps extends IDialogProps {
-  selectedMaterial: {
-    id: number;
-    name: string;
-  };
+  selectedMaterial: Material;
+  setMaterials: Dispatch<SetStateAction<Material[]>>;
 }
 
 export default function AddNewBatchDialog({
   isDialogOpen,
   setIsDialogOpen,
   selectedMaterial,
+  setMaterials,
 }: IAddNewBatchDialogProps) {
   const [batchNumber, setBatchNumber] = useState("");
   const [amount, setAmount] = useState("");
   const [supplier, setSupplier] = useState("");
+  const [unitPrice, setUnitPrice] = useState("");
   const toast = useToast();
   function onDialogClose() {
     setBatchNumber("");
     setAmount("");
     setSupplier("");
+    setUnitPrice("");
     setIsDialogOpen(false);
   }
   async function handleAddNewBatch() {
     try {
       const token = await SecureStorage.getItemAsync("user-token");
+      const payload = {
+        fornecedor: supplier,
+        numerolote: batchNumber,
+      };
+      apiInstance
+        .post("/lotematerial/register", payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          handleMaterialArrival(Number(res.data.id));
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    } catch (error) {
+      console.error("Erro ao recuperar token", error);
+    }
+  }
+  async function handleMaterialArrival(batchId: number) {
+    try {
+      const token = await SecureStorage.getItemAsync("user-token");
       const data = {
         fornecedor: supplier,
         numerolote: batchNumber,
-        fkmaterial: 1, //TODO: aguardar o retorno da API trazer os IDs de cada material para alterar essa linha para selectedMaterial.id
+        fkmaterial: selectedMaterial.id,
+        qttentrada: amount,
+        fklotematerial: batchId,
+        dataentrada: new Date().toISOString().slice(0, 10),
+        valorunidade: parseFloat(unitPrice),
       };
       apiInstance
         .post("/entradamaterial/register", data, {
@@ -45,10 +74,22 @@ export default function AddNewBatchDialog({
             Authorization: `Bearer ${token}`,
           },
         })
-        .then(() => {
+        .then((res) => {
+          const data = res.data;
           toast({
             heading: "Sucesso!",
-            message: `Lote ${batchNumber} do fornecedor ${supplier} com ${amount} de ${selectedMaterial.name} cadastrado com sucesso.`,
+            message: `Lote ${batchNumber} do fornecedor ${supplier} com ${amount} de ${selectedMaterial.nome} cadastrado com sucesso.`,
+          });
+          setMaterials((prev) => {
+            return prev.map((m) => {
+              if (m.id === data.fkmaterial) {
+                return {
+                  ...m,
+                  quantidade: m.quantidade + data.qttentrada,
+                };
+              }
+              return m;
+            });
           });
         })
         .catch((err) => {
@@ -67,7 +108,7 @@ export default function AddNewBatchDialog({
       });
       console.error("Erro ao recuperar token", err);
     }
-    setIsDialogOpen(false);
+    onDialogClose();
   }
   return (
     <CenteredModal
@@ -83,7 +124,7 @@ export default function AddNewBatchDialog({
           </TouchableOpacity>
         </View>
         <Text className="text-2xl text-black font-bold mb-6">
-          Adicionar lote de {selectedMaterial.name.toUpperCase()}.
+          Adicionar lote de {selectedMaterial.nome.toUpperCase()}.
         </Text>
         <View className="gap-4">
           <InputBox
@@ -98,6 +139,13 @@ export default function AddNewBatchDialog({
             placeholder="500"
             value={amount}
             onChangeText={(v) => setAmount(v)}
+            keyboardType="number-pad"
+          />
+          <InputBox
+            title="Valor da unidade"
+            placeholder="15.50"
+            value={unitPrice}
+            onChangeText={(v) => setUnitPrice(v)}
             keyboardType="number-pad"
           />
           <InputBox

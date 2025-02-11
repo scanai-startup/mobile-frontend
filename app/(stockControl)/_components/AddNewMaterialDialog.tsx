@@ -4,15 +4,21 @@ import { DefaultButton } from "@/components/DefaultButton";
 import { InputBox } from "@/components/Input";
 import { useToast } from "@/hooks/useToast";
 import { IDialogProps } from "@/types/IDialogProps";
+import { Material } from "@/types/IMaterial";
 import * as SecureStorage from "expo-secure-store";
 import { X } from "lucide-react-native";
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { Text, TouchableOpacity, View } from "react-native";
+
+interface IAddNewMaterialDialogProps extends IDialogProps {
+  setMaterials: Dispatch<SetStateAction<Material[]>>;
+}
 
 export default function AddNewMaterialDialog({
   isDialogOpen,
   setIsDialogOpen,
-}: IDialogProps) {
+  setMaterials,
+}: IAddNewMaterialDialogProps) {
   const [materialName, setMaterialName] = useState("");
   const toast = useToast();
   function onDialogClose() {
@@ -31,10 +37,13 @@ export default function AddNewMaterialDialog({
             Authorization: `Bearer ${token}`,
           },
         })
-        .then(() => {
+        .then((res) => {
           toast({
             heading: "Sucesso!",
             message: `Material ${materialName} cadastrado com sucesso.`,
+          });
+          setMaterials((prev) => {
+            return [...prev, { ...res.data, quantidade: 0 }];
           });
         })
         .catch((err) => {
@@ -53,7 +62,7 @@ export default function AddNewMaterialDialog({
       });
       console.error("Erro ao recuperar token", err);
     }
-    setIsDialogOpen(false);
+    onDialogClose();
   }
   return (
     <CenteredModal

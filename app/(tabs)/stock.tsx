@@ -6,6 +6,7 @@ import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
+import { Material } from "@/types/IMaterial";
 import { useFocusEffect } from "expo-router";
 import * as SecureStorage from "expo-secure-store";
 import { CirclePlus, Search } from "lucide-react-native";
@@ -19,49 +20,17 @@ import {
 } from "react-native";
 
 export default function StockItemsList() {
-  const boilerplate = [
-    {
-      title: "rotulo rosé",
-      amount: 68360,
-      lastSupplier: "Forn. 1",
-      lastBatch: "03205991234",
-      lastLoss: 185,
-    },
-    {
-      title: "vinho tinto",
-      amount: 45230,
-      lastSupplier: "Forn. 2",
-      lastBatch: "03205991235",
-      lastLoss: 120,
-    },
-    {
-      title: "vinho branco",
-      amount: 78900,
-      lastSupplier: "Forn. 3",
-      lastBatch: "03205991236",
-      lastLoss: 200,
-    },
-    {
-      title: "espumante",
-      amount: 12345,
-      lastSupplier: "Forn. 4",
-      lastBatch: "03205991237",
-      lastLoss: 50,
-    },
-  ];
-  const [materials, setMaterials] = useState(boilerplate);
+  const [materials, setMaterials] = useState<Material[]>([]);
   const [isNewMaterialDialogOpen, setIsNewMaterialDialogOpen] = useState(false);
   const [isNewBatchDialogOpen, setIsNewBatchDialogOpen] = useState(false);
-  const [selectedMaterial, setSelectedMaterial] = useState<{
-    id: number;
-    name: string;
-  }>({
+  const [selectedMaterial, setSelectedMaterial] = useState<Material>({
     id: 0,
-    name: "",
+    nome: "",
+    quantidade: 0,
   });
   const [searchedName, setSearchedName] = useState("");
   const filteredData = materials.filter((m) => {
-    return m.title.toLowerCase().includes(searchedName.toLowerCase());
+    return m.nome.toLowerCase().includes(searchedName.toLowerCase());
   });
 
   async function getAllMaterials() {
@@ -74,7 +43,7 @@ export default function StockItemsList() {
           },
         })
         .then((res) => {
-          console.log(res.data);
+          setMaterials(res.data);
         })
         .catch((err) => {
           console.log(err);
@@ -96,11 +65,13 @@ export default function StockItemsList() {
       <AddNewMaterialDialog
         isDialogOpen={isNewMaterialDialogOpen}
         setIsDialogOpen={setIsNewMaterialDialogOpen}
+        setMaterials={setMaterials}
       />
       <AddNewBatchDialog
         isDialogOpen={isNewBatchDialogOpen}
         setIsDialogOpen={setIsNewBatchDialogOpen}
         selectedMaterial={selectedMaterial}
+        setMaterials={setMaterials}
       />
       <SafeAreaView
         style={{ flex: 1, gap: 20 }}
@@ -137,13 +108,13 @@ export default function StockItemsList() {
           </View>
           <FlatList
             data={filteredData}
-            keyExtractor={(i) => i.title}
+            keyExtractor={(i) => i.id.toString()}
             renderItem={({ item }) => {
               return (
                 <StockMaterialCard
                   {...item}
                   handleAddButton={() => {
-                    setSelectedMaterial({ id: 1, name: item.title });
+                    setSelectedMaterial(item);
                     setIsNewBatchDialogOpen(true);
                   }}
                 />
