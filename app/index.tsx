@@ -1,17 +1,14 @@
-import apiInstance from "@/api/apiInstance";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
-import {  useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
-import React from "react";
-import { useAutoLogin } from "@/hooks/useAutoLogin";
 import { useAuth } from "@/hooks/useAuth";
+import React, { useState } from "react";
+import { Image, Text, TouchableOpacity, View } from "react-native";
 
 export default function Login() {
   const [matricula, setMatricula] = useState("");
   const [senha, setSenha] = useState("");
-  useAutoLogin();
+  // useAutoLogin();
 
   return (
     <>
@@ -84,7 +81,10 @@ function LoginButton({
   return (
     <TouchableOpacity
       className="bg-[#171717] w-full flex items-center rounded-lg p-4"
-      onPress={() => login(matricula, senha)}
+      onPress={() => {
+        login(matricula, senha);
+      }}
+      accessibilityRole="button"
     >
       <Text className="text-white text-lg font-medium ">{placeholder}</Text>
     </TouchableOpacity>
