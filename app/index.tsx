@@ -2,13 +2,17 @@ import CustomStatusBar from "@/components/CustomStatusBar";
 import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useAuth } from "@/hooks/useAuth";
+import { useAutoLogin } from "@/hooks/useAutoLogin";
 import React, { useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
 export default function Login() {
   const [matricula, setMatricula] = useState("");
   const [senha, setSenha] = useState("");
-  // useAutoLogin();
+
+  if (__DEV__ && !process.env.JEST_WORKER_ID) {
+    useAutoLogin();
+  }
 
   return (
     <>
