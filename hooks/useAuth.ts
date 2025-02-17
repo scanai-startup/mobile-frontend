@@ -1,8 +1,8 @@
-import { useTokenStore } from "@/store/userData";
-import { useToast } from "./useToast";
 import apiInstance from "@/api/apiInstance";
-import * as SecureStore from "expo-secure-store";
+import { useTokenStore } from "@/store/userData";
 import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
+import { useToast } from "./useToast";
 
 export function useAuth() {
   const { setToken } = useTokenStore();
@@ -28,7 +28,7 @@ export function useAuth() {
         message: "Houve um erro, por favor verifique suas credenciais.",
         type: "error",
       });
-      console.error(error);
+      // console.error(error);
     }
   };
 
