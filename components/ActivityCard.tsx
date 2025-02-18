@@ -42,6 +42,7 @@ export default function ActivityCard({
       }}
       href={href}
       asChild
+      testID="activity-card"
     >
       <TouchableOpacity className="bg-white justify-between rounded-lg">
         {icon}

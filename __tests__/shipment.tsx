@@ -1,6 +1,6 @@
-import { renderRouter, screen } from "expo-router/testing-library";
-import { fireEvent, waitFor, act } from "@testing-library/react-native";
 import apiInstance from "@/api/apiInstance";
+import { act, fireEvent, waitFor } from "@testing-library/react-native";
+import { renderRouter, screen } from "expo-router/testing-library";
 
 jest.mock("expo-secure-store", () => ({
   setItemAsync: jest.fn(),

@@ -11,8 +11,6 @@ import {
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import React from "react";
-import { server } from "@/mocks/server";
-import { http, HttpResponse } from "msw";
 
 // mocks secure store calls
 jest.mock("expo-secure-store", () => ({
@@ -71,11 +69,9 @@ describe("login screen", () => {
       fireEvent.press(loginBtn);
     });
 
-    await waitFor(() => {
-      expect(require("@/hooks/useToast").useToast()).toHaveBeenCalledWith({
-        heading: "Sucesso",
-        message: "Seja bem-vindo!",
-      });
+    expect(require("@/hooks/useToast").useToast()).toHaveBeenCalledWith({
+      heading: "Sucesso",
+      message: "Seja bem-vindo!",
     });
 
     expect(SecureStore.setItemAsync).toHaveBeenCalledWith(
@@ -87,25 +83,23 @@ describe("login screen", () => {
   });
 
   test("should not let user log in with incorrect credentials.", async () => {
-    server.use(
-      http.post("*/auth/login", () => {
-        return HttpResponse.json(
-          { error: "Invalid credentials" },
-          { status: 401 },
-        );
-      }),
-    );
-
     const user = userEvent.setup();
     render(<Login />);
 
-    await user.type(
-      screen.getByPlaceholderText("carlos_andrade"),
-      "WRONG_USER",
-    );
+    await act(async () => {
+      await user.type(
+        screen.getByPlaceholderText("carlos_andrade"),
+        "WRONG_USER",
+      );
+      await user.type(
+        screen.getByPlaceholderText("************"),
+        "WRONG_PASS",
+      );
+    });
 
-    await user.type(screen.getByPlaceholderText("************"), "WRONG_PASS");
-    await user.press(screen.getByRole("button"));
+    await act(async () => {
+      fireEvent.press(screen.getByRole("button"));
+    });
 
     // Wait for async operations
     await waitFor(() => {

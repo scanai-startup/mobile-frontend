@@ -50,7 +50,7 @@ export default function TankControl() {
         },
       );
       setData(response.data);
-      console.log(response.data);
+      // console.log(response.data);
     } catch (error) {
       console.error("Erro ao buscar depósitos:", error);
     }
@@ -64,7 +64,7 @@ export default function TankControl() {
           showReturnButton
           variant="secondary"
           mainText="Controle de tanques"
-          returnHref={router.back}
+          returnHref={() => router.dismissTo("/")}
         />
         <View className="px-7 flex-1">
           <View>
@@ -102,6 +102,7 @@ export default function TankControl() {
           <FlatList
             data={filteredData}
             keyExtractor={(item) => item.idDeposito}
+            ListEmptyComponent={<EmptyTankList />}
             renderItem={({ item }) => {
               let identificacaoDeposito = `${item.tipoDeposito} ${item.numeroDeposito}`;
               return item.conteudo === "Mostro" || item.conteudo === "Vinho" ? (
@@ -185,5 +186,15 @@ function FilterDrawer({
         </View>
       </View>
     </Modal>
+  );
+}
+
+function EmptyTankList() {
+  return (
+    <View className="flex-1 justify-center items-center">
+      <Text className="text-gray-500 text-center mb-4">
+        Não há nenhum tanque cadastrado ainda.
+      </Text>
+    </View>
   );
 }
