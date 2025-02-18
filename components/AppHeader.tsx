@@ -17,7 +17,7 @@ export default function AppHeader({
   mainText,
 }: AppHeaderProps) {
   const OSPadding = Platform.OS === "ios" ? 0 : 20;
-  const router = useRouter()
+  const router = useRouter();
 
   return (
     <View
@@ -32,11 +32,14 @@ export default function AppHeader({
     >
       {showReturnButton ? (
         typeof returnHref === "function" ? (
-          <TouchableOpacity onPress={returnHref}>
+          <TouchableOpacity onPress={returnHref} testID="chevron-left-icon">
             <ChevronLeft color="#171717" />
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity onPress={() => router.push(returnHref)}>
+          <TouchableOpacity
+            onPress={() => router.push(returnHref)}
+            testID="chevron-left-icon"
+          >
             <ChevronLeft color="#171717" />
           </TouchableOpacity>
         )
