@@ -94,7 +94,7 @@ export function Card({
   };
 
   return (
-    <Link href={href as Href} asChild>
+    <Link href={href as Href} asChild testID="tank-card">
       <TouchableOpacity style={{ marginBottom: 16, width: "100%" }}>
         <View className="bg-white rounded-lg shadow flex-col border border-neutral-250">
           <View className="flex-row p-4 justify-between items-center">

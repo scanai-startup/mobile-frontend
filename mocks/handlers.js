@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw";
 
 export const handlers = [
-  http.post(`*/auth/login`, async ({ request }) => {
+  http.post("*/auth/login", async ({ request }) => {
     const { matricula, senha } = await request.json();
     if (matricula === "123" && senha === "senha123") {
       return HttpResponse.json({
