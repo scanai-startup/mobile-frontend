@@ -50,7 +50,7 @@ export default function TankControl() {
         },
       );
       setData(response.data);
-      console.log(response.data);
+      // console.log(response.data);
     } catch (error) {
       console.error("Erro ao buscar depósitos:", error);
     }
@@ -64,7 +64,7 @@ export default function TankControl() {
           showReturnButton
           variant="secondary"
           mainText="Controle de tanques"
-          returnHref={router.back}
+          returnHref={() => router.dismissTo("/")}
         />
         <View className="px-7 flex-1">
           <View>

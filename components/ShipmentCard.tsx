@@ -90,7 +90,7 @@ export default function ShipmentCard({
             Data recebido
           </Text>
           <Text className="text-2xl font-semibold text-neutral-900">
-            {new Date(shipment.datachegada).toLocaleDateString()}
+            {new Date(shipment.datachegada).toLocaleDateString("pt-BR")}
           </Text>
         </View>
         <View className="flex-row justify-between items-center">

@@ -1,5 +1,5 @@
 import apiInstance from "@/api/apiInstance";
-import { userEvent, waitFor } from "@testing-library/react-native";
+import { act, userEvent, waitFor } from "@testing-library/react-native";
 import { renderRouter, screen } from "expo-router/testing-library";
 
 jest.mock("@/api/apiInstance", () => ({
@@ -36,12 +36,24 @@ describe("Tank control", () => {
       ).toBeOnTheScreen();
     });
   });
+  test("should return to home screen when clicking on navbar return button.", async () => {
+    (apiInstance.get as jest.Mock).mockResolvedValueOnce({ data: [] });
+    renderRouter({ index: require("../app/(tabs)/tankControl") });
+
+    const returnBtn = screen.getByTestId("chevron-left-icon");
+    const user = userEvent.setup();
+
+    await user.press(returnBtn);
+
+    expect(screen).toHavePathname("/");
+  });
   describe("Tanks list", () => {
     test("should display a message if no tanks are listed.", async () => {
       (apiInstance.get as jest.Mock).mockResolvedValueOnce({ data: [] });
       renderRouter({
         index: require("@/app/(tabs)/tankControl"),
       });
+
       await waitFor(() => {
         expect(
           screen.getByText("Não há nenhum tanque cadastrado ainda."),
@@ -92,8 +104,67 @@ describe("Tank control", () => {
       renderRouter({
         index: require("@/app/(tabs)/tankControl"),
       });
+
       await waitFor(() => {
         expect(screen.getAllByTestId("tank-card").length).toBe(3);
+      });
+    });
+    test("should filter tanks based on filter text.", async () => {
+      (apiInstance.get as jest.Mock).mockResolvedValueOnce({
+        data: [
+          {
+            idDeposito: 1,
+            capacidadeDeposito: 200,
+            conteudo: "Mostro",
+            densidade: 100,
+            idConteudo: 1,
+            numeroDeposito: "100",
+            pressao: 100,
+            temperatura: 20,
+            tipoDeposito: "AUT",
+            volumeConteudo: 500,
+          },
+          {
+            idDeposito: 2,
+            capacidadeDeposito: 200,
+            conteudo: "Pé de cuba",
+            densidade: 100,
+            idConteudo: 1,
+            numeroDeposito: "100",
+            pressao: 100,
+            temperatura: 20,
+            tipoDeposito: "AUT",
+            volumeConteudo: 500,
+          },
+          {
+            idDeposito: 3,
+            capacidadeDeposito: 200,
+            conteudo: "Vinho",
+            densidade: 100,
+            idConteudo: 1,
+            numeroDeposito: "100",
+            pressao: 100,
+            temperatura: 20,
+            tipoDeposito: "TES",
+            volumeConteudo: 500,
+          },
+        ],
+      });
+      renderRouter({
+        index: require("@/app/(tabs)/tankControl"),
+      });
+
+      const input = await screen.findByPlaceholderText(
+        "Digite o que deseja buscar...",
+      );
+      const user = userEvent.setup();
+
+      await act(async () => {
+        await user.type(input, "AUT");
+      });
+
+      await waitFor(() => {
+        expect(screen.getAllByTestId("tank-card").length).toBe(2);
       });
     });
     describe("Tank card navigation", () => {
@@ -116,6 +187,7 @@ describe("Tank control", () => {
         renderRouter({
           index: require("@/app/(tabs)/tankControl"),
         });
+
         const user = userEvent.setup();
         const tankCard = await screen.findByTestId("tank-card");
 
@@ -147,6 +219,7 @@ describe("Tank control", () => {
         renderRouter({
           index: require("@/app/(tabs)/tankControl"),
         });
+
         const user = userEvent.setup();
         const tankCard = await screen.findByTestId("tank-card");
 
