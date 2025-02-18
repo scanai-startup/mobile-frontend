@@ -14,6 +14,7 @@ export default function GrapeReceptionLayout() {
   const router = useRouter();
   const { shipmentData } = useShipmentStore();
   const toast = useToast();
+  const [isFormValid, setIsFormValid] = useState(false);
 
   async function handleDataSubmit() {
     const token = await SecureStore.getItemAsync("user-token");
@@ -26,14 +27,16 @@ export default function GrapeReceptionLayout() {
       })
       .then((res) => {
         console.log(res.request);
-        router.navigate("/(tabs)/shipment"); // navigate back to the shipments list
+        router.dismissTo("/(tabs)/shipment"); // navigate back to the shipments list
       })
       .catch((e) => {
         console.log(e);
       });
   }
+
   const [nextHref, setNextHref] = useState("");
   const currRoute = usePathname();
+
   const routes = [
     {
       route: "/",
@@ -44,10 +47,30 @@ export default function GrapeReceptionLayout() {
       nextHref: "/(tabs)/",
     },
   ];
+
   useEffect(() => {
     const r = routes.find((r) => r.route === currRoute);
     r ? setNextHref(r.nextHref) : null;
   }, [currRoute]);
+
+  useEffect(() => {
+    const page1Valid = Boolean(
+      shipmentData.datachegada &&
+        shipmentData.numerotalao &&
+        shipmentData.casta &&
+        shipmentData.numerolote &&
+        shipmentData.qttcaixa &&
+        shipmentData.peso,
+    );
+
+    const page2Valid = Boolean(
+      shipmentData.sanidade && shipmentData.so2 && shipmentData.tipodevinho,
+    );
+
+    // Validate based on current page
+    setIsFormValid(currRoute === "/" ? page1Valid : page1Valid && page2Valid);
+  }, [shipmentData, currRoute]);
+
   return (
     <>
       <CustomStatusBar barStyle="dark-content" />
@@ -62,6 +85,7 @@ export default function GrapeReceptionLayout() {
         <FormFooter
           nextHref={nextHref}
           isReturnButtonEnabled={currRoute === "/" ? false : true}
+          isNextButtonEnabled={isFormValid}
           isLastPage={nextHref === "/(tabs)/" && true}
           handleDataSubmit={() => {
             handleDataSubmit();
