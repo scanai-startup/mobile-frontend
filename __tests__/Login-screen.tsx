@@ -80,7 +80,7 @@ describe("login screen", () => {
 
     expect(SecureStore.setItemAsync).toHaveBeenCalledWith(
       "user-token",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzY2FuYWktYXBpIiwic3ViIjoiMTIzIiwiaWQiOjIsInJvbGUiOiJBRE1JTiJ9.iU3N8GF9PWk1a5UFuZ2yZ8_X3vKz4X2RgDIQrOgTLpM",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzY2FuYWktYXBpIiwic3ViIjoiMTIzIiwiaWQiOjEsInJvbGUiOiJBRE1JTiJ9._L8_7RQISitEKaTaoXSOc4Ni_IuAF19qmS2jMOunVd0",
     );
 
     expect(useRouter().push).toHaveBeenCalledWith("/(tabs)/");
