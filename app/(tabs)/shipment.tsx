@@ -6,7 +6,7 @@ import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
 import ShipmentCard from "@/components/ShipmentCard";
 import IShipmentCard from "@/types/IShipmentCard";
-import { Link, useFocusEffect } from "expo-router";
+import { Link, useFocusEffect, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { CirclePlus } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
@@ -21,6 +21,7 @@ import {
 export default function Shipment() {
   const [shipments, setShipments] = useState<IShipmentCard[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   //TODO: ERRO HANDLING
   const [error, setError] = useState<string | null>(null);
@@ -68,15 +69,15 @@ export default function Shipment() {
           showReturnButton
         />
         <View className="px-7">
-          <Link
-            href="/(grapeReception)?nextHref=(grapeReception)/grapeReceptionP2&prevHref=/"
-            asChild
-          >
-            <DefaultButton
-              title="ADICIONAR NOVA REMESSA"
-              icon={<CirclePlus color="white" />}
-            />
-          </Link>
+          <DefaultButton
+            onPress={() =>
+              router.push(
+                "/(grapeReception)?nextHref=(grapeReception)/grapeReceptionP2&prevHref=/",
+              )
+            }
+            title="ADICIONAR NOVA REMESSA"
+            icon={<CirclePlus color="white" />}
+          />
           <FlatList
             data={shipments}
             keyExtractor={(item) => String(item.id)}
