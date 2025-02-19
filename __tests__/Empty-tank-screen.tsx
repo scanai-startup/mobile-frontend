@@ -1,6 +1,5 @@
-import { userEvent } from "@testing-library/react-native";
-import * as router from "expo-router";
-import { renderRouter, screen, waitFor } from "expo-router/testing-library";
+import { userEvent, waitFor } from "@testing-library/react-native";
+import { renderRouter, screen } from "expo-router/testing-library";
 
 describe("Empty tank", () => {
   test("should render screen without breaking.", () => {
@@ -12,24 +11,28 @@ describe("Empty tank", () => {
   });
 
   describe("Header", () => {
-    test("should display tank identification on header.", () => {
-      jest.spyOn(router, "useLocalSearchParams").mockReturnValue({
-        tank: "AUT 200",
-        depositId: "1",
-        capacity: "500",
-      }); // spies the expo-router useLocalSearchParams calling and mocks its return
-
-      renderRouter({
-        index: require("@/app/(tankControl)/[emptyTank]"),
-      });
+    test("should display tank identification on header.", async () => {
+      renderRouter(
+        {
+          "/[emptyTank]": require("@/app/(tankControl)/[emptyTank]"),
+        },
+        {
+          initialUrl: "/[emptyTank]?tank=AUT%20200&depositId=1&capacity=500",
+        },
+      );
 
       expect(screen.getByText("AUT 200")).toBeOnTheScreen();
     });
 
     test("should return to tankControl page when clicking on header return button.", async () => {
-      renderRouter({
-        index: require("@/app/(tankControl)/[emptyTank]"),
-      });
+      renderRouter(
+        {
+          "/[emptyTank]": require("@/app/(tankControl)/[emptyTank]"),
+        },
+        {
+          initialUrl: "/[emptyTank]?tank=AUT%20200&depositId=1&capacity=500",
+        },
+      );
 
       const returnBtn = await screen.findByTestId("chevron-left-icon");
       const user = userEvent.setup();
