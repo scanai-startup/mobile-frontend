@@ -3,7 +3,7 @@ import AppHeader from "@/components/AppHeader";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useShipmentStore } from "@/store/remessasContext";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
-import { AlertCircle, ArrowRightLeft, Grape, Truck } from "lucide-react-native";
+import { AlertCircle, Grape, Truck } from "lucide-react-native";
 import React, { useCallback } from "react";
 import { FlatList, Text, View } from "react-native";
 

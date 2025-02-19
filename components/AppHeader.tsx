@@ -1,4 +1,4 @@
-import { Href, Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { Bell, ChevronLeft } from "lucide-react-native";
 import React from "react";
 import { Image, Platform, Text, TouchableOpacity, View } from "react-native";
