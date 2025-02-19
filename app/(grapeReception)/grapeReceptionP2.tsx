@@ -22,9 +22,8 @@ export default function GrapeRepectionP2() {
           <InputBox
             title="Sanidade"
             placeholder="5"
-            onChangeText={(value) =>
-              handleInputChange("sanidade", parseFloat(value))
-            }
+            value={shipmentData.sanidade.toString()}
+            onChangeText={(value) => handleInputChange("sanidade", value)}
             keyboardType="number-pad"
           />
 
@@ -39,7 +38,11 @@ export default function GrapeRepectionP2() {
               />
             </View>
             <View className="flex-1">
-              <InputBox title="Unidade" placeholder="Unidade" />
+              <InputBox
+                title="Unidade"
+                placeholder="Unidade"
+                defaultValue="XX"
+              />
             </View>
           </View>
           <InputBox
@@ -72,6 +75,7 @@ export default function GrapeRepectionP2() {
                 noDescription="Boas práticas não mantidas"
                 question="As boas práticas estão sendo mantidas?"
               />
+              <View className="mb-4" />
             </View>
           </View>
         </ScrollView>

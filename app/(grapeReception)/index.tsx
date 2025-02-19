@@ -19,8 +19,7 @@ import {
   View,
 } from "react-native";
 
-export default function GrapeReception() {
-  const { shipmentData } = useShipmentStore(); // gets the shipment data context
+export default function GrapeReception({ isNextButtonEnabled = false }) {
   const [isHourModalOpen, setIsHourModalOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedHour, setSelectedHour] = useState(new Date());
@@ -94,20 +93,23 @@ export default function GrapeReception() {
           />
           <InputBox
             title="Número da carrada"
-            placeholder="3°"
+            placeholder="3"
             onChangeText={(value) =>
               handleInputChange("numerotalao", Number(value))
             }
-            keyboardType="numeric"
+            keyboardType="number-pad"
           />
+
           <InputBox
             title="Casta"
             placeholder="AIREN"
             onChangeText={(value) => handleInputChange("casta", value)}
           />
+
           <InputBox
             title="Lote"
             placeholder="101"
+            keyboardType="number-pad"
             onChangeText={(value) =>
               handleInputChange("numerolote", Number(value))
             }
@@ -138,18 +140,19 @@ export default function GrapeReception() {
             onChangeText={(value) =>
               handleInputChange("qttcaixa", Number(value))
             }
-            keyboardType="numeric"
+            keyboardType="number-pad"
           />
+
           <InputBox
             title="Peso"
             auxText="kg"
-            placeholder="1.450"
+            placeholder="1450"
             onChangeText={(value) => handleInputChange("peso", Number(value))}
-            keyboardType="numeric"
+            keyboardType="number-pad"
           />
+          <View className="mb-4" />
         </ScrollView>
       </View>
-
       <Modal
         visible={isModalOpen}
         transparent={true}

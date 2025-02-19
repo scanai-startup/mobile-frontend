@@ -12,6 +12,7 @@ interface IShipmentData {
   so2: string;
   tipodevinho: string;
   fkmostro?: number;
+  qttcaixa: number;
 }
 
 interface ShipmentState {
@@ -28,7 +29,7 @@ export const useShipmentStore = create<ShipmentState>((set) => ({
     peso: 0,
     fkviticultor: 1,
     fkfuncionario: 1,
-    casta: "Airen",
+    casta: "",
     datachegada: "",
     sanidade: 0,
     so2: "",
