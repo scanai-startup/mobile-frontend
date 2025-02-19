@@ -64,7 +64,7 @@ export default function TankControl() {
           showReturnButton
           variant="secondary"
           mainText="Controle de tanques"
-          returnHref={() => router.dismissTo("/")}
+          returnHref={"/(tabs)/"}
         />
         <View className="px-7 flex-1">
           <View>
