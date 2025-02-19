@@ -1,11 +1,21 @@
+import apiInstance from "@/api/apiInstance";
 import { userEvent, waitFor } from "@testing-library/react-native";
 import { renderRouter, screen } from "expo-router/testing-library";
 
+jest.mock("@/api/apiInstance", () => ({
+  get: jest.fn(),
+}));
+
 describe("Empty tank", () => {
   test("should render screen without breaking.", () => {
-    renderRouter({
-      index: require("@/app/(tankControl)/[emptyTank]"),
-    });
+    renderRouter(
+      {
+        "/[emptyTank]": require("@/app/(tankControl)/[emptyTank]"),
+      },
+      {
+        initialUrl: "/[emptyTank]?tank=AUT%20200&depositId=1&capacity=500",
+      },
+    );
 
     expect(screen).toBeTruthy();
   });
@@ -25,9 +35,11 @@ describe("Empty tank", () => {
     });
 
     test("should return to tankControl page when clicking on header return button.", async () => {
+      (apiInstance.get as jest.Mock).mockReturnValueOnce({ data: [] });
       renderRouter(
         {
           "/[emptyTank]": require("@/app/(tankControl)/[emptyTank]"),
+          "/(tabs)/tankControl": require("@/app/(tabs)/tankControl"),
         },
         {
           initialUrl: "/[emptyTank]?tank=AUT%20200&depositId=1&capacity=500",
@@ -40,16 +52,23 @@ describe("Empty tank", () => {
       await user.press(returnBtn);
 
       await waitFor(() => {
-        expect(screen).toHavePathname("/(tabs)/tankControl");
+        expect(screen).toHavePathname("/tankControl");
       });
+      expect(screen.getByText("Controle de tanques")).toBeOnTheScreen();
+      screen.debug();
     });
   });
 
   describe("Activity cards", () => {
     test("should display add new shipment and start pé de cuba activity cards.", () => {
-      renderRouter({
-        index: require("@/app/(tankControl)/[emptyTank]"),
-      });
+      renderRouter(
+        {
+          "/[emptyTank]": require("@/app/(tankControl)/[emptyTank]"),
+        },
+        {
+          initialUrl: "/[emptyTank]?tank=AUT%20200&depositId=1&capacity=500",
+        },
+      );
 
       //! maybe theres a better approach to this test
       expect(screen.getByText("Adicionar Remessa")).toBeOnTheScreen();
@@ -57,9 +76,14 @@ describe("Empty tank", () => {
     });
 
     test("should display only two activity cards.", () => {
-      renderRouter({
-        index: require("@/app/(tankControl)/[emptyTank]"),
-      });
+      renderRouter(
+        {
+          "/[emptyTank]": require("@/app/(tankControl)/[emptyTank]"),
+        },
+        {
+          initialUrl: "/[emptyTank]?tank=AUT%20200&depositId=1&capacity=500",
+        },
+      );
 
       expect(screen.getAllByTestId("activity-card").length).toBe(2);
     });
