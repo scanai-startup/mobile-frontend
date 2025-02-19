@@ -93,17 +93,19 @@ export default function GrapeReception({ isNextButtonEnabled = false }) {
           />
           <InputBox
             title="Número da carrada"
-            placeholder="3°"
+            placeholder="3"
             onChangeText={(value) =>
               handleInputChange("numerotalao", Number(value))
             }
             keyboardType="number-pad"
           />
+
           <InputBox
             title="Casta"
             placeholder="AIREN"
             onChangeText={(value) => handleInputChange("casta", value)}
           />
+
           <InputBox
             title="Lote"
             placeholder="101"
@@ -140,17 +142,17 @@ export default function GrapeReception({ isNextButtonEnabled = false }) {
             }
             keyboardType="number-pad"
           />
+
           <InputBox
             title="Peso"
             auxText="kg"
-            placeholder="1.450"
+            placeholder="1450"
             onChangeText={(value) => handleInputChange("peso", Number(value))}
             keyboardType="number-pad"
           />
           <View className="mb-4" />
         </ScrollView>
       </View>
-
       <Modal
         visible={isModalOpen}
         transparent={true}

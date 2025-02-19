@@ -10,7 +10,16 @@ export default function Login() {
   const [matricula, setMatricula] = useState("");
   const [senha, setSenha] = useState("");
 
-  if (__DEV__ && !process.env.JEST_WORKER_ID) {
+  {
+    /* 
+    So executa for ambiente de testes nem ambiente de desenvolvimento
+    */
+  }
+  if (
+    __DEV__ &&
+    !process.env.JEST_WORKER_ID &&
+    process.env.EXPO_PUBLIC_ENV == "development"
+  ) {
     useAutoLogin();
   }
 
