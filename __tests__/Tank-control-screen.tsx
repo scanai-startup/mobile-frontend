@@ -45,7 +45,7 @@ describe("Tank control", () => {
 
     await user.press(returnBtn);
 
-    expect(screen).toHavePathname("/");
+    expect(screen).toHavePathname("/(tabs)");
   });
   describe("Tanks list", () => {
     test("should display a message if no tanks are listed.", async () => {
