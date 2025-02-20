@@ -5,7 +5,6 @@ import { useShipmentStore } from "@/store/remessasContext";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import {
   ArrowRightLeft,
-  ChevronDown,
   Cylinder,
   Microscope,
   Milk,
@@ -99,41 +98,16 @@ export default function Tank() {
   ];
 
   function filterActivityItems() {
-    if (content !== "Vinho" && content !== "Pé de Cuba") {
-      return activityListItems.filter((i) => i.name !== "Controle de produtos");
+    if ((content as string).toLowerCase() === "mostro") {
+      return activityListItems.filter(
+        (i) =>
+          i.name !== "Envase e rotulagem" && i.name !== "Controle de produtos",
+      );
     }
-    if (content !== "Vinho") {
-      return activityListItems.filter((i) => i.name !== "Envase e Rotulagem");
-    }
-    return activityListItems;
+    return activityListItems.filter(
+      (i) => i.name !== "Envase e rotulagem" && i.name !== "Nova Remessa",
+    );
   }
-
-  const shipmentDetailsLink = () => {
-    console.log("Navigate to shipment details");
-  };
-
-  const analysisData = [
-    {
-      label: "Densidade",
-      value: 996,
-      unit: "g/cm³",
-    },
-    {
-      label: "Temperatura",
-      value: "20",
-      unit: "ºC",
-      icon: ChevronDown,
-      iconColor: "red",
-    },
-    {
-      label: "Pressão",
-      value: "5.7",
-      unit: "bar",
-      icon: ChevronDown,
-      iconColor: "green",
-      iconStyle: { transform: [{ rotate: "180deg" }] },
-    },
-  ];
 
   return (
     <SafeAreaView>

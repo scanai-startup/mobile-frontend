@@ -62,16 +62,16 @@ export default function SelectTargetTank() {
     try {
       const payload = {
         depositoId: selectedTank!.id,
-        dataFimFermentacao: new Date().toISOString(),
         pedecubaId: Number(fkPeDeCuba),
-        pedecubaVolumePerda: Number(peDeCubaVolPerdido),
+        volumeChegadaPedecuba: Number(peDeCubaVol) - Number(peDeCubaVolPerdido),
+        volumeTrasfegaPedecuba: Number(peDeCubaVol),
         rotuloId: selectedLabel,
         mostroId: Number(fkMostro),
-        volumeMostro: Number(mostroVol),
-        volumeMostroPerda: Number(mostroVolPerdido),
+        volumeTrasfegaMostro: Number(mostroVol),
+        volumeChegadaMostro: Number(mostroVol) - Number(mostroVolPerdido),
         funcionarioId: userId,
       };
-      console.log(payload);
+      // console.log(payload);
       await apiInstance.post("/vinculodepositovinho", payload, {
         headers: {
           Authorization: `Bearer ${token}`,

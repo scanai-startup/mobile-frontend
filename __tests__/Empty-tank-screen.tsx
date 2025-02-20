@@ -55,7 +55,6 @@ describe("Empty tank", () => {
         expect(screen).toHavePathname("/tankControl");
       });
       expect(screen.getByText("Controle de tanques")).toBeOnTheScreen();
-      screen.debug();
     });
   });
 
@@ -86,6 +85,48 @@ describe("Empty tank", () => {
       );
 
       expect(screen.getAllByTestId("activity-card").length).toBe(2);
+    });
+
+    test("should redirect user to add shipment screen when clicking on add shipment activity card.", async () => {
+      (apiInstance.get as jest.Mock).mockReturnValueOnce({ data: [] });
+
+      renderRouter(
+        {
+          "/[emptyTank]": require("@/app/(tankControl)/[emptyTank]"),
+          "/(tankControl)/tank/addBaseWine/[addBaseWine]": require("@/app/(tankControl)/tank/addBaseWine/[baseWine]"),
+        },
+        {
+          initialUrl: "/[emptyTank]?tank=AUT%20200&depositId=1&capacity=500",
+        },
+      );
+
+      const user = userEvent.setup();
+      const addNewShipmentCard = screen.getAllByTestId("activity-card")[0];
+
+      await user.press(addNewShipmentCard);
+
+      expect(screen.getByText("Associar Remessas")).toBeOnTheScreen();
+      expect(screen).toHavePathname("/tank/addBaseWine/[addBaseWine]");
+    });
+
+    test("should redirect user to start pé de cuba screen when clicking on start pé de cuba activity card.", async () => {
+      renderRouter(
+        {
+          "/[emptyTank]": require("@/app/(tankControl)/[emptyTank]"),
+          "/(tankControl)/tank/addPeDeCuba/[addPeDeCuba]": require("@/app/(tankControl)/tank/addPeDeCuba/[addPeDeCuba]"),
+        },
+        {
+          initialUrl: "/[emptyTank]?tank=AUT%20200&depositId=1&capacity=500",
+        },
+      );
+
+      const user = userEvent.setup();
+      const addNewPeDeCuba = screen.getAllByTestId("activity-card")[1];
+
+      await user.press(addNewPeDeCuba);
+
+      expect(screen.getByText("Adicionar Pé de Cuba")).toBeOnTheScreen();
+      expect(screen).toHavePathname("/tank/addPeDeCuba/[addPeDeCuba]");
     });
   });
 
