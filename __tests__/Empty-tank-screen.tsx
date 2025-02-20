@@ -55,7 +55,6 @@ describe("Empty tank", () => {
         expect(screen).toHavePathname("/tankControl");
       });
       expect(screen.getByText("Controle de tanques")).toBeOnTheScreen();
-      screen.debug();
     });
   });
 
