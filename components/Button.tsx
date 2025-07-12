@@ -1,18 +1,39 @@
-import { Link } from "expo-router";
-import { Text, TouchableOpacity } from "react-native";
+import React from "react";
+import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
+
+interface Button extends TouchableOpacityProps {
+  placeholder: string;
+  buttonClassname?: string;
+  placeholderClassname?: string;
+  variant?: "default" | "ghost";
+}
 
 export function Button({
   placeholder,
-  route,
-}: {
-  placeholder: string;
-  route: string;
-}) {
+  buttonClassname,
+  placeholderClassname,
+  variant = "default",
+  ...TouchableOpacityProps
+}: Button) {
+  const classVariants = {
+    default: {
+      button: "bg-[#171717]",
+      placeholder: "text-white",
+    },
+    ghost: {
+      button: "bg-neutral-300",
+      placeholder: "",
+    },
+  };
+
   return (
-    <Link href={route} className="p-3" asChild>
-      <TouchableOpacity className="bg-[#171717] w-full flex items-center rounded-lg mb-4">
-        <Text className="text-white text-lg font-medium ">{placeholder}</Text>
-      </TouchableOpacity>
-    </Link>
+    <TouchableOpacity
+      className={`flex items-center rounded-lg p-4 ${classVariants[variant].button} ${buttonClassname}`}
+      {...TouchableOpacityProps}
+    >
+      <Text className={`${classVariants[variant].placeholder} font-medium`}>
+        {placeholder}
+      </Text>
+    </TouchableOpacity>
   );
 }

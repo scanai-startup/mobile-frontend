@@ -1,22 +1,15 @@
 import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
-import { Button } from "@/components/Button";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
 import ShipmentCard from "@/components/ShipmentCard";
 import IShipmentCard from "@/types/IShipmentCard";
-import { Link, useFocusEffect, useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { CirclePlus } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
-import {
-  ActivityIndicator,
-  FlatList,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ActivityIndicator, FlatList, Text, View } from "react-native";
 
 export default function Shipment() {
   const [shipments, setShipments] = useState<IShipmentCard[]>([]);

@@ -1,26 +1,22 @@
 import CustomStatusBar from "@/components/CustomStatusBar";
-import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
-import { useAuth } from "@/hooks/useAuth";
-import { useAutoLogin } from "@/hooks/useAutoLogin";
-import React, { useState } from "react";
-import { Image, Text, TouchableOpacity, View } from "react-native";
+import { UserAuthForm } from "@/features/auth";
+import authUser from "@/features/auth/services/authService";
+import React from "react";
+import { Image, Text, View } from "react-native";
 
 export default function Login() {
-  const [matricula, setMatricula] = useState("");
-  const [senha, setSenha] = useState("");
-
-  {
-    /* 
-    So executa for ambiente de testes nem ambiente de desenvolvimento
-    */
-  }
   if (
+    //! if on dev environment, auto-logins
     __DEV__ &&
     !process.env.JEST_WORKER_ID &&
     process.env.EXPO_PUBLIC_ENV == "development"
   ) {
-    useAutoLogin();
+    const credentials = {
+      matricula: "123",
+      senha: "senha123",
+    };
+    authUser(credentials);
   }
 
   return (
@@ -36,26 +32,8 @@ export default function Login() {
             <Text className="text-4xl text-black mt-4 mb-8">
               Desfrute da <B>inovação</B> que a <B>Scan.AI</B> pode oferecer.
             </Text>
-            <View className="w-full mb-6 mt-20 gap-2">
-              <InputBox
-                title="Nome de usuário"
-                placeholder="carlos_andrade"
-                onChangeText={setMatricula}
-              />
-              <InputBox
-                title="Senha"
-                placeholder="************"
-                secureTextEntry={true}
-                onChangeText={setSenha}
-              />
-            </View>
+            <UserAuthForm />
             <View className="flex w-full items-center mt-14">
-              <LoginButton
-                placeholder="Acessar"
-                route="/(tabs)"
-                matricula={matricula}
-                senha={senha}
-              />
               <Text className="mt-4 text-[#9B9B9B] text-[10px]">
                 © 2024 Scan.AI. Todos os direitos reservados.
               </Text>
@@ -78,28 +56,3 @@ export default function Login() {
 const B = (props: any) => (
   <Text style={{ fontWeight: "bold" }}>{props.children}</Text>
 );
-
-function LoginButton({
-  placeholder,
-  matricula,
-  senha,
-}: {
-  placeholder: string;
-  route: string;
-  matricula: string;
-  senha: string;
-}) {
-  const { login } = useAuth();
-
-  return (
-    <TouchableOpacity
-      className="bg-[#171717] w-full flex items-center rounded-lg p-4"
-      onPress={() => {
-        login(matricula, senha);
-      }}
-      accessibilityRole="button"
-    >
-      <Text className="text-white text-lg font-medium ">{placeholder}</Text>
-    </TouchableOpacity>
-  );
-}
