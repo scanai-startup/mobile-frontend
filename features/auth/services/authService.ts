@@ -1,11 +1,9 @@
 import apiInstance from "@/api/apiInstance";
 import { Credentials } from "@/features/auth/types/auth";
 import { useToast } from "@/hooks/useToast";
-import { useTokenStore } from "@/store/userData";
 import { useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 
-const { setToken } = useTokenStore();
 const router = useRouter();
 const toast = useToast();
 
@@ -14,10 +12,11 @@ export default async function authUser(credentials: Credentials) {
     const response = await apiInstance.post("/auth/login", credentials);
     const token = response.data.token;
 
-    setToken(token);
     await SecureStore.setItemAsync("user-token", token);
     router.push("/(tabs)/");
     toast({ heading: "Sucesso", message: "Seja bem-vindo!" });
+
+    return token;
   } catch (e) {
     console.error("User login failed: ", e);
     //TODO: check error types to correctly handle them
