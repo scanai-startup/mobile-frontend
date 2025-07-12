@@ -1,5 +1,6 @@
 import { server } from "@/mocks/server";
 import { load } from "@expo/env";
+import "@testing-library/jest-native/legacy-extend-expect";
 import "fast-text-encoding";
 import "react-native-url-polyfill/auto";
 
