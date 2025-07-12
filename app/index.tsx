@@ -1,8 +1,7 @@
 import CustomStatusBar from "@/components/CustomStatusBar";
 import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
-import { useAuth } from "@/hooks/useAuth";
-import { useAutoLogin } from "@/hooks/useAutoLogin";
+import authUser from "@/features/auth/services/authService";
 import React, { useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 
@@ -20,7 +19,11 @@ export default function Login() {
     !process.env.JEST_WORKER_ID &&
     process.env.EXPO_PUBLIC_ENV == "development"
   ) {
-    useAutoLogin();
+    const credentials = {
+      matricula: "123",
+      senha: "senha123",
+    };
+    authUser(credentials);
   }
 
   return (
@@ -89,14 +92,18 @@ function LoginButton({
   matricula: string;
   senha: string;
 }) {
-  const { login } = useAuth();
+  function handleSubmit() {
+    const credentials = {
+      matricula: matricula,
+      senha: senha,
+    };
+    authUser(credentials);
+  }
 
   return (
     <TouchableOpacity
       className="bg-[#171717] w-full flex items-center rounded-lg p-4"
-      onPress={() => {
-        login(matricula, senha);
-      }}
+      onPress={handleSubmit}
       accessibilityRole="button"
     >
       <Text className="text-white text-lg font-medium ">{placeholder}</Text>
