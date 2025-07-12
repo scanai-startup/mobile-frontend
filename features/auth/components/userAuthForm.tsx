@@ -1,9 +1,10 @@
+import { Button } from "@/components/Button";
 import { InputBox } from "@/components/Input";
 import React, { useState } from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { View } from "react-native";
 import authUser from "../services/authService";
 
-export default function UserAuthForm() {
+export function UserAuthForm() {
   const [matricula, setMatricula] = useState("");
   const [senha, setSenha] = useState("");
 
@@ -31,13 +32,12 @@ export default function UserAuthForm() {
         />
       </View>
       <View className="flex w-full items-center mt-14">
-        <TouchableOpacity
-          className="bg-[#171717] w-full flex items-center rounded-lg p-4"
+        <Button
+          placeholder="Acessar"
           onPress={handleSubmit}
+          buttonClassname="w-full"
           accessibilityRole="button"
-        >
-          <Text className="text-white text-lg font-medium ">Acessar</Text>
-        </TouchableOpacity>
+        />
       </View>
     </View>
   );
