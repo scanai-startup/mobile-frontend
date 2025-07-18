@@ -17,7 +17,7 @@ interface CardTrasfegaProps {
   isSelected?: boolean;
 }
 
-export function CardTrasfega({
+export default function CardTrasfega({
   title = "ERROR",
   isAvailable,
   density = 0,

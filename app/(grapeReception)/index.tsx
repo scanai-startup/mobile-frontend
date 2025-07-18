@@ -2,8 +2,7 @@ import DateInput from "@/components/DateInput";
 import { DefaultButton } from "@/components/DefaultButton";
 import { InputBox } from "@/components/Input";
 import { useShipmentStore } from "@/store/NewShipmentContext";
-import { useTokenStore } from "@/store/userData";
-
+import { useTokenStore } from "@/features/auth/store/userStore";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";

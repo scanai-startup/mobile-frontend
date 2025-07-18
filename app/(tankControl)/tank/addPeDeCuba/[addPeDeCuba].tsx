@@ -1,13 +1,12 @@
 import apiInstance from "@/api/apiInstance";
-import AddOrEditProductModal from "@/components/AddOrEditProductModal";
 import AppHeader from "@/components/AppHeader";
 import DateInput from "@/components/DateInput";
 import { DefaultButton } from "@/components/DefaultButton";
-import ProductCard from "@/components/ProductCard";
 import SafeAreaView from "@/components/SafeAreaView";
-import { useTokenStore } from "@/store/userData";
+import { useTokenStore } from "@/features/auth/store/userStore";
+import { AddOrEditProductModal, ProductCard } from "@/features/pedecuba";
+import IProduct from "@/features/pedecuba/types/IProduct";
 import { useToast } from "@/hooks/useToast";
-import IProduct from "@/types/IProduct";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { CirclePlus } from "lucide-react-native";
