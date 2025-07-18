@@ -5,7 +5,7 @@ import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useToast } from "@/hooks/useToast";
 import { validateField } from "@/hooks/validateField";
-import { useTokenStore } from "@/store/userData";
+import { useTokenStore } from "@/features/auth/store/userStore";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import React, { useState } from "react";
@@ -37,9 +37,10 @@ export default function DailyAnalysis() {
     let data = {};
     console.log(content);
 
-    if (!validateField(temperature, "Preencha a temperatura para prosseguir")) return;
+    if (!validateField(temperature, "Preencha a temperatura para prosseguir"))
+      return;
     if (!validateField(density, "Preencha a densidade para prosseguir")) return;
-        
+
     switch (content) {
       case "Mostro":
         endpoint = "/analisediariamostro/register";
