@@ -12,8 +12,8 @@ import { Eye, EyeOff } from "lucide-react-native";
 import React, { useMemo, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { CardTrasfega } from "./_components/CardTrasfega";
-import { TransferControls } from "./_components/TransferControls";
+import CardTrasfega from "./_components/CardTrasfega";
+import TransferControls from "./_components/TransferControls";
 
 export default function RealizarTrasfega() {
   const [volumeTrasfega, setVolumeTrasfega] = useState("");
