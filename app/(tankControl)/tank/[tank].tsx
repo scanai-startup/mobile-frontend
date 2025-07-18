@@ -74,7 +74,12 @@ export default function Tank() {
       name: "Envase e rotulagem",
       icon: <Milk size="28px" color="#000000" />,
       route: "/envaseERotulagem/envase",
-      param: [{ tank: tank as string, depositId: Number(depositId) }],
+      param: [
+        {
+          tank: tank as string,
+          depositId: Number(depositId),
+        },
+      ],
     },
     {
       name: "Controle de produtos",
@@ -98,6 +103,7 @@ export default function Tank() {
   ];
 
   function filterActivityItems() {
+    console.log(activityListItems);
     if ((content as string).toLowerCase() === "mostro") {
       return activityListItems.filter(
         (i) =>

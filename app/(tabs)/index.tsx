@@ -3,13 +3,14 @@ import AppHeader from "@/components/AppHeader";
 import CustomStatusBar from "@/components/CustomStatusBar";
 import { ProcessDepositCard } from "@/components/ProcessDepositCard";
 import SafeAreaView from "@/components/SafeAreaView";
-import { useTokenStore } from "@/store/userData";
+import { useTokenStore } from "@/features/auth/store/userStore";
 import { Cylinder, LucideBox, Tag, Truck, Wine } from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
 export default function Home() {
   const { subject } = useTokenStore();
+
   const activityListItems = [
     {
       name: "Gestão de tanques",

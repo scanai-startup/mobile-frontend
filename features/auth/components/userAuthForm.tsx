@@ -1,23 +1,37 @@
 import { Button } from "@/components/Button";
 import { InputBox } from "@/components/Input";
-import { useTokenStore } from "@/store/userData";
 import React, { useState } from "react";
 import { View } from "react-native";
-import authUser from "../services/authService";
+import { authUser } from "../services/authService";
+import { useRouter } from "expo-router";
+import { useToast } from "@/hooks/useToast";
+import { useTokenStore } from "../store/userStore";
 
 export function UserAuthForm() {
   const [matricula, setMatricula] = useState("");
   const [senha, setSenha] = useState("");
   const { setToken } = useTokenStore();
+  const router = useRouter();
+  const toast = useToast();
 
   async function handleSubmit() {
-    const credentials = {
-      matricula: matricula,
-      senha: senha,
-    };
-    const token = await authUser(credentials);
-    if (token) setToken(token);
+    const credentials = { matricula, senha };
+    await authUser(credentials, { setToken, router, toast });
   }
+
+  React.useEffect(() => {
+    if (
+      __DEV__ &&
+      !process.env.JEST_WORKER_ID &&
+      process.env.EXPO_PUBLIC_ENV == "development"
+    ) {
+      const credentials = {
+        matricula: "123",
+        senha: "senha123",
+      };
+      authUser(credentials, { setToken, router, toast });
+    }
+  }, []);
 
   return (
     <View>

@@ -1,4 +1,4 @@
-import IProduct from "@/types/IProduct";
+import IProduct from "../types/IProduct";
 import { CircleX, Minus, Pencil, Plus } from "lucide-react-native";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";

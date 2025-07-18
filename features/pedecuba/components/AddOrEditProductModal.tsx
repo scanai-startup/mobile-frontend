@@ -1,4 +1,5 @@
-import IProduct from "@/types/IProduct";
+import { DefaultButton } from "@/components/DefaultButton";
+import IProduct from "../types/IProduct";
 import { CirclePlus } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
@@ -9,7 +10,6 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import { DefaultButton } from "./DefaultButton";
 
 interface IAddOrEditProductModal {
   product?: IProduct | null;

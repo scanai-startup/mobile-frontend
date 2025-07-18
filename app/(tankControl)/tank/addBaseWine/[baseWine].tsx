@@ -5,10 +5,9 @@ import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
 import ShipmentCard from "@/components/ShipmentCard";
 import { useShipmentStore } from "@/store/remessasContext";
-import { useTokenStore } from "@/store/userData";
+import { useTokenStore } from "@/features/auth/store/userStore";
 import {
   Href,
-  Link,
   useFocusEffect,
   useLocalSearchParams,
   useRouter,
@@ -73,6 +72,7 @@ export default function BaseWine() {
           Authorization: `Bearer ${token}`,
         },
       });
+
       const responseData = res.data;
       clearShipments();
       router.navigate({

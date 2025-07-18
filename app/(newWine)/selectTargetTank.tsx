@@ -6,7 +6,7 @@ import SafeAreaView from "@/components/SafeAreaView";
 import SelectTankCard from "@/components/SelectTankCard";
 import { useGetLocalTanksData } from "@/hooks/useGetLocalTanksData";
 import { useToast } from "@/hooks/useToast";
-import { useTokenStore } from "@/store/userData";
+import { useTokenStore } from "@/features/auth/store/userStore";
 import { ILabel } from "@/types/ILabel";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import * as SecureStore from "expo-secure-store";

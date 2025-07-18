@@ -28,7 +28,14 @@ export const useTokenStore = create<TokenState>((set) => ({
     try {
       const decoded = jwtDecode<IUserTokenPayload>(token);
       set({
-        token,
+        token: token,
+        issuer: decoded.iss,
+        subject: decoded.sub,
+        userId: decoded.id,
+        userRole: decoded.role,
+      });
+      console.log({
+        token: token,
         issuer: decoded.iss,
         subject: decoded.sub,
         userId: decoded.id,

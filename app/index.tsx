@@ -1,24 +1,10 @@
 import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
 import { UserAuthForm } from "@/features/auth";
-import authUser from "@/features/auth/services/authService";
 import React from "react";
 import { Image, Text, View } from "react-native";
 
 export default function Login() {
-  if (
-    //! if on dev environment, auto-logins
-    __DEV__ &&
-    !process.env.JEST_WORKER_ID &&
-    process.env.EXPO_PUBLIC_ENV == "development"
-  ) {
-    const credentials = {
-      matricula: "123",
-      senha: "senha123",
-    };
-    authUser(credentials);
-  }
-
   return (
     <>
       <CustomStatusBar barStyle="dark-content" />

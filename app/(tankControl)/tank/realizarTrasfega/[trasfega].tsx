@@ -3,7 +3,7 @@ import AppHeader from "@/components/AppHeader";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useFetchDepositos } from "@/hooks/useFetchDepositos";
 import { useTankSelection } from "@/hooks/useTankSelection";
-import { useTokenStore } from "@/store/userData";
+import { useTokenStore } from "@/features/auth/store/userStore";
 import { Deposito } from "@/types/IDeposito";
 import { validateTransfer } from "@/utils/validateTransfer";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -12,8 +12,8 @@ import { Eye, EyeOff } from "lucide-react-native";
 import React, { useMemo, useState } from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
 import Toast from "react-native-toast-message";
-import { CardTrasfega } from "./_components/CardTrasfega";
-import { TransferControls } from "./_components/TransferControls";
+import CardTrasfega from "./_components/CardTrasfega";
+import TransferControls from "./_components/TransferControls";
 
 export default function RealizarTrasfega() {
   const [volumeTrasfega, setVolumeTrasfega] = useState("");
