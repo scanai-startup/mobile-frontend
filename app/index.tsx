@@ -1,5 +1,5 @@
-import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
+import StatusBar from "@/components/StatusBar";
 import { UserAuthForm } from "@/features/auth";
 import React from "react";
 import { Image, Text, View } from "react-native";
@@ -7,7 +7,7 @@ import { Image, Text, View } from "react-native";
 export default function Login() {
   return (
     <>
-      <CustomStatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" />
       <SafeAreaView>
         <View className="px-7 flex-1 justify-between">
           <View>

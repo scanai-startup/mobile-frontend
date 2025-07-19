@@ -1,6 +1,6 @@
 import AppHeader from "@/components/AppHeader";
-import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
+import StatusBar from "@/components/StatusBar";
 import { Stack, usePathname } from "expo-router";
 import React, { useEffect, useState } from "react";
 
@@ -29,7 +29,7 @@ export default function NewWineLayout() {
 
   return (
     <>
-      <CustomStatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" />
       <SafeAreaView style={{ flex: 1 }} edges={["right", "bottom", "left"]}>
         <AppHeader
           showReturnButton={currRoute === "/" ? true : false}

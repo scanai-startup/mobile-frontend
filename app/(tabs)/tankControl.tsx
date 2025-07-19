@@ -1,7 +1,7 @@
 import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
-import CustomStatusBar from "@/components/CustomStatusBar";
 import SafeAreaView from "@/components/SafeAreaView";
+import StatusBar from "@/components/StatusBar";
 import { Card } from "@/components/TankControlCard";
 import ITankData from "@/types/ITankData";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -58,7 +58,7 @@ export default function TankControl() {
 
   return (
     <>
-      <CustomStatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" />
       <SafeAreaView>
         <AppHeader
           showReturnButton
