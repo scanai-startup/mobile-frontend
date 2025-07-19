@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { TransferControlsProps } from "@/types/ITransferControlsProps";
 
-export function TransferControls({
+export default function TransferControls({
   selectedTank,
   volumeTrasfega,
   setVolumeTrasfega,

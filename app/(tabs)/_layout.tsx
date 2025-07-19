@@ -4,9 +4,6 @@ import { Cylinder, House, Truck, Warehouse } from "lucide-react-native";
 import React from "react";
 
 export default function TabLayout() {
-  const iconProps = {
-    size: "28px",
-  };
   return (
     <>
       <Tabs
