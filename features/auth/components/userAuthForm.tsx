@@ -1,10 +1,10 @@
 import { Button } from "@/components/Button";
 import { InputBox } from "@/components/Input";
+import { useToast } from "@/hooks/useToast";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { View } from "react-native";
 import { authUser } from "../services/authService";
-import { useRouter } from "expo-router";
-import { useToast } from "@/hooks/useToast";
 import { useTokenStore } from "../store/userStore";
 
 export function UserAuthForm() {

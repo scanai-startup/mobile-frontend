@@ -1,8 +1,8 @@
 import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
-import CustomStatusBar from "@/components/CustomStatusBar";
 import FormFooter from "@/components/FormFooter";
 import SafeAreaView from "@/components/SafeAreaView";
+import StatusBar from "@/components/StatusBar";
 import { useToast } from "@/hooks/useToast";
 import { useShipmentStore } from "@/store/NewShipmentContext";
 
@@ -73,7 +73,7 @@ export default function GrapeReceptionLayout() {
 
   return (
     <>
-      <CustomStatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" />
       <SafeAreaView style={{ flex: 1 }} edges={["right", "bottom", "left"]}>
         <AppHeader
           showReturnButton={currRoute === "/" ? true : false}

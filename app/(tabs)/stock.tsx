@@ -3,9 +3,9 @@ import AddNewBatchDialog from "@/app/(stockControl)/_components/AddNewBatchDialo
 import AddNewMaterialDialog from "@/app/(stockControl)/_components/AddNewMaterialDialog";
 import StockMaterialCard from "@/app/(stockControl)/_components/StockMaterialCard";
 import AppHeader from "@/components/AppHeader";
-import CustomStatusBar from "@/components/CustomStatusBar";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
+import StatusBar from "@/components/StatusBar";
 import { Material } from "@/types/IMaterial";
 import { useFocusEffect } from "expo-router";
 import * as SecureStorage from "expo-secure-store";
@@ -61,7 +61,7 @@ export default function StockItemsList() {
   );
   return (
     <>
-      <CustomStatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" />
       <AddNewMaterialDialog
         isDialogOpen={isNewMaterialDialogOpen}
         setIsDialogOpen={setIsNewMaterialDialogOpen}

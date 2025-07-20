@@ -1,8 +1,8 @@
 import ActivityCard from "@/components/ActivityCard";
 import AppHeader from "@/components/AppHeader";
-import CustomStatusBar from "@/components/CustomStatusBar";
 import { ProcessDepositCard } from "@/components/ProcessDepositCard";
 import SafeAreaView from "@/components/SafeAreaView";
+import StatusBar from "@/components/StatusBar";
 import { useTokenStore } from "@/features/auth/store/userStore";
 import { Cylinder, LucideBox, Tag, Truck, Wine } from "lucide-react-native";
 import React from "react";
@@ -41,7 +41,7 @@ export default function Home() {
 
   return (
     <>
-      <CustomStatusBar backgroundColor="#18181b" barStyle="light-content" />
+      <StatusBar barStyle="light-content" backgroundColor="#171717" />
       <SafeAreaView>
         <AppHeader mainText={`Olá, ${subject}`} />
         <View>

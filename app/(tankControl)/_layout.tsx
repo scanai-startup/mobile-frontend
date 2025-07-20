@@ -1,11 +1,11 @@
-import CustomStatusBar from "@/components/CustomStatusBar";
+import StatusBar from "@/components/StatusBar";
 import { Stack } from "expo-router";
 import React from "react";
 
 export default function TankControlLayout() {
   return (
     <>
-      <CustomStatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" />
       <Stack screenOptions={{ headerShown: false }} />
     </>
   );

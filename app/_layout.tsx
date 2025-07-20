@@ -12,7 +12,6 @@ import Toast from "react-native-toast-message";
 
 import { toastConfig } from "@/constants/ToastConfig";
 import React from "react";
-import { StatusBar } from "react-native";
 import "../global.css";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -38,7 +37,6 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={color}>
-      <StatusBar barStyle="default" />
       <Stack screenOptions={{ headerShown: false }} />
       <Toast config={toastConfig} />
     </ThemeProvider>
