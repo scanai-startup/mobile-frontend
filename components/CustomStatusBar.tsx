@@ -1,3 +1,4 @@
+import React from "react";
 import { StatusBar, StatusBarProps } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 interface CustomStatusBarProps extends StatusBarProps {
