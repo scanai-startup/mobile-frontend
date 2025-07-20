@@ -99,13 +99,15 @@ export function Card({
         <View className="bg-white rounded-lg shadow flex-col border border-neutral-250">
           <View className="flex-row p-4 justify-between items-center">
             {title !== "ERROR" ? (
-              <Text className="text-2xl font-bold">{title}</Text>
+              <View>
+                <Text className="text-2xl font-bold">{title}</Text>
+                <Text className="text-sm text-gray-500">{content}</Text>
+              </View>
             ) : (
               renderError()
             )}
             {renderStatus()}
           </View>
-
           {renderDetails()}
         </View>
       </TouchableOpacity>

@@ -88,7 +88,10 @@ export default function CardTrasfega({
         <View className="flex-row p-4 justify-between items-center">
           <View className="flex-row gap-4">
             {title !== "ERROR" ? (
-              <Text className="text-2xl font-bold">{title}</Text>
+              <View>
+                <Text className="text-2xl font-bold">{title}</Text>
+                <Text className="text-sm text-gray-500">{content}</Text>
+              </View>
             ) : (
               renderError()
             )}
