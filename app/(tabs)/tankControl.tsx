@@ -1,5 +1,6 @@
 import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
+import { Button } from "@/components/atoms/Button";
 import SafeAreaView from "@/components/SafeAreaView";
 import StatusBar from "@/components/StatusBar";
 import { Card } from "@/components/TankControlCard";
@@ -84,20 +85,11 @@ export default function TankControl() {
                 placeholder="Digite o que deseja buscar..."
               />
             </View>
-            <TouchableOpacity
+            <Button
+              placeholder="Filtrar"
               onPress={() => setDrawerVisible(true)}
-              style={{
-                backgroundColor: "#007BFF",
-                paddingVertical: 14,
-                paddingHorizontal: 15,
-                borderRadius: 5,
-                marginLeft: 8,
-              }}
-            >
-              <Text style={{ color: "#FFFFFF", fontWeight: "semibold" }}>
-                Filtrar
-              </Text>
-            </TouchableOpacity>
+              buttonClassname="bg-blue-500 ml-2"
+            />
           </View>
           <FlatList
             data={filteredData}

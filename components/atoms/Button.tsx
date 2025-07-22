@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
 
-interface Button extends TouchableOpacityProps {
+interface Button extends Omit<TouchableOpacityProps, "className"> {
   placeholder: string;
   buttonClassname?: string;
   placeholderClassname?: string;
@@ -22,7 +22,7 @@ export function Button({
     },
     ghost: {
       button: "bg-neutral-300",
-      placeholder: "",
+      placeholder: "text-neutral-700",
     },
   };
 
