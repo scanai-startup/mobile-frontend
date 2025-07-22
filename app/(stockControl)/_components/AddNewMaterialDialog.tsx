@@ -1,6 +1,6 @@
 import apiInstance from "@/api/apiInstance";
+import { Button } from "@/components/atoms/Button";
 import CenteredModal from "@/components/CenteredModal";
-import { DefaultButton } from "@/components/DefaultButton";
 import { InputBox } from "@/components/Input";
 import { useToast } from "@/hooks/useToast";
 import { IDialogProps } from "@/types/IDialogProps";
@@ -86,9 +86,10 @@ export default function AddNewMaterialDialog({
           value={materialName}
           onChangeText={(v) => setMaterialName(v)}
         />
-        <DefaultButton
-          title="Criar novo material"
-          className="mt-4"
+        <Button
+          placeholder="Criar novo material"
+          buttonClassname="mt-4"
+          variant="secondary"
           onPress={handleCreateNewMaterial}
           disabled={materialName ? false : true}
         />

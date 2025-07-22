@@ -88,7 +88,8 @@ export default function TankControl() {
             <Button
               placeholder="Filtrar"
               onPress={() => setDrawerVisible(true)}
-              buttonClassname="bg-blue-500 ml-2"
+              buttonClassname="ml-2"
+              variant="secondary"
             />
           </View>
           <FlatList

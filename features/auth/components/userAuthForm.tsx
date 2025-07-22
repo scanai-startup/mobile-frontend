@@ -53,7 +53,6 @@ export function UserAuthForm() {
           placeholder="Acessar"
           onPress={handleSubmit}
           buttonClassname="w-full"
-          accessibilityRole="button"
         />
       </View>
     </View>

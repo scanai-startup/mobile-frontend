@@ -1,8 +1,8 @@
+import { Button } from "@/components/atoms/Button";
 import DateInput from "@/components/DateInput";
-import { DefaultButton } from "@/components/DefaultButton";
 import { InputBox } from "@/components/Input";
-import { useShipmentStore } from "@/store/NewShipmentContext";
 import { useTokenStore } from "@/features/auth/store/userStore";
+import { useShipmentStore } from "@/store/NewShipmentContext";
 import DateTimePicker, {
   DateTimePickerEvent,
 } from "@react-native-community/datetimepicker";
@@ -76,10 +76,11 @@ export default function GrapeReception({ isNextButtonEnabled = false }) {
   return (
     <View className="flex-1">
       <View className="flex flex-1 gap-2 px-7 mt-6">
-        <DefaultButton
-          title="SCANEAR DOCUMENTO"
+        <Button
+          placeholder="Scanear documento"
           icon={<ScanText color="white" />}
           onPress={() => setIsModalOpen(!isModalOpen)}
+          variant="secondary"
         />
         <ScrollView
           contentContainerStyle={{ gap: 10 }}
@@ -172,11 +173,8 @@ export default function GrapeReception({ isNextButtonEnabled = false }) {
               <Text className="text-2xl flex-1 text-center font-medium">
                 Aponte a câmera para o centro do documento
               </Text>
-              <TouchableOpacity className="bg-blue-500 rounded-lg py-4 px-16 mt-5 items-center">
-                <Text className="text-lg font-bold text-white ">
-                  Tirar foto
-                </Text>
-              </TouchableOpacity>
+
+              <Button placeholder="Tirar foto" variant="secondary" />
             </View>
           </View>
         </View>

@@ -70,8 +70,7 @@ export default function Shipment() {
               )
             }
             icon={<CirclePlus color="white" />}
-            buttonClassname="bg-blue-500"
-            placeholderClassname="text-xl"
+            variant="secondary"
           />
           <FlatList
             data={shipments}

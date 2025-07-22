@@ -5,7 +5,7 @@ interface Button extends Omit<TouchableOpacityProps, "className"> {
   placeholder: string;
   buttonClassname?: string;
   placeholderClassname?: string;
-  variant?: "default" | "ghost";
+  variant?: "default" | "ghost" | "secondary";
   icon?: ReactNode;
   iconPosition?: "right" | "left";
 }
@@ -28,11 +28,16 @@ export function Button({
       button: "bg-neutral-300",
       placeholder: "text-neutral-700",
     },
+    secondary: {
+      button: "bg-blue-500",
+      placeholder: "text-white",
+    },
   };
 
   return (
     <TouchableOpacity
       className={`flex ${iconPosition === "right" ? "flex-row-reverse" : "flex-row"} items-center justify-center gap-2 rounded-lg p-4 ${classVariants[variant].button} ${buttonClassname}`}
+      accessibilityRole="button"
       {...TouchableOpacityProps}
     >
       {icon}

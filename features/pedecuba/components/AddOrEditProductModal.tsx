@@ -1,5 +1,4 @@
-import { DefaultButton } from "@/components/DefaultButton";
-import IProduct from "../types/IProduct";
+import { Button } from "@/components/atoms/Button";
 import { CirclePlus } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
 import {
@@ -10,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import IProduct from "../types/IProduct";
 
 interface IAddOrEditProductModal {
   product?: IProduct | null;
@@ -76,7 +76,10 @@ export default function AddOrEditProductModal({
         }}
       >
         <Pressable className="flex-1" onPress={() => onDialogClose()} />
-        <View className="bg-white px-7 py-5 gap-4 rounded-t-3xl h-[350px]">
+        <View
+          className="bg-white px-7 py-5 gap-4 rounded-t-3xl h-[350px]"
+          style={{ height: 320 }} //TODO: check why nativewind styles arent being appllied
+        >
           <Text className="text-zinc-950 font-bold text-3xl mb-1">
             {product ? "Editar produto" : "Novo Produto"}
           </Text>
@@ -117,10 +120,11 @@ export default function AddOrEditProductModal({
             </View>
           </View>
           <View className="flex-1 justify-end">
-            <DefaultButton
-              title={product ? "EDITAR PRODUTO" : "ADICIONAR PRODUTO"}
+            <Button
+              placeholder={product ? "EDITAR PRODUTO" : "ADICIONAR PRODUTO"}
               icon={<CirclePlus color="white" />}
               onPress={() => handleAddProduct()}
+              variant="secondary"
             />
           </View>
         </View>
