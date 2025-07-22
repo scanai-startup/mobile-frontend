@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactNode } from "react";
 import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
 
 interface Button extends Omit<TouchableOpacityProps, "className"> {
@@ -6,6 +6,8 @@ interface Button extends Omit<TouchableOpacityProps, "className"> {
   buttonClassname?: string;
   placeholderClassname?: string;
   variant?: "default" | "ghost";
+  icon?: ReactNode;
+  iconPosition?: "right" | "left";
 }
 
 export function Button({
@@ -13,6 +15,8 @@ export function Button({
   buttonClassname,
   placeholderClassname,
   variant = "default",
+  icon,
+  iconPosition = "left",
   ...TouchableOpacityProps
 }: Button) {
   const classVariants = {
@@ -28,10 +32,13 @@ export function Button({
 
   return (
     <TouchableOpacity
-      className={`flex items-center rounded-lg p-4 ${classVariants[variant].button} ${buttonClassname}`}
+      className={`flex ${iconPosition === "right" ? "flex-row-reverse" : "flex-row"} items-center justify-center gap-2 rounded-lg p-4 ${classVariants[variant].button} ${buttonClassname}`}
       {...TouchableOpacityProps}
     >
-      <Text className={`${classVariants[variant].placeholder} font-medium`}>
+      {icon}
+      <Text
+        className={`${classVariants[variant].placeholder} font-medium ${placeholderClassname}`}
+      >
         {placeholder}
       </Text>
     </TouchableOpacity>
