@@ -3,6 +3,7 @@ import { Href, Link } from "expo-router";
 import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { IDepositCardProps } from "../types/IDepositCardProps";
+import getHref from "../utils/getDepositHref";
 
 export function DepositCard({
   title = "ERROR",
@@ -25,7 +26,8 @@ export function DepositCard({
     (capacity = capacity),
     (volume = volume),
   );
-  const renderStatus = () => {
+
+  function renderStatus() {
     const statusStyles =
       isAvailable == true ? (
         <Badge
@@ -38,16 +40,28 @@ export function DepositCard({
       );
 
     return statusStyles;
-  };
-
-  const renderError = () =>
-    title === "ERROR" && (
-      <Text className="text-base max-w-[200px]">
-        Por favor contate imediatamente o suporte
-      </Text>
+  }
+  function renderError() {
+    return (
+      title === "ERROR" && (
+        <Text className="text-base max-w-[200px]">
+          Por favor contate imediatamente o suporte
+        </Text>
+      )
     );
-
-  const renderAnalysisDetails = () => {
+  }
+  function renderDetailRow(label: string, value: number, unit: string) {
+    return (
+      <View className="flex-row justify-between items-center">
+        <Text className="text-xl font-light">{label}</Text>
+        <View className="flex-row justify-center items-end">
+          <Text className="text-2xl font-semibold">{value}</Text>
+          <Text className="text-base font-normal text-neutral-400">{unit}</Text>
+        </View>
+      </View>
+    );
+  }
+  function renderAnalysisDetails() {
     return (
       <>
         {renderDetailRow("Densidade:", density, " kg/m³")}
@@ -55,9 +69,8 @@ export function DepositCard({
         {pressure && renderDetailRow("Pressão:", pressure, " Pa")}
       </>
     );
-  };
-
-  const renderDetails = () => {
+  }
+  function renderDetails() {
     return (
       <>
         <View className="w-full h-[1px] bg-neutral-250" />
@@ -68,19 +81,7 @@ export function DepositCard({
         </View>
       </>
     );
-  };
-
-  const renderDetailRow = (label: string, value: number, unit: string) => {
-    return (
-      <View className="flex-row justify-between items-center">
-        <Text className="text-xl font-light">{label}</Text>
-        <View className="flex-row justify-center items-end">
-          <Text className="text-2xl font-semibold">{value}</Text>
-          <Text className="text-base font-normal text-neutral-400">{unit}</Text>
-        </View>
-      </View>
-    );
-  };
+  }
 
   return (
     <Link href={href as Href} asChild testID="tank-card">
@@ -94,37 +95,9 @@ export function DepositCard({
             )}
             {renderStatus()}
           </View>
-
           {renderDetails()}
         </View>
       </TouchableOpacity>
     </Link>
   );
-}
-
-function getHref(
-  title: string,
-  depositId: number,
-  isAvailable: boolean,
-  content: string,
-  contentId: number,
-  capacity: number,
-  volume: number,
-) {
-  return isAvailable
-    ? {
-        pathname: "/(tankControl)/[emptyTank]",
-        params: { tank: title, depositId, capacity },
-      }
-    : {
-        pathname: "/tank/[tank]",
-        params: {
-          tank: title,
-          depositId,
-          content,
-          contentId,
-          capacity,
-          volume,
-        },
-      };
 }
