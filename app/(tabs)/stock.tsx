@@ -3,7 +3,7 @@ import AddNewBatchDialog from "@/app/(stockControl)/_components/AddNewBatchDialo
 import AddNewMaterialDialog from "@/app/(stockControl)/_components/AddNewMaterialDialog";
 import StockMaterialCard from "@/app/(stockControl)/_components/StockMaterialCard";
 import AppHeader from "@/components/AppHeader";
-import { DefaultButton } from "@/components/DefaultButton";
+import { Button } from "@/components/atoms/Button";
 import SafeAreaView from "@/components/SafeAreaView";
 import StatusBar from "@/components/StatusBar";
 import { Material } from "@/types/IMaterial";
@@ -11,13 +11,7 @@ import { useFocusEffect } from "expo-router";
 import * as SecureStorage from "expo-secure-store";
 import { CirclePlus, Search } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
-import {
-  FlatList,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, Text, TextInput, View } from "react-native";
 
 export default function StockItemsList() {
   const [materials, setMaterials] = useState<Material[]>([]);
@@ -79,12 +73,13 @@ export default function StockItemsList() {
       >
         <AppHeader mainText="Estoque" variant="secondary" showReturnButton />
         <View className="px-7 flex-1 gap-6">
-          <DefaultButton
-            title="CRIAR NOVO MATERIAL"
+          <Button
+            placeholder="Criar novo material"
             icon={<CirclePlus color="white" />}
             onPress={() => {
               setIsNewMaterialDialogOpen(true);
             }}
+            variant="secondary"
           />
           <View className="flex flex-row justify-between">
             <View className="flex-1 flex-row items-center bg-[#DEDEDE] rounded-lg h-14 px-3">
@@ -97,14 +92,11 @@ export default function StockItemsList() {
                 placeholder="Digite o que deseja buscar..."
               />
             </View>
-            <TouchableOpacity
-              onPress={() => {}}
-              className="bg-[#007BFF] justify-center px-4 rounded-md ml-3"
-            >
-              <Text style={{ color: "#FFFFFF", fontWeight: "semibold" }}>
-                Filtrar
-              </Text>
-            </TouchableOpacity>
+            <Button
+              placeholder="Filtrar"
+              buttonClassname="ml-2"
+              variant="secondary"
+            />
           </View>
           <FlatList
             data={filteredData}

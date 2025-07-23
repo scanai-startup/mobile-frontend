@@ -1,7 +1,7 @@
 import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
+import { Button } from "@/components/atoms/Button";
 import DateInput from "@/components/DateInput";
-import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useTokenStore } from "@/features/auth/store/userStore";
 import { AddOrEditProductModal, ProductCard } from "@/features/pedecuba";
@@ -142,10 +142,11 @@ export default function AddPeDeCuba() {
           <Text className="text-zinc-950 font-bold text-3xl mb-1">
             Produtos
           </Text>
-          <DefaultButton
-            title="ADICIONAR NOVO PRODUTO"
+          <Button
+            placeholder="Adicionar novo produto"
             icon={<CirclePlus color="white" />}
             onPress={() => setIsModalOpen(true)}
+            variant="secondary"
           />
           <FlatList
             data={products}
@@ -176,7 +177,11 @@ export default function AddPeDeCuba() {
               </View>
             }
           ></FlatList>
-          <DefaultButton title="CONCLUIR" onPress={() => handleAddPeDeCuba()} />
+          <Button
+            placeholder="Concluir"
+            onPress={() => handleAddPeDeCuba()}
+            variant="secondary"
+          />
         </View>
       </SafeAreaView>
     </>

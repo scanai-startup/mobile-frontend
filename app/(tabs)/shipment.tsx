@@ -1,6 +1,6 @@
 import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
-import { DefaultButton } from "@/components/DefaultButton";
+import { Button } from "@/components/atoms/Button";
 import SafeAreaView from "@/components/SafeAreaView";
 import ShipmentCard from "@/components/ShipmentCard";
 import StatusBar from "@/components/StatusBar";
@@ -62,14 +62,15 @@ export default function Shipment() {
           showReturnButton
         />
         <View className="px-7">
-          <DefaultButton
+          <Button
+            placeholder="Adicionar nova remessa"
             onPress={() =>
               router.push(
                 "/(grapeReception)?nextHref=(grapeReception)/grapeReceptionP2&prevHref=/",
               )
             }
-            title="ADICIONAR NOVA REMESSA"
             icon={<CirclePlus color="white" />}
+            variant="secondary"
           />
           <FlatList
             data={shipments}

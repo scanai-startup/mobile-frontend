@@ -1,12 +1,12 @@
 import apiInstance from "@/api/apiInstance";
+import { Button } from "@/components/atoms/Button";
 import CenteredModal from "@/components/CenteredModal";
-import { DefaultButton } from "@/components/DefaultButton";
 import FormFooter from "@/components/FormFooter";
 import SafeAreaView from "@/components/SafeAreaView";
 import SelectTankCard from "@/components/SelectTankCard";
+import { useTokenStore } from "@/features/auth/store/userStore";
 import { useGetLocalTanksData } from "@/hooks/useGetLocalTanksData";
 import { useToast } from "@/hooks/useToast";
-import { useTokenStore } from "@/features/auth/store/userStore";
 import { ILabel } from "@/types/ILabel";
 import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import * as SecureStore from "expo-secure-store";
@@ -136,9 +136,10 @@ export default function SelectTargetTank() {
               activeColor="#f0f0f0"
               value={selectedLabel === 0 ? 0 : selectedLabel}
             />
-            <DefaultButton
-              title="Continuar"
-              className="mt-4"
+            <Button
+              placeholder="Continuar"
+              buttonClassname="mt-4"
+              variant="secondary"
               onPress={() => setIsDialogOpen(false)}
               disabled={selectedLabel === 0 ? true : false}
             />

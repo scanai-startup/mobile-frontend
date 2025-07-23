@@ -1,16 +1,16 @@
 import AppHeader from "@/components/AppHeader";
-import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
 import { CirclePlus } from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, View } from "react-native";
 
+import { Button } from "@/components/atoms/Button";
 import {
-  handleRemoveProduct,
-  handleProductAction,
   AddOrEditProductModal,
-  useAddProducts,
+  handleProductAction,
+  handleRemoveProduct,
   ProductCard,
+  useAddProducts,
 } from "@/features/pedecuba";
 
 export default function AddProduct() {
@@ -55,11 +55,11 @@ export default function AddProduct() {
             }
             product={selectedProduct}
           />
-
-          <DefaultButton
-            title="ADICIONAR NOVO PRODUTO"
+          <Button
+            placeholder="Adicionar novo produto"
             icon={<CirclePlus color="white" />}
             onPress={() => setIsModalOpen(true)}
+            variant="secondary"
           />
           <FlatList
             data={products}
