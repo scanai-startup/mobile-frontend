@@ -1,11 +1,12 @@
-import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
 import SafeAreaView from "@/components/SafeAreaView";
 import StatusBar from "@/components/StatusBar";
 import { Card } from "@/components/TankControlCard";
-import ITankData from "@/types/ITankData";
+import { getAllDepositsWithInformation } from "@/features/deposito/services/get-all-deposits";
+import IDepositDetailedData from "@/features/deposito/types/IDepositDetailedData";
+import { useToast } from "@/hooks/useToast";
 import { useFocusEffect, useRouter } from "expo-router";
-import * as SecureStore from "expo-secure-store";
+
 import { Search } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
 import {
@@ -20,7 +21,8 @@ import {
 export default function TankControl() {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const router = useRouter();
-  const [data, setData] = useState<ITankData[]>([]);
+  const toast = useToast();
+  const [data, setData] = useState<IDepositDetailedData[]>([]);
   const [search, setSearch] = useState("");
 
   const filteredData = data.filter((e) => {
@@ -30,32 +32,17 @@ export default function TankControl() {
     );
   });
 
+  async function fetchDeposits() {
+    const deposits = await getAllDepositsWithInformation({ toast });
+    setData(deposits);
+  }
+
   useFocusEffect(
-    // calls the api everytime the screen gets displayed
     useCallback(() => {
-      getDepositos();
+      fetchDeposits();
       return;
     }, []),
   );
-
-  const getDepositos = async () => {
-    try {
-      const token = await SecureStore.getItemAsync("user-token");
-      const response = await apiInstance.get(
-        "/deposito/getAllDepositosWithInformations",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-      setData(response.data);
-      // console.log(response.data);
-    } catch (error) {
-      console.error("Erro ao buscar depósitos:", error);
-    }
-  };
-
   return (
     <>
       <StatusBar barStyle="dark-content" />
