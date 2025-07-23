@@ -17,9 +17,7 @@ function EmptyTankList() {
   );
 }
 
-export default function DepositList<ReactNode>({
-  deposits,
-}: IDepositListProps) {
+export default function DepositList({ deposits }: IDepositListProps) {
   function handleDepositType(deposit: IDepositDetailedData) {
     const depositId = Number(deposit.idDeposito);
     const title = `${deposit.tipoDeposito} ${deposit.numeroDeposito}`;

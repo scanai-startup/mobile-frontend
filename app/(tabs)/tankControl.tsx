@@ -5,37 +5,13 @@ import SafeAreaView from "@/components/SafeAreaView";
 import StatusBar from "@/components/StatusBar";
 import DepositList from "@/features/deposito/components/deposit-list";
 import SearchDepositForm from "@/features/deposito/components/search-deposit-form";
-import { getAllDepositsWithInformation } from "@/features/deposito/services/get-all-deposits";
-import { IDepositDetailedData } from "@/features/deposito/types/index";
-import { useToast } from "@/hooks/useToast";
-import { useFocusEffect } from "expo-router";
-import React, { useCallback, useState } from "react";
+import useManageDeposits from "@/features/deposito/hooks/useManageDeposits";
+import React from "react";
 import { Text, View } from "react-native";
 
 export default function TankControl() {
-  const [drawerVisible, setDrawerVisible] = useState(false);
-  const [data, setData] = useState<IDepositDetailedData[]>([]);
-  const [search, setSearch] = useState("");
-  const toast = useToast();
-  const filteredData = search
-    ? data.filter((e) => {
-        return (
-          e.tipoDeposito.toLowerCase().includes(search.toLowerCase()) ||
-          e.numeroDeposito.toLowerCase().includes(search.toLowerCase())
-        );
-      })
-    : data;
-
-  async function fetchDeposits() {
-    const deposits = await getAllDepositsWithInformation({ toast });
-    setData(deposits);
-  }
-  useFocusEffect(
-    useCallback(() => {
-      fetchDeposits();
-      return;
-    }, []),
-  );
+  const { filteredData, isDrawerVisible, setIsDrawerVisible, setSearch } =
+    useManageDeposits();
 
   return (
     <>
@@ -60,14 +36,14 @@ export default function TankControl() {
             <SearchDepositForm onSearch={setSearch} />
             <Button
               placeholder="Filtrar"
-              onPress={() => setDrawerVisible(true)}
+              onPress={() => setIsDrawerVisible(true)}
               buttonClassname="ml-2"
               variant="secondary"
             />
           </View>
           <FilterDrawer
-            visible={drawerVisible}
-            onClose={() => setDrawerVisible(false)}
+            visible={isDrawerVisible}
+            onClose={() => setIsDrawerVisible(false)}
           />
           <DepositList deposits={filteredData} />
         </View>
