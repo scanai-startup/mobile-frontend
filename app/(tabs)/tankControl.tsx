@@ -3,7 +3,7 @@ import { Button } from "@/components/atoms/Button";
 import FilterDrawer from "@/components/molecules/FilterDrawer";
 import SafeAreaView from "@/components/SafeAreaView";
 import StatusBar from "@/components/StatusBar";
-import { DepositCard } from "@/features/deposito/components/deposit-card";
+import DepositList from "@/features/deposito/components/deposit-list";
 import { getAllDepositsWithInformation } from "@/features/deposito/services/get-all-deposits";
 import IDepositDetailedData from "@/features/deposito/types/IDepositDetailedData";
 import { useToast } from "@/hooks/useToast";
@@ -11,7 +11,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 
 import { Search } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
-import { FlatList, Text, TextInput, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
 
 export default function TankControl() {
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -77,66 +77,9 @@ export default function TankControl() {
             visible={drawerVisible}
             onClose={() => setDrawerVisible(false)}
           />
-          <FlatList
-            data={filteredData}
-            keyExtractor={(item) => item.idDeposito}
-            ListEmptyComponent={<EmptyTankList />}
-            renderItem={({ item }) => {
-              let identificacaoDeposito = `${item.tipoDeposito} ${item.numeroDeposito}`;
-              return item.conteudo === "Mostro" || item.conteudo === "Vinho" ? (
-                <>
-                  {/* Tanque com Mostro/Vinho */}
-                  <DepositCard
-                    depositId={Number(item.idDeposito)}
-                    title={identificacaoDeposito}
-                    isAvailable={false}
-                    content={item.conteudo}
-                    contentId={item.idConteudo}
-                    density={item.densidade}
-                    temperature={item.temperatura}
-                    pressure={item.pressao ? item.pressao : null}
-                    capacity={item.capacidadeDeposito}
-                    volume={item.volumeConteudo}
-                  />
-                </>
-              ) : item.conteudo == "Pé de Cuba" ? (
-                <>
-                  {/* Tanque com pé de cuba */}
-                  <DepositCard
-                    depositId={Number(item.idDeposito)}
-                    title={identificacaoDeposito}
-                    isAvailable={false}
-                    content={item.conteudo}
-                    contentId={item.idConteudo}
-                    capacity={item.capacidadeDeposito}
-                    volume={item.volumeConteudo}
-                  />
-                </>
-              ) : (
-                <>
-                  {/* Conteúdo Vazio */}
-                  <DepositCard
-                    depositId={Number(item.idDeposito)}
-                    title={identificacaoDeposito}
-                    isAvailable={true}
-                    capacity={item.capacidadeDeposito}
-                  />
-                </>
-              );
-            }}
-          />
+          <DepositList deposits={filteredData} />
         </View>
       </SafeAreaView>
     </>
-  );
-}
-
-function EmptyTankList() {
-  return (
-    <View className="flex-1 justify-center items-center">
-      <Text className="text-gray-500 text-center mb-4">
-        Não há nenhum tanque cadastrado ainda.
-      </Text>
-    </View>
   );
 }
