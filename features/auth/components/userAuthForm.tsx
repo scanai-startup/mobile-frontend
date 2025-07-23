@@ -1,4 +1,4 @@
-import { Button } from "@/components/Button";
+import { Button } from "@/components/atoms/Button";
 import { InputBox } from "@/components/Input";
 import { useToast } from "@/hooks/useToast";
 import { useRouter } from "expo-router";
@@ -53,7 +53,6 @@ export function UserAuthForm() {
           placeholder="Acessar"
           onPress={handleSubmit}
           buttonClassname="w-full"
-          accessibilityRole="button"
         />
       </View>
     </View>

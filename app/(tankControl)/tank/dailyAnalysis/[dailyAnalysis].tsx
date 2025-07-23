@@ -1,8 +1,13 @@
 import AppHeader from "@/components/AppHeader";
+import { Button } from "@/components/atoms/Button";
 import DateInput from "@/components/DateInput";
-import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
-import React from "react";
+import { useTokenStore } from "@/features/auth/store/userStore";
+import { useToast } from "@/hooks/useToast";
+import { validateField } from "@/hooks/validateField";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
+import React, { useState } from "react";
 import { Text, TextInput, View } from "react-native";
 import { useDailyAnalysisForm } from "@/features/analisediaria/index";
 
@@ -65,7 +70,11 @@ export default function DailyAnalysis() {
       </View>
 
       <View className="px-5 py-4">
-        <DefaultButton title="Concluir" onPress={handleSubmit} />
+        <Button
+          placeholder="Concluir"
+          onPress={handleSubmit}
+          variant="secondary"
+        />
       </View>
     </SafeAreaView>
   );

@@ -1,6 +1,6 @@
 import apiInstance from "@/api/apiInstance";
+import { Button } from "@/components/atoms/Button";
 import CenteredModal from "@/components/CenteredModal";
-import { DefaultButton } from "@/components/DefaultButton";
 import { InputBox } from "@/components/Input";
 import { useToast } from "@/hooks/useToast";
 import { IDialogProps } from "@/types/IDialogProps";
@@ -155,9 +155,10 @@ export default function AddNewBatchDialog({
             onChangeText={(v) => setSupplier(v)}
           />
         </View>
-        <DefaultButton
-          title="ADICIONAR NOVO MATERIAL"
-          className="mt-4"
+        <Button
+          placeholder="Adicionar novo material"
+          buttonClassname="mt-4"
+          variant="secondary"
           onPress={handleAddNewBatch}
           disabled={amount && batchNumber && supplier ? false : true}
         />

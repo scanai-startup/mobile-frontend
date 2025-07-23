@@ -1,11 +1,11 @@
 import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
-import { DefaultButton } from "@/components/DefaultButton";
+import { Button } from "@/components/atoms/Button";
 import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
 import ShipmentCard from "@/components/ShipmentCard";
-import { useShipmentStore } from "@/store/remessasContext";
 import { useTokenStore } from "@/features/auth/store/userStore";
+import { useShipmentStore } from "@/store/remessasContext";
 import {
   Href,
   useFocusEffect,
@@ -13,9 +13,9 @@ import {
   useRouter,
 } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import React, { useCallback, useState } from "react";
-import { FlatList, Text, View, TouchableOpacity } from "react-native";
 import { ChevronDown, ChevronUp } from "lucide-react-native";
+import React, { useCallback, useState } from "react";
+import { FlatList, Text, TouchableOpacity, View } from "react-native";
 
 export default function BaseWine() {
   const router = useRouter();
@@ -166,10 +166,11 @@ export default function BaseWine() {
         />
 
         <View className="mt-4">
-          <DefaultButton
+          <Button
             disabled={selectedShipments.length == 0}
-            title="Concluir"
+            placeholder="Concluir"
             onPress={handleSubmit}
+            variant="secondary"
           />
         </View>
       </View>

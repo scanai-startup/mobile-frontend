@@ -1,4 +1,5 @@
 import AppHeader from "@/components/AppHeader";
+import { Button } from "@/components/atoms/Button";
 import SafeAreaView from "@/components/SafeAreaView";
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import React from "react";
@@ -46,11 +47,7 @@ export default function ListAnalysis() {
           }}
           asChild
         >
-          <TouchableOpacity className="bg-blue-500 p-4 rounded-md items-center mb-4">
-            <Text className="text-white font-bold">
-              NOVA ANÁLISE DE DEPOSITO
-            </Text>
-          </TouchableOpacity>
+          <Button placeholder="Nova análise de depósito" variant="secondary" />
         </Link>
         <FlatList
           data={data}

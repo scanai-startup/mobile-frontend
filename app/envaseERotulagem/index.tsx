@@ -1,7 +1,7 @@
 import AppHeader from "@/components/AppHeader";
-import { DefaultButton } from "@/components/DefaultButton";
+import { Button } from "@/components/atoms/Button";
 import SafeAreaView from "@/components/SafeAreaView";
-import { Link, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { CirclePlus } from "lucide-react-native";
 import React from "react";
 import { FlatList, Text, TouchableOpacity, View } from "react-native";
@@ -101,10 +101,11 @@ export default function envaseERotulagem() {
         returnHref="/(tabs)"
       />
       <View className="flex-1 px-7">
-        <DefaultButton
+        <Button
           onPress={() => router.push("/envaseERotulagem/newFilLab/newFilLab")}
-          title="ADICIONAR NOVO PROCESSO"
+          placeholder="Adicionar novo processo"
           icon={<CirclePlus color="white" />}
+          variant="secondary"
         />
         <FlatList
           data={data}

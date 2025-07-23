@@ -1,5 +1,5 @@
+import { Button } from "@/components/atoms/Button";
 import CenteredModal from "@/components/CenteredModal";
-import { DefaultButton } from "@/components/DefaultButton";
 import FormFooter from "@/components/FormFooter";
 import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
@@ -63,9 +63,10 @@ export default function SelectMostroView() {
                 value={lostVolume}
               />
             </View>
-            <DefaultButton
-              title="Continuar"
-              className="mt-4"
+            <Button
+              placeholder="Continuar"
+              buttonClassname="mt-4"
+              variant="secondary"
               onPress={() => handleContinueButton()}
               disabled={isDialogConfirmButtonEnabled}
             />
