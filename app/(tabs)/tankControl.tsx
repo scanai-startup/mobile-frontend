@@ -4,40 +4,39 @@ import FilterDrawer from "@/components/molecules/FilterDrawer";
 import SafeAreaView from "@/components/SafeAreaView";
 import StatusBar from "@/components/StatusBar";
 import DepositList from "@/features/deposito/components/deposit-list";
+import SearchDepositForm from "@/features/deposito/components/search-deposit-form";
 import { getAllDepositsWithInformation } from "@/features/deposito/services/get-all-deposits";
-import IDepositDetailedData from "@/features/deposito/types/IDepositDetailedData";
+import { IDepositDetailedData } from "@/features/deposito/types/index";
 import { useToast } from "@/hooks/useToast";
-import { useFocusEffect, useRouter } from "expo-router";
-
-import { Search } from "lucide-react-native";
+import { useFocusEffect } from "expo-router";
 import React, { useCallback, useState } from "react";
-import { Text, TextInput, View } from "react-native";
+import { Text, View } from "react-native";
 
 export default function TankControl() {
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const router = useRouter();
-  const toast = useToast();
   const [data, setData] = useState<IDepositDetailedData[]>([]);
   const [search, setSearch] = useState("");
-
-  const filteredData = data.filter((e) => {
-    return (
-      e.tipoDeposito.toLowerCase().includes(search.toLowerCase()) ||
-      e.numeroDeposito.toLowerCase().includes(search.toLowerCase())
-    );
-  });
+  const toast = useToast();
+  const filteredData = search
+    ? data.filter((e) => {
+        return (
+          e.tipoDeposito.toLowerCase().includes(search.toLowerCase()) ||
+          e.numeroDeposito.toLowerCase().includes(search.toLowerCase())
+        );
+      })
+    : data;
 
   async function fetchDeposits() {
     const deposits = await getAllDepositsWithInformation({ toast });
     setData(deposits);
   }
-
   useFocusEffect(
     useCallback(() => {
       fetchDeposits();
       return;
     }, []),
   );
+
   return (
     <>
       <StatusBar barStyle="dark-content" />
@@ -58,14 +57,7 @@ export default function TankControl() {
             </Text>
           </View>
           <View className="flex flex-row items-center w-full mb-4">
-            <View className="flex flex-row items-center bg-[#DEDEDE] py-0 px-3 rounded-lg flex-1">
-              <Search size="25px" color="#9A9A9A" />
-              <TextInput
-                onChangeText={(value) => setSearch(value)}
-                className="text-base ml-2 flex-1 py-0 h-14"
-                placeholder="Digite o que deseja buscar..."
-              />
-            </View>
+            <SearchDepositForm onSearch={setSearch} />
             <Button
               placeholder="Filtrar"
               onPress={() => setDrawerVisible(true)}
