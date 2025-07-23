@@ -31,10 +31,10 @@ export function DepositCard({
         <Badge
           placeholder="Disponível"
           variant="default"
-          containerClassname="bg-green-500"
+          containerClassname="bg-green-400"
         />
       ) : (
-        <Badge placeholder="Ocupado" />
+        <Badge placeholder="Ocupado" variant="destructive" />
       );
 
     return statusStyles;

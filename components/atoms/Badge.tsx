@@ -16,25 +16,24 @@ export default function Badge({
 }: IBadgeProps) {
   const classVariants = {
     default: {
-      view: "border-transparent bg-zinc-900 text-white",
-      placeholder: "text-white",
+      view: "border-transparent text-white",
     },
     destructive: {
-      view: "border-transparent bg-red-400 text-white",
-      placeholder: "text-white",
+      view: "border-transparent text-white",
     },
   };
-  console.log(containerClassname);
+  const defaultBgColor = variant === "default" ? "bg-zinc-900" : "bg-red-400";
+  const hasExternalBgColor = containerClassname?.includes("bg-");
+  const viewClasses = `${classVariants[variant].view} ${
+    hasExternalBgColor ? "" : defaultBgColor
+  } ${containerClassname} px-3 py-1 rounded-xl`;
+  const textClasses = `text-md font-semibold ${
+    placeholderClassname ? placeholderClassname : "text-white"
+  }`;
 
   return (
-    <View
-      className={`${classVariants[variant].view} ${containerClassname} px-3 py-1 rounded-xl`}
-    >
-      <Text
-        className={`text-md font-semibold ${classVariants[variant].placeholder} ${placeholderClassname}`}
-      >
-        {placeholder}
-      </Text>
+    <View className={viewClasses}>
+      <Text className={textClasses}>{placeholder}</Text>
     </View>
   );
 }

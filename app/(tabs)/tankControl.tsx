@@ -3,7 +3,7 @@ import { Button } from "@/components/atoms/Button";
 import FilterDrawer from "@/components/molecules/FilterDrawer";
 import SafeAreaView from "@/components/SafeAreaView";
 import StatusBar from "@/components/StatusBar";
-import { Card } from "@/components/TankControlCard";
+import { DepositCard } from "@/features/deposito/components/deposit-card";
 import { getAllDepositsWithInformation } from "@/features/deposito/services/get-all-deposits";
 import IDepositDetailedData from "@/features/deposito/types/IDepositDetailedData";
 import { useToast } from "@/hooks/useToast";
@@ -86,7 +86,7 @@ export default function TankControl() {
               return item.conteudo === "Mostro" || item.conteudo === "Vinho" ? (
                 <>
                   {/* Tanque com Mostro/Vinho */}
-                  <Card
+                  <DepositCard
                     depositId={Number(item.idDeposito)}
                     title={identificacaoDeposito}
                     isAvailable={false}
@@ -102,7 +102,7 @@ export default function TankControl() {
               ) : item.conteudo == "Pé de Cuba" ? (
                 <>
                   {/* Tanque com pé de cuba */}
-                  <Card
+                  <DepositCard
                     depositId={Number(item.idDeposito)}
                     title={identificacaoDeposito}
                     isAvailable={false}
@@ -115,7 +115,7 @@ export default function TankControl() {
               ) : (
                 <>
                   {/* Conteúdo Vazio */}
-                  <Card
+                  <DepositCard
                     depositId={Number(item.idDeposito)}
                     title={identificacaoDeposito}
                     isAvailable={true}
