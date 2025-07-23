@@ -1,9 +1,9 @@
 import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
-import CustomStatusBar from "@/components/CustomStatusBar";
 import { DefaultButton } from "@/components/DefaultButton";
 import SafeAreaView from "@/components/SafeAreaView";
 import ShipmentCard from "@/components/ShipmentCard";
+import StatusBar from "@/components/StatusBar";
 import IShipmentCard from "@/types/IShipmentCard";
 import { useFocusEffect, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
@@ -51,7 +51,7 @@ export default function Shipment() {
 
   return (
     <>
-      <CustomStatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" />
       <SafeAreaView
         style={{ flex: 1, gap: 20 }}
         edges={["right", "bottom", "left"]}
