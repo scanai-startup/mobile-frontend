@@ -1,4 +1,5 @@
 import AppHeader from "@/components/AppHeader";
+import FilterDrawer from "@/components/molecules/FilterDrawer";
 import SafeAreaView from "@/components/SafeAreaView";
 import StatusBar from "@/components/StatusBar";
 import { Card } from "@/components/TankControlCard";
@@ -11,7 +12,6 @@ import { Search } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
 import {
   FlatList,
-  Modal,
   Text,
   TextInput,
   TouchableOpacity,
@@ -86,6 +86,10 @@ export default function TankControl() {
               </Text>
             </TouchableOpacity>
           </View>
+          <FilterDrawer
+            visible={drawerVisible}
+            onClose={() => setDrawerVisible(false)}
+          />
           <FlatList
             data={filteredData}
             keyExtractor={(item) => item.idDeposito}
@@ -134,45 +138,9 @@ export default function TankControl() {
               );
             }}
           />
-          <FilterDrawer
-            visible={drawerVisible}
-            onClose={() => setDrawerVisible(false)}
-          />
         </View>
       </SafeAreaView>
     </>
-  );
-}
-
-function FilterDrawer({
-  visible,
-  onClose,
-}: {
-  visible: boolean;
-  onClose: any;
-}) {
-  return (
-    <Modal
-      transparent={true}
-      visible={visible}
-      animationType="slide"
-      onRequestClose={onClose}
-    >
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "flex-end",
-          backgroundColor: "rgba(0,0,0,0.3)",
-        }}
-      >
-        <View className="bg-white p-4 rounded-t-lg">
-          <Text className="text-xl font-bold mb-4">Filtros</Text>
-          <TouchableOpacity onPress={onClose}>
-            <Text className="text-blue-500">Fechar</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </Modal>
   );
 }
 
