@@ -1,4 +1,3 @@
-import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
 import { Button } from "@/components/atoms/Button";
 import DateInput from "@/components/DateInput";
@@ -10,83 +9,20 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import React, { useState } from "react";
 import { Text, TextInput, View } from "react-native";
+import { useDailyAnalysisForm } from "@/features/analisediaria/index";
 
-// const data: Analysis[] = [
-//   {
-//     id: "1",
-//     date: "09/07/24",
-//     stage: "Tomada espuma",
-//     density: "996",
-//     temperature: "20",
-//   },
-// ];
-//! IMPORTANT: this component is currently working with deposits with mostro only
-//TODO: handle the logic with another types of content inside of the deposits
 export default function DailyAnalysis() {
-  const { tank, content, contentId } = useLocalSearchParams();
-  const router = useRouter();
-  const toast = useToast();
-  const [date, setDate] = useState<Date>(new Date());
-  const [density, setDensity] = useState("");
-  const [temperature, setTemperature] = useState("");
-  const { userId } = useTokenStore();
-
-  async function handleSubmit() {
-    const token = await SecureStore.getItemAsync("user-token");
-    let endpoint = "";
-    let data = {};
-    console.log(content);
-
-    if (!validateField(temperature, "Preencha a temperatura para prosseguir"))
-      return;
-    if (!validateField(density, "Preencha a densidade para prosseguir")) return;
-
-    switch (content) {
-      case "Mostro":
-        endpoint = "/analisediariamostro/register";
-        data = {
-          fkmostro: contentId,
-          fkfuncionario: userId,
-          densidade: density,
-          data: date,
-          temperatura: temperature,
-        };
-        break;
-      case "Pé de Cuba":
-        endpoint = "/analisepedecuba/register";
-        data = {
-          fkpedecuba: contentId,
-          fkfuncionario: userId,
-          densidade: density,
-          data: date,
-          temperatura: temperature,
-        };
-        break;
-      default:
-        break;
-    }
-    apiInstance
-      .post(endpoint, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then(() => {
-        toast({
-          heading: "Sucesso",
-          message: "Nova análise criada com sucesso.",
-          type: "success",
-        });
-        router.back();
-      })
-      .catch(() => {
-        toast({
-          heading: "Erro",
-          message: "A análise não pôde ser criada, tente novamente.",
-          type: "error",
-        });
-      });
-  }
+  const {
+    tank,
+    date,
+    setDate,
+    density,
+    setDensity,
+    temperature,
+    setTemperature,
+    handleSubmit,
+    router,
+  } = useDailyAnalysisForm();
 
   return (
     <SafeAreaView className="flex-1">

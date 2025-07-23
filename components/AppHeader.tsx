@@ -37,7 +37,7 @@ export default function AppHeader({
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
-            onPress={() => router.push(returnHref)}
+            onPress={() => router.push(returnHref as any)}
             testID="chevron-left-icon"
           >
             <ChevronLeft color="#171717" />
@@ -63,14 +63,14 @@ export default function AppHeader({
           {mainText}
         </Text>
         {variant === "primary" ? (
-          <View className="flex flex-row items-center" style={{ gap: 12 }}>
-            <TouchableOpacity>
-              <Bell color="white" fill="white" />
-            </TouchableOpacity>
-            <Image
-              source={require("@/assets/images/rio-sol-logo.jpg")}
-              style={{ width: 45, height: 45, borderRadius: 100 }}
-            />
+          <View
+            className="size-8 bg-white rounded-full"
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text>U</Text>
           </View>
         ) : null}
       </View>

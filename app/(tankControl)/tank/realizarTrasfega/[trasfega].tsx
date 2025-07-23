@@ -72,7 +72,13 @@ export default function RealizarTrasfega() {
       });
       router.back();
     } catch (error) {
-      Toast.show({ type: "error", text1: "Erro na trasfega" });
+      const errorMessage = String(JSON.stringify(error)) as any;
+
+      Toast.show({
+        type: "error",
+        text1: "Erro na trasfega",
+        text2: errorMessage.message,
+      });
     } finally {
       setSubmitting(false);
     }
