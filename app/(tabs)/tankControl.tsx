@@ -1,4 +1,5 @@
 import AppHeader from "@/components/AppHeader";
+import { Button } from "@/components/atoms/Button";
 import FilterDrawer from "@/components/molecules/FilterDrawer";
 import SafeAreaView from "@/components/SafeAreaView";
 import StatusBar from "@/components/StatusBar";
@@ -10,13 +11,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 
 import { Search } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
-import {
-  FlatList,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { FlatList, Text, TextInput, View } from "react-native";
 
 export default function TankControl() {
   const [drawerVisible, setDrawerVisible] = useState(false);
@@ -71,20 +66,12 @@ export default function TankControl() {
                 placeholder="Digite o que deseja buscar..."
               />
             </View>
-            <TouchableOpacity
+            <Button
+              placeholder="Filtrar"
               onPress={() => setDrawerVisible(true)}
-              style={{
-                backgroundColor: "#007BFF",
-                paddingVertical: 14,
-                paddingHorizontal: 15,
-                borderRadius: 5,
-                marginLeft: 8,
-              }}
-            >
-              <Text style={{ color: "#FFFFFF", fontWeight: "semibold" }}>
-                Filtrar
-              </Text>
-            </TouchableOpacity>
+              buttonClassname="ml-2"
+              variant="secondary"
+            />
           </View>
           <FilterDrawer
             visible={drawerVisible}

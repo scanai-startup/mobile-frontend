@@ -1,14 +1,9 @@
 import AppHeader from "@/components/AppHeader";
+import { Button } from "@/components/atoms/Button";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
-import {
-  ScrollView,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { ScrollView, Text, TextInput, View } from "react-native";
 
 export default function DepositAnalysis() {
   const { tank } = useLocalSearchParams();
@@ -235,10 +230,7 @@ export default function DepositAnalysis() {
             onChangeText={setPH}
           />
         </View>
-
-        <TouchableOpacity className="bg-blue-600 p-4 rounded-lg items-center mt-6 mb-4">
-          <Text className="text-white text-lg font-bold">Concluir</Text>
-        </TouchableOpacity>
+        <Button placeholder="Concluir" variant="secondary" />
       </ScrollView>
     </SafeAreaView>
   );
