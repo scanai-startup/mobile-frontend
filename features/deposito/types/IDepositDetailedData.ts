@@ -1,4 +1,4 @@
-export default interface ITankData {
+export default interface IDepositDetailedData {
   idDeposito: string;
   capacidadeDeposito: number;
   conteudo: string;
