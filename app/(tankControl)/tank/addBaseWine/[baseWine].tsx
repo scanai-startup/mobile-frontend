@@ -67,11 +67,15 @@ export default function BaseWine() {
     };
 
     try {
-      const res = await apiInstance.post("/vinculodepositoremessas", data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
+      const res = await apiInstance.post(
+        "/vinculoDepositoRemessas/register",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
-      });
+      );
 
       const responseData = res.data;
       clearShipments();

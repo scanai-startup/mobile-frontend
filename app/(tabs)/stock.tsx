@@ -4,6 +4,7 @@ import AddNewMaterialDialog from "@/app/(stockControl)/_components/AddNewMateria
 import StockMaterialCard from "@/app/(stockControl)/_components/StockMaterialCard";
 import AppHeader from "@/components/AppHeader";
 import { Button } from "@/components/atoms/Button";
+import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
 import StatusBar from "@/components/StatusBar";
 import { Material } from "@/types/IMaterial";
@@ -11,7 +12,7 @@ import { useFocusEffect } from "expo-router";
 import * as SecureStorage from "expo-secure-store";
 import { CirclePlus, Search } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
-import { FlatList, Text, TextInput, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 
 export default function StockItemsList() {
   const [materials, setMaterials] = useState<Material[]>([]);
@@ -82,16 +83,14 @@ export default function StockItemsList() {
             variant="secondary"
           />
           <View className="flex flex-row justify-between">
-            <View className="flex-1 flex-row items-center bg-[#DEDEDE] rounded-lg h-14 px-3">
-              <Search size="25px" color="#9A9A9A" />
-              <TextInput
-                onChangeText={(value) => {
-                  setSearchedName(value);
-                }}
-                className="text-base ml-2"
-                placeholder="Digite o que deseja buscar..."
-              />
-            </View>
+            <InputBox
+              icon={Search}
+              placeholder="Pesquise pelo material"
+              className="flex-1"
+              onChangeText={(value) => {
+                setSearchedName(value);
+              }}
+            />
             <Button
               placeholder="Filtrar"
               buttonClassname="ml-2"

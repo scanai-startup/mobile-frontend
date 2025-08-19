@@ -1,14 +1,8 @@
 import { Button } from "@/components/atoms/Button";
+import { InputBox } from "@/components/Input";
 import { CirclePlus } from "lucide-react-native";
 import React, { useEffect, useState } from "react";
-import {
-  Modal,
-  Pressable,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Modal, Pressable, Text, View } from "react-native";
 import IProduct from "../types/IProduct";
 
 interface IAddOrEditProductModal {
@@ -78,46 +72,32 @@ export default function AddOrEditProductModal({
         <Pressable className="flex-1" onPress={() => onDialogClose()} />
         <View
           className="bg-white px-7 py-5 gap-4 rounded-t-3xl h-[350px]"
-          style={{ height: 320 }} //TODO: check why nativewind styles arent being appllied
+          style={{ height: 340 }} //TODO: check why nativewind styles arent being appllied
         >
-          <Text className="text-zinc-950 font-bold text-3xl mb-1">
-            {product ? "Editar produto" : "Novo Produto"}
-          </Text>
+          <View className="flex flex-row justify-between items-center">
+            <Text className="text-zinc-950 font-bold text-3xl mb-1">
+              {product ? "Editar produto" : "Novo Produto"}
+            </Text>
+            <Button
+              onPress={() => {
+                productUnity === "KG"
+                  ? setProductUnity("L")
+                  : setProductUnity("KG");
+              }}
+              placeholder={
+                productUnity === "KG" ? "Quilograma (kg)" : "Litro (L)"
+              } //TODO: melhorar isso
+              variant="secondary"
+            />
+          </View>
           <View className="justify-between gap-4">
-            <View>
-              <Text className="text-xl">Nome do produto</Text>
-              <View className="flex flex-row items-center bg-[#DEDEDE] rounded-lg h-14">
-                <TextInput
-                  className="text-xl ml-2 flex-1"
-                  placeholder="Dep.100"
-                  value={productName}
-                  onChangeText={(v) => setProductName(v)}
-                />
-              </View>
-            </View>
-            <View>
-              <Text className="text-xl">Quantidade</Text>
-              <View className="flex flex-row items-center bg-[#DEDEDE] rounded-lg h-14">
-                <TextInput
-                  className="text-xl ml-2 flex-1"
-                  placeholder="1.200"
-                  value={productQuantity}
-                  onChangeText={(v) => setProductQuantity(v)}
-                  keyboardType="number-pad"
-                />
-                <TouchableOpacity
-                  onPress={() => {
-                    productUnity === "KG"
-                      ? setProductUnity("L")
-                      : setProductUnity("KG");
-                  }}
-                >
-                  <Text className="text-lg mr-1">
-                    {productUnity === "KG" ? "kg" : "L"}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
+            <InputBox placeholder="Dep. 100" title="Nome do produto" />
+            <InputBox
+              placeholder="1200"
+              title="Quantidade"
+              auxText={productUnity}
+              className="w-full"
+            />
           </View>
           <View className="flex-1 justify-end">
             <Button

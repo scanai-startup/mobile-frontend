@@ -30,8 +30,9 @@ export default function useManageDeposits() {
           );
         })
       : data;
+    filteredData;
     setFilteredData(filteredDeposits);
-  }, [search]);
+  }, [search, data]);
 
   return { filteredData, isDrawerVisible, setIsDrawerVisible, setSearch };
 }

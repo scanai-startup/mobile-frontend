@@ -2,6 +2,7 @@ import apiInstance from "@/api/apiInstance";
 import AppHeader from "@/components/AppHeader";
 import { Button } from "@/components/atoms/Button";
 import DateInput from "@/components/DateInput";
+import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
 import { useTokenStore } from "@/features/auth/store/userStore";
 import { AddOrEditProductModal, ProductCard } from "@/features/pedecuba";
@@ -11,7 +12,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { CirclePlus } from "lucide-react-native";
 import React, { useState } from "react";
-import { FlatList, Text, TextInput, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 
 export default function AddPeDeCuba() {
   const router = useRouter();
@@ -57,7 +58,7 @@ export default function AddPeDeCuba() {
     };
 
     apiInstance
-      .post("/vinculodepositopedecuba", data, {
+      .post("/vinculoDepositoPeDeCuba/register", data, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -127,17 +128,12 @@ export default function AddPeDeCuba() {
             setSelectedDate={(date) => setTrasfegaDate(date)}
           />
           <View className="flex-row justify-between gap-8">
-            <View className="flex-1">
-              <Text className="text-xl">Litros</Text>
-              <View className="flex flex-row items-center bg-[#DEDEDE] rounded-lg h-14">
-                <TextInput
-                  className="text-xl ml-2 flex-1"
-                  placeholder="1.200"
-                  onChangeText={(v) => setVolume(Number(v))}
-                  keyboardType="number-pad"
-                />
-              </View>
-            </View>
+            <InputBox
+              placeholder="Litros"
+              auxText="L"
+              className="w-full"
+              title="Litros"
+            />
           </View>
           <Text className="text-zinc-950 font-bold text-3xl mb-1">
             Produtos

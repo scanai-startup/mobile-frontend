@@ -9,7 +9,7 @@ import { useNewWineTankSelect } from "@/hooks/useNewWineTankSelect";
 import { useLocalSearchParams } from "expo-router/build/hooks";
 import { Search } from "lucide-react-native";
 import React from "react";
-import { FlatList, Text, TextInput, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 
 export default function SelectPeDeCuba() {
   const { fkMostro, mostroVol, mostroVolPerdido } = useLocalSearchParams();
@@ -84,15 +84,11 @@ export default function SelectPeDeCuba() {
               Selecione o pé de cuba que deseja utilizar na criação do vinho.
             </Text>
           </View>
-          <View className="flex flex-row items-center w-full mb-4">
-            <View className="flex flex-row items-center bg-[#DEDEDE] py-2 px-3 rounded-lg flex-1">
-              <Search color="#9A9A9A" />
-              <TextInput
-                className="text-xl ml-2 flex-1"
-                placeholder="Digite o número do tanque"
-              />
-            </View>
-          </View>
+          <InputBox
+            icon={Search}
+            placeholder="Pesquise pelo tanque"
+            className="mb-4"
+          />
           <FlatList
             data={filteredData}
             keyExtractor={(item) => item.idDeposito.toString()}
