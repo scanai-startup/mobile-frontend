@@ -33,7 +33,7 @@ export function DepositCard({
         <Badge
           placeholder="Disponível"
           variant="default"
-          containerClassname="bg-green-400"
+          containerClassname="bg-green-500"
         />
       ) : (
         <Badge placeholder="Ocupado" variant="destructive" />

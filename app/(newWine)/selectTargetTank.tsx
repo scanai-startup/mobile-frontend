@@ -2,6 +2,7 @@ import apiInstance from "@/api/apiInstance";
 import { Button } from "@/components/atoms/Button";
 import CenteredModal from "@/components/CenteredModal";
 import FormFooter from "@/components/FormFooter";
+import { InputBox } from "@/components/Input";
 import SafeAreaView from "@/components/SafeAreaView";
 import SelectTankCard from "@/components/SelectTankCard";
 import { useTokenStore } from "@/features/auth/store/userStore";
@@ -12,7 +13,7 @@ import { router, useFocusEffect, useLocalSearchParams } from "expo-router";
 import * as SecureStore from "expo-secure-store";
 import { Search } from "lucide-react-native";
 import React, { useCallback, useState } from "react";
-import { FlatList, Text, TextInput, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 export default function SelectTargetTank() {
@@ -154,15 +155,11 @@ export default function SelectTargetTank() {
               Selecione o tanque final para o vinho.
             </Text>
           </View>
-          <View className="flex flex-row items-center w-full mb-4">
-            <View className="flex flex-row items-center bg-[#DEDEDE] py-2 px-3 rounded-lg flex-1">
-              <Search color="#9A9A9A" />
-              <TextInput
-                className="text-xl ml-2 flex-1"
-                placeholder="Digite o número do tanque"
-              />
-            </View>
-          </View>
+          <InputBox
+            icon={Search}
+            placeholder="Pesquise pelo tanque"
+            className="mb-4"
+          />
           <FlatList
             data={data.filter((t) => t.conteudo === null)}
             keyExtractor={(item) => item.idDeposito.toString()}

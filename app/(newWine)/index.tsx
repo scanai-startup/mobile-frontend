@@ -8,7 +8,7 @@ import { useFetchDepositos } from "@/hooks/useFetchDepositos";
 import { useNewWineTankSelect } from "@/hooks/useNewWineTankSelect";
 import { Search } from "lucide-react-native";
 import React from "react";
-import { FlatList, Text, TextInput, View } from "react-native";
+import { FlatList, Text, View } from "react-native";
 
 export default function SelectMostroView() {
   const { data, loading } = useFetchDepositos();
@@ -81,15 +81,11 @@ export default function SelectMostroView() {
               Selecione o mostro que deseja utilizar na criação do vinho.
             </Text>
           </View>
-          <View className="flex flex-row items-center w-full mb-4">
-            <View className="flex flex-row items-center bg-[#DEDEDE] py-2 px-3 rounded-lg flex-1">
-              <Search color="#9A9A9A" />
-              <TextInput
-                className="text-xl ml-2 flex-1"
-                placeholder="Digite o número do tanque"
-              />
-            </View>
-          </View>
+          <InputBox
+            icon={Search}
+            placeholder="Pesquise pelo tanque"
+            className="mb-4"
+          />
           <FlatList
             data={data.filter((t) => t.conteudo === "Mostro")}
             keyExtractor={(item) => item.idDeposito.toString()}

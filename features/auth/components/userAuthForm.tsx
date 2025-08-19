@@ -35,7 +35,7 @@ export function UserAuthForm() {
 
   return (
     <View>
-      <View className="w-full mb-6 mt-20 gap-2">
+      <View className="mb-6 mt-20 gap-2">
         <InputBox
           title="Nome de usuário"
           placeholder="carlos_andrade"
