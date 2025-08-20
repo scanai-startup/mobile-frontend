@@ -9,12 +9,14 @@ interface DateInputP {
   setSelectedDate: (date: Date) => void;
   selectedDate: Date;
   questionTitle: string;
+  maximumDate?: Date;
 }
 
 export default function DateInput({
   selectedDate,
   setSelectedDate,
   questionTitle,
+  maximumDate,
 }: DateInputP) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   function handleDatePickEvent(event: DateTimePickerEvent, date: Date) {
@@ -41,6 +43,7 @@ export default function DateInput({
               date ? handleDatePickEvent(event, date) : null;
             }}
             is24Hour
+            maximumDate={maximumDate}
           />
         )}
       </View>
