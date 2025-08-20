@@ -34,6 +34,7 @@
   "dependencies": {
     "@babel/runtime": "^7.26.0",
     "@expo/vector-icons": "^14.1.0",
+    "@hookform/resolvers": "^5.2.1",
     "@react-native-async-storage/async-storage": "2.1.2",
     "@react-native-community/datetimepicker": "8.4.1",
     "@react-navigation/native": "^7.0.0",
@@ -58,6 +59,7 @@
     "nativewind": "^4.1.23",
     "react": "19.0.0",
     "react-dom": "19.0.0",
+    "react-hook-form": "^7.62.0",
     "react-native": "0.79.5",
     "react-native-async-storage": "^0.0.1",
     "react-native-css-interop": "^0.1.20",
@@ -72,6 +74,7 @@
     "react-native-url-polyfill": "^2.0.0",
     "react-native-web": "^0.20.0",
     "victory-native": "^37.3.6",
+    "yup": "^1.7.0",
     "zustand": "^5.0.1"
   },
   "devDependencies": {
